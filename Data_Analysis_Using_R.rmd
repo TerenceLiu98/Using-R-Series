@@ -1,0 +1,103 @@
+---
+title: "Data Analysis Using R"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+## Learning Outcomes
+* Ability to organize, visualize and analyze data by statistical software R.
+* Skills to select and use an appropriate statistical method to solve the real-world problem.
+* Report writing and oral presentation skills
+* Develop ability on writing R program to solve various real-life problem.
+
+## Topics：
+* Chapter One: Introduction to `R`
+* Chapter Two: From data to graphics
+* Probability Distributions
+* Hypothesis Testing and Confidence Interval Estimation
+* Analysis of variance
+* Multiple Regression
+* Tabular Data
+
+## Leason Resource
+
+### Introduction to `R`
+
+#### What is `R`
+`R` is a programming language with is **widely** using in statistics and data science.
+- software;
+- documentation (R-Markdown and Jupyter-notebook);
+- RNews.
+
+#### How to install `R`
+<a href="https://cran.r-project.org">**Click here**</a> and you can find the answer. \\ **Remember!**, follow the direction and you may get the `R` installed properly.
+
+#### Some Useful Commands
+
+* How to Quit the `R` program
+`> q()`
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+q()
+# attention! DO NOT RUN THIS CODE IN THIS MOMENT
+# quit(save = "default", status = 0, runLast = TRUE)
+# q(save = "default", status = 0, runLast = TRUE)
+```
+If you are coding in Windows, `File_Exit` can also works.
+
+* Get or Set Working Directory(Files Path)
+`getwd` returns an absolute filepath representing the current working directory of the `R` process; `setwd(dir)` is used to set the working directory to dir.
+```{r}
+getwd()
+setwd(dir)
+```
+* List Objects
+`ls` and `objects` return a vector of character strings giving the names of the objects in the specified environment. When invoked with no argument at the top level prompt, `ls` shows what data sets and functions a user has defined. When invoked with no argument inside a function, `ls` returns the names of the function's local variables: this is useful in conjunction with browser.
+```{r}
+ls()
+# ls(name, pos = -1L, envir = as.environment(pos),all.names = FALSE, pattern, sorted = TRUE)
+objects()
+# objects(name, pos= -1L, envir = as.environment(pos),all.names = FALSE, pattern, sorted = TRUE)
+```
+#### Getting HELP
+* Details about a specific command whose name you know (input arguments, options)
+`help()` is the primary interface to the help systems
+```{r}
+help()
+#help(topic, package = NULL, lib.loc = NULL,verbose = getOption("verbose"),try.all.packages = getOption("help.try.all.packages"),help_type = getOption("help_type"))
+```
+Also, we can use `?` + `[command]` to get the help files, for instance, `?ls()`
+
+* Find commands containing a regular expression:
+`apropos()` returns a character vector giving the names of objects in the search list matching (as a regular expression) what.
+```{r}
+apropos("help")
+# The return:
+# [1] "help"          "help.request"  "help.search"   "help.start"    "main.help.url"
+```
+* Web Searching
+We can also call the search engine lets us to search for topic related to regular expressions:
+`>help.search("help")`This command allows for searching the help system for documentation matching a given character string in the (file) name, alias, title, concept or keyword entries (or any combination thereof), using either fuzzy matching or regular expression matching. Names and titles of the matched help entries are displayed nicely formatted.
+```{r}
+help.search("covariance")
+```
+* Example of Usage
+`demo` is a user-friendly interface to running some demonstration R scripts. demo() gives the list of available topics.
+```{r}
+demo(graphics)
+#demo(topic, package = NULL, lib.loc = NULL,character.only = FALSE, verbose = getOption("verbose"),echo = TRUE, ask = getOption("demo.ask"),encoding = getOption("encoding"))
+```
+* Check the function
+To see code for a function, just type the name with no parentheses or arguments \\
+```{r}
+plot
+function (x, y, ...)
+UseMethod("plot")
+<bytecode: 0x7fb062f6f9d8>
+<environment: namespace:graphics>> plot
+function (x, y, ...)
+UseMethod("plot")
+<bytecode: 0x7fb062f6f9d8>
+<environment: namespace:graphics>gi
+```
