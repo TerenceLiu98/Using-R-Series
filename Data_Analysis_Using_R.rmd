@@ -97,3 +97,53 @@ UseMethod("plot")
 <bytecode: 0x7fb062f6f9d8>
 <environment: namespace:graphics>
 ```
+#### `R` As A Calculator
+We can use `R` to do some calculation just using the operators: `+, -, *, /` and etc..
+```{r}
+2 + 2
+# [1] 4
+2 * 3 * 4 * 5
+# [1] 5
+log2(32)
+# [1] 5
+print(sqrt(2))
+# [1] 1.414214
+sin(c(30,60,90) * pi / 180)
+# [1] 0.5000000 0.8660254 1.0000000
+```
+#### Important concept
+
+* Command:function
+```{r}
+plot(mydata1),q()
+#mydata1 is not exsist
+```
+* Objects:
+vector, matrix, factor, list and data frame
+
+* Modes
+logical, numeric, and character
+
+#### Modes
+* Variables:
+```{r}
+a <- -49 # let 'a' equals negative fourty-nine
+sqrt(a) # solution is: [1] 7
+```
+`a` is numeric.
+
+``` {r}
+b <- "The dog ate my homework"
+sub("dog", "cat", b)
+# substitude "dog" with "cat"
+#solution is: [1] "The cat ate my homework"
+```
+`b` is Character string
+
+```{r}
+d <- (1 + 1 == 3)
+d # solution is: [1] FALSE
+```
+`d` is Logical(Boolean Variable)
+
+#### Objects
