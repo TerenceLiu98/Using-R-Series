@@ -7,5 +7,5 @@
 
 There is no doubt that in statistics, `R` is a very useful tools, in fact, in UIC most of the lecturers are using R; In year three, after learning the basic mathmematical knowledge and basic programming, we can now using `R` to do some realisitic analysis.
 
-In year three, we have ME courses ( Major Elective Courses), which containing [Bayesian Statistics], [Data analysis Using R] and [Introduction of mathmematical Finance]. As the matter of fact, these courses are all require the knowledge of `R`.
+In year three, we have ME courses ( Major Elective Courses), which containing [Bayesian Statistics], [Data analysis Using R] and [Introduction of mathmematical Finance]. As the matter of fact, these courses are all require the knowledge of `R`.
 Base on this current situation, I highly recommend learning something in R and this is the companion repo for `Using-Python`.

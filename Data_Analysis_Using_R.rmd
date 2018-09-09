@@ -95,9 +95,5 @@ plot
 function (x, y, ...)
 UseMethod("plot")
 <bytecode: 0x7fb062f6f9d8>
-<environment: namespace:graphics>> plot
-function (x, y, ...)
-UseMethod("plot")
-<bytecode: 0x7fb062f6f9d8>
-<environment: namespace:graphics>gi
+<environment: namespace:graphics>
 ```
