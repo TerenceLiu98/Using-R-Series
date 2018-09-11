@@ -226,3 +226,63 @@ x[3:length(x)]
 print(length(x)) #length(x) can gets or sets the length of vectors
 print((x[3:length(x)]) == x[3:5])
 ```
+There are two other methods for getting subvectors. The first is using a logical vector ( i.e. containing `TRUE` and `FALSE` of the same length:)
+```{r}
+x > 4
+# solution is: [1] TRUE TRUE FALSE TRUE FALSE
+x[x > 4]
+# solution is: [1] 5 9 14
+```
+or we can use negative indices to specify wich elements should not be selected:
+```{r}
+x[1]
+# solution is [1] 9 2 14 -4
+x[-c(1,4)]
+# solution is 9 2 -4
+```
+(Note that this is rather different tot what other languages such as `C` or `Python` would interpret negative indices to mean.)
+
+* Logical Operators
+As we see above, the comparison operator `>` returns a logical vector indicating whether or not the left hand side is greater that the right hand side. Here we demonstrate the other comparison operators:
+ ```{r}
+ x <= 2 # less than or equal to
+ # solution is: [1] FALSE FALSE TRUE FALSE TRUE
+ x == 2 # equal to
+ # solution is: [1] FALSE FALSE TRUE FALSE FALSE
+ x != 2 # not equal to
+ # solution is: [1]  TRUE  TRUE FALSE  TRUE  TRUE
+```
+Notice that the double equals sign `==`, to distinguish between assignment and comparison.
+We may also wish to combine logical vectors. If we want the elements of x within a gange, we can use the following:
+```{r}
+(x > 0) & (x<10) # '&' means 'and'
+# solution is: [1] TRUE TRUE TRUE FALSE FALSE
+
+# The & operator does a pointwise 'and' comparison between the two sides. Similarly, the vertical bar | does pointwise 'or', and the unary `!` operator performs negation.
+
+(x == 5) | (x > 10)
+# solution is: [1]  TRUE FALSE FALSE  TRUE FALSE
+!(x > 5)
+# solution is: [1]  TRUE FALSE  TRUE FALSE  TRUE
+```
+* Character Vectors
+As you might have noticed in the above section, vectors only have contains numbers, but vectors can also contain numbers. We can equally create a **Character Vectors**, in which each entry is a string of text. Strings in `R` are contained within double quote":
+```{r}
+x <- c("Hello", "how do you do", "lovely to meet you", 42)
+print(x)
+# the solution is :
+# [1] "Hello"              "how do you do"      "lovely to meet you"
+# [4] "42"
+```
+Notice that you cannot mix numbers with strings: if you try to do so the number will be converted into a string. Otherwise charater vectors are much like their numerical counterparts.
+```{r}
+x[2:3]
+# solution is: [1] "how do you do" "lovely to meet you"
+x[-4]
+$ solutions is
+# solution is: [1] "Hello" "how do you do" "lovely to meet you"
+c(x[1:2], "goodbye")
+# solution is: [1] "Hello"  "how do you do" "goodbye"
+```
+
+#### Matrices 
