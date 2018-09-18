@@ -314,3 +314,63 @@ matrix(1:9, nrow=3, ncol=3, byrow=T) #byrow = T means tranfer row and col
 # [1,]    1    2    3
 # [2,]    4    5    6
 # [3,]    7    8    9
+```
+* Combination, we can also create a matrix by combination two or more vectors,
+using the functions called `rbind` and `cbind`
+```{r}
+a <- c(1,2,3)
+b <- c(4,6,9)
+
+cbind(a,b) # combine these two vector by columns
+#      a b
+# [1,] 1 4
+# [2,] 2 6
+# [3,] 3 9
+
+rbind(a,b) # combine these two vectors by rows
+#    [,1] [,2] [,3]
+# a    1    2    3
+# b    4    6    9
+```
+* Subset of Matrix
+some times we need to extract some parts of the matrix, in this time, we need to
+use these functions:
+```{r}
+A <- matrix(1:9, nrow = 3, ncol = 3)  # create a Matrix
+
+A[2,3] # take out the element from row two and column three
+# [1] 8
+
+A[2:3, 1:2] # pick up the elements from row two to three && column one to two
+#       [,1] [,2]
+# [1,]    2    5
+# [2,]    3    6
+A[2:3,]  # extract entire columns by leaving a blank after the comma
+#      [,1] [,2] [,3]
+# [1,]    2    5    8
+# [2,]    3    6    9
+A[,2:3] # extract entire columns by leaving a blank before the comma
+#      [,1] [,2]
+# [1,]    4    7
+# [2,]    5    8
+# [3,]    6    9
+
+```
+
+In matrix, we sometimes will do some operations like production and there are
+two types of production: scalar multiplication and vector multiplication and in
+R, we have two functions to differentiate them: `*` and `%*%`:
+```{r}
+matrix_1 <- matrix(c(1,2,3,4,5,6),ncol = 3)
+
+print(matrix_1 * 2) # scalar multiplication
+#      [,1] [,2] [,3]
+# [1,]    2    6   10
+# [2,]    4    8   12
+
+matrix_2 <- matrix(c(1,2,1,2,1,2), ncol = 2) # vector multiplication
+
+print(matrix_1 %*% matrix_2)
+#      [,1] [,2]
+# [1,]    9   18
+# [2,]   12   24
