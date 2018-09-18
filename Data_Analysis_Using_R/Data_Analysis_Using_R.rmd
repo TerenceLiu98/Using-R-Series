@@ -284,5 +284,33 @@ $ solutions is
 c(x[1:2], "goodbye")
 # solution is: [1] "Hello"  "how do you do" "goodbye"
 ```
+#### Matrices
+* Matrix: rectangular table of data of the sam type (Two dimension)
+* A mtrix:
+```{r}
+matrix(1:10, ncol = 5)`
+#      [,1] [,2] [,3] [,4] [,5]
+# [1,]    1    3    5    7    9
+# [2,]    2    4    6    8   10
+# matrix function Description
+# ‘matrix’ creates a matrix from the given set of values.
+# ‘as.matrix’ attempts to turn its argument into a matrix.
+# ‘is.matrix’ tests if its argument is a (strict) matrix.
 
-#### Matrices 
+# Usage:
+# matrix(data = NA, nrow = 1, ncol = 1, byrow = FALSE, dimnames = NULL)
+```
+**Create Matrix**
+We can use `matrix` function to create a matrix, the usage can check the help.
+```{r}
+matrix(1:9, nrow=3, ncol=3)
+#       [,1] [,2] [,3]
+# [1,]    1    4    7
+# [2,]    2    5    8
+# [3,]    3    6    9
+
+matrix(1:9, nrow=3, ncol=3, byrow=T) #byrow = T means tranfer row and col
+#      [,1] [,2] [,3]
+# [1,]    1    2    3
+# [2,]    4    5    6
+# [3,]    7    8    9
