@@ -1,0 +1,45 @@
+%!TEX program = xelatex
+\documentclass[11pt]{article}
+\usepackage{ctex}
+\author {Terry Liu 刘骏杰 l630005038 \\
+Section: Dr.Hua-Jun YE}
+\title {Regression Assignment Two}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{listings} %插入代码
+\usepackage{xcolor} %代码高亮
+\lstset{language=r,
+  basicstyle=\ttfamily,
+  keywordstyle=\color{blue},
+  commentstyle=\color{darkgreen},
+  stringstyle=\color{red}}
+\begin{document}
+\maketitle
+\date
+  \paragraph{\color{red}{Question One Answer:}}
+  \\
+    (a) According to the basic SLR model, we can see that $\beta_1 = \frac{S_{xy}}{S_{xx}}$ and now we are given $\sum x$ and $\sum y$:
+
+    \begin{align*}
+      S_{xy}  &=  \sum(x_i  - \overline x)  (y_i  - \overline y) \\
+              &=  \sum(x_i  - \overline x)  \sum(y_i  - \overline y) \\
+              &=  (\sum(x_i) - \frac{1}{n}\sum(x_i))(\sum(y_i) - \frac{1}{n}\sum(y_i)) \\
+      S_{xx}  &=  \sum(x_i  - \overline x)^2 \\
+              &=  \sum x^2  - \frac{(\sum x_i)^2}{n}
+    \end{align*}
+    We can get $\beta_1 = 69.42857, \beta_0 = -204.2857$ the LSR line is: $\hat{y} = -204.2857 + 69.42857x$
+  \\
+    (b) $\beta_1$ is the estimated change in the average value of $Y$ as a result of a one-unit change in $X$ \\
+        $\beta_0$ represents the $Y$ is also influenced by other factor.
+  \\
+    (c) $SS_{residual} = \sum(y_i - \hat{y_i})^2$ $SS_{total} = \sum_i (y_i-\overline{y})^2$ \\
+    The Sum of Squares Regression (SSR) is the sum of the squared differences between the prediction for each observation and the population mean.
+  \\
+    (d)
+  \paragraph{\color{red}{Question Two  Answer:}}
+    Using the matrix, we can notice that $y = \mathbf{X}\beta_1 + \epsilon \Rightarrow \beta_1 = (\mathbf{X^T X})^{-1}\mathbf{X^T}y$, we can get $\beta_1 = 0.37$ and $(\mathbf{X^T X})^{-1} = 2 \times 10^{-5}$ \\
+    $b_1 = \beta_1 = 0.37, \b_0 = \bar{y} - \b_1 \bar{x} = 0.19$
+\end{document}
