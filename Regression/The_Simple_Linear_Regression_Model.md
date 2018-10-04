@@ -103,4 +103,95 @@ $$
 We are doing the maximum likelihood estimation, which means we need to maximize $L$ $\Rightarrow \ ln(L)$, which actually, we are minimize the $\displaystyle{\sum^n_{i=1}[y_i - (\beta_0 + \beta_1 x_i)]^2}$ **IT IS THE SAME AS THE LSM**. For $\sigma^2$, we can consider it as a variable, this will makes the question much easier $\hat{sigma} = \frac{1}{n}\displaystyle{\sum^n_{i=1}e_i^2}$ <br>
 $\hat{\beta_0},\ \hat{\beta_1}$ is the same as the prious and $e_i = y_i - \hat{y_i}$
 
-#### Matrix form of Least Square Regression
+#### Matrix Algebra isn Estimation for Regression Model
+First, let us make sure we are in the same channel: we assume that $A$ is a matrix and $A = (a_{ij}:n \times p)$ <br>
+The **Transpose** of $A$ is $A'\text{ or } A^T : p \times n$ <br>
+If $A$ is a  **Square matrix**, $A$ is $n \times n$ matrix <br>
+The **Row vector** $a = (a_1,\dots,a_p):\ 1\times p$ <br>
+The **Column vector** $a = (a_1,\dots,a_n)^T:\ n\times 1$ <br>
+If $A$ is a **Symmetric matrix**, $A = A^T$ <br>
+If $A$ is a Diagonal Matrix, $A = \begin{pmatrix} a_1 & & \\ & \ddots & \\& & a_n \end{pmatrix} = diag(a_1, \dots, a_n)$ <br>
+
+Ok, They we are going to review the derivatives of a Matrix. <br>
+If there is a function, a multivariate function $f(x_1,\cdots,x_n) = f(\mathbf{x})$, in this function, $\mathbf{x} = (x_1,\dots,x_n))^T$, so the derivatives of $f$ with respect to $x$ is a $n$ dimentional matrix:
+$$
+  \begin{align*}
+    \nabla f = \frac{\partial f(x)}{\partial x}
+		  = \begin{pmatrix}
+				  \frac{\partial f(x)}{\partial x_1} \\
+				      \vdots \\
+				          \frac{\partial f(x)}{\partial x_n} \\
+		     \end{pmatrix} \qquad
+  \end{align*}
+$$
+
+Now, let us think about the **quadratic forms' derivative**. <br>
+What is the quadratic form? For any quadratic form we always can express it as the matrix form of $\mathbf{x'Ax}$. This means any quadratic polynomial equations can be written is a matrix form: $\mathbf{x'Ax}$. $\mathbf{A}$ is a $n \times n$ constant matrix, which written in this form $A=\begin{bmatrix}c_1 & \cdots & c_n \end{bmatrix}=\begin{bmatrix}r_1 & \cdots & r_n \end{bmatrix}^T$, $c_i$ is the column vector and $r_i$ is the row vector.
+$$
+  \begin{align*}
+  \nabla f = \frac{\partial (x^TAx)}{\partial x}
+   = \begin{bmatrix}
+      (r_1^T + c_1^T)x \\
+      \vdots \\
+      (r_n^T + c_n^T)x \\
+     \end{bmatrix}
+    = \left( \begin{bmatrix} r_1^T \\ \vdots \\ r_n^T \end{bmatrix} +
+    \begin{bmatrix} c_1^T \\ \vdots \\ c_n^T \end{bmatrix} \right) x
+    = (A + A^T)x   
+  \end{align*}
+$$
+In particular, if $A$ is a symmetric matrix $\frac{\partial (x^TAx)}{\partial x} = 2\mathbf{Ax}$
+
+Ok, now we can talk about the matrix form of the regression. In Simple linear gression model, there is only one $x$, one independent variable, but in the reality, there may be thousands of independent variables. For example, there are two $x$: $x_1$,$x_2$, and we have collected 5 data :
+$$
+  \begin{align*}
+    y_1 = \beta_0 + \beta_1x_{11} + \beta_2x_{12} + \epsilon_1 \\
+    y_2 = \beta_0 + \beta_1x_{21} + \beta_2x_{22} + \epsilon_2 \\
+    y_3 = \beta_0 + \beta_1x_{31} + \beta_2x_{32} + \epsilon_3 \\
+    y_4 = \beta_0 + \beta_1x_{41} + \beta_2x_{42} + \epsilon_4 \\
+    y_5 = \beta_0 + \beta_1x_{51} + \beta_2x_{52} + \epsilon_5 \\
+  \end{align*}
+$$
+We can use matrix form to  simplify these polynomial:
+$$
+\overrightarrow{y} =
+\begin{bmatrix}
+  y_1 \\
+  y_2 \\
+  y_3 \\
+  y_4 \\
+  y_5
+\end{bmatrix},\quad X =
+\begin{bmatrix}
+1 & x_{11} & x_{12} \\
+1 & x_{21} & x_{22} \\
+1 & x_{31} & x_{32} \\
+1 & x_{41} & x_{42} \\
+1 & x_{51} & x_{52}
+\end{bmatrix},\quad \overrightarrow{\beta} =
+\begin{bmatrix}
+  \beta_0 \\
+  \beta_1 \\
+  \beta_2
+\end{bmatrix},\quad \overrightarrow{\epsilon} =
+\begin{bmatrix}
+  \epsilon_1 \\
+  \epsilon_2 \\
+  \epsilon_3 \\
+  \epsilon_4 \\
+  \epsilon_5
+\end{bmatrix}
+$$
+Then the linear model can be expressed as:
+$$\overrightarrow{y} = X\overrightarrow{beta} + \overrightarrow{\epsilon}$$
+Just like the prious, we need $epsilon$ to be the minimum:$\epsilon ^ 2 = \epsilon^T\epsilon$
+$$
+  \begin{equation}
+    \begin{split}
+    \epsilon^{T}\epsilon & = (y - Xw)^T(y - Xw)\\
+     & = (y - Xw)^Ty - (y - Xw)^TXw \\
+     & = y^Ty - (Xw)^Ty - y^TXw + (Xw)^TXw \\
+     & = y^Ty - w^TX^Ty - y^TXw + w^TX^TXw
+    \end{split}
+  \end{equation}
+$$

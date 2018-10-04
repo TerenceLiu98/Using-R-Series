@@ -1,4 +1,4 @@
-# Questions One 
+# Questions One
 
 time <- seq(1:100)
 number_time <- c(sample(1:6,100,replacement = T))
@@ -11,7 +11,7 @@ for (i in 1:100){
 print(paste("There are",j,"'5' in the trail."))
 
 
-# Question two 
+# Question two
 
 country <- read.table("country.txt") # before enter this command, please use getwd() to check the path
 
@@ -50,20 +50,20 @@ sum <- 0
 repeat{
   i = i + 1
   sum = sum + i
-  
+
   if (sum >= 1000000 ){
     break
   }
 }
 print(paste("After",i,"times rolling, the first sum which is exceeded one million is:",sum))
 
-# Question four 
+# Question four
 for ( i in 0:299) {
   i = i + 1
   sum = sum + i
   if(i %% 20 == 0){ # every 20 terms we make a judgement
     # check if the number is the multiple of 20
-    if(i %% 20 == 0) {  
+    if(i %% 20 == 0) {
       print(paste("The",i,"the current number  is",i,"which is the multiple of 20."))
     } else if (i %% 20 != 0) {
       print(paste("The",i,"the current number is",i,"which is not the multiple of 20."))
@@ -73,8 +73,8 @@ for ( i in 0:299) {
 
 # Question five
 collatz <- function(n, acc=c()) {
-  if(n==1) return(c(acc, 1));
-  collatz(ifelse(n%%2==0, n/2, 3*n +1), c(acc, n))}
+  if(n==1) return(c(acc, 1)); # if the input/output is 1, the loop will stop immediately to avoid 0 == 0
+  collatz(ifelse(n%%2==0, n/2, 3*n +1), c(acc, n))} #
 
 # Quesiton six
 collatz <- function(n, acc=c()) {
@@ -105,7 +105,7 @@ Question_Eight <- function(x){
   return(answer)
 }
 
-# Question nine 
+# Question nine
 
 sex <- readline()
 height <- readline()
@@ -160,7 +160,7 @@ elimination <- function (x, y)
     else x)
 }
 
-# Chanllenge problem 
+# Chanllenge problem
 
 test_matrix <- matrix(c(-2,4,6,0,0,0,-1,1,1,2,0,2),ncol = 4,nrow = 3)
 reduced_row_echelon_form <- function(A)
@@ -202,4 +202,3 @@ reduced_row_echelon_form <- function(A)
   return(A)
 }
 print(test_matrix)
-
