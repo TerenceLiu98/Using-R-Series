@@ -70,7 +70,7 @@ Assume that we get this data, frist, we can plot the data in scatter diagram for
 We can see that the dots is nearly in one line, then we can get a hypothesis: the women's weight and women's height is in a positive linear correlation. We can give a prediction line:
 [![Screenshot 2018-10-02 at 02.37.56.png](https://i.loli.net/2018/10/02/5bb26974d03be.png)](https://i.loli.net/2018/10/02/5bb26974d03be.png)
 
-We can find that, there are some gaps between Observed Values  and Predicted Values(on the red line), these gaps we called it random error, yes, it is the $\epsilson_i$. As Statistics is always dealing with the un-certain data, this random error, is also uncertain. However, we can use some mathematical method to reduce the error: **Least Square Method**. How can this method to reduce the random error, as we can notice, $\sum^n_{i=1}\epsilon_i = \sum^n_{i=1}E(y_i|e_i)$, we should make $\sum^n_{i=1}E(y_i|e_i)$ the least. When we are trying to find the extreme value, we will think of derivative. If we choose $\sum^n_{i = 1} |E(y_i|x_i)|$ it is difficult for us to do the derivative, so, we choose $\sum^n_{i = 1} (E(y_i|x_i))^2$. To find out the minimum of $\sum^n_{i = 1} (E(y_i|x_i))^2$ is actually find out the minimum of $\sum^n_{i = 1} (\beta_0 + \beta_1 x))^2$. We assume that this function is $ f(\beta_0, \beta_1)$, for the function has more than one variables, we can use partial derivative to get the extreme value. Here is the conclusion:
+We can find that, there are some gaps between Observed Values  and Predicted Values(on the red line), these gaps we called it random error, yes, it is the $\epsilon_i$. As Statistics is always dealing with the un-certain data, this random error, is also uncertain. However, we can use some mathematical method to reduce the error: **Least Square Method**. How can this method to reduce the random error, as we can notice, $\sum^n_{i=1}\epsilon_i = \sum^n_{i=1}E(y_i|e_i)$, we should make $\sum^n_{i=1}E(y_i|e_i)$ the least. When we are trying to find the extreme value, we will think of derivative. If we choose $\sum^n_{i = 1} |E(y_i|x_i)|$ it is difficult for us to do the derivative, so, we choose $\sum^n_{i = 1} (E(y_i|x_i))^2$. To find out the minimum of $\sum^n_{i = 1} (E(y_i|x_i))^2$ is actually find out the minimum of $\sum^n_{i = 1} (\beta_0 + \beta_1 x))^2$. We assume that this function is $ f(\beta_0, \beta_1)$, for the function has more than one variables, we can use partial derivative to get the extreme value. Here is the conclusion:
 $$
   \begin{align}
     &\hat{\beta_1} = \frac{\sum^n_{i = }(x_i - \bar{x})(y_i - \bar{y})}{\sum^n_{i = 1}(x_i - \bar{x})^2} \\
@@ -183,15 +183,37 @@ $$
 \end{bmatrix}
 $$
 Then the linear model can be expressed as:
-$$\overrightarrow{y} = X\overrightarrow{beta} + \overrightarrow{\epsilon}$$
+$$\overrightarrow{y} = X\overrightarrow{\beta} + \overrightarrow{\epsilon}$$
 Just like the prious, we need $epsilon$ to be the minimum:$\epsilon ^ 2 = \epsilon^T\epsilon$
 $$
-  \begin{equation}
+  \begin{equation*}
     \begin{split}
-    \epsilon^{T}\epsilon & = (y - Xw)^T(y - Xw)\\
-     & = (y - Xw)^Ty - (y - Xw)^TXw \\
-     & = y^Ty - (Xw)^Ty - y^TXw + (Xw)^TXw \\
-     & = y^Ty - w^TX^Ty - y^TXw + w^TX^TXw
+    \epsilon^{T}\epsilon & = (y - X\beta)^T(y - X\beta)\\
+     & = (y - X\hat{\beta} + X\hat{\beta} -X\beta)^T (y - X\hat{\beta} + X\hat{\beta}-X\beta) \\
+     & = (y - X\hat{\beta})^T (y - X\hat{\beta})\ \}  \ \ \textbf{I}\\
+     & + (\hat{\beta} - \beta)^TX^TX(\hat{\beta}-\beta)\ \}  \ \ \textbf{II}\\
+     & + (y - X\hat{\beta})^T (X\hat{\beta} - X\beta)\ \}  \ \ \textbf{III}\\
+     & + (X\hat{\beta} - X\beta)^T(y-X\beta)\ \}  \ \ \textbf{IV}\\
     \end{split}
-  \end{equation}
+  \end{equation*}
 $$
+
+Therefore:
+$$
+  \begin{align*}
+    Q(\beta) &= \textbf{I + II + III +IV} \\
+    &= Q(\hat{\beta}) + (\hat{\beta} - \beta)^TX^TX(\hat{\beta} - \beta) + 0 + 0  \\
+  \end{align*}
+$$
+$$
+  \begin{equation*}
+    \left\{
+      \begin{aligned}
+        = Q(\hat{\beta}) \text{ if } \beta = \hat{\beta} \\
+        \leq Q(\hat{\beta}) \text{ if } \beta \neq \hat{\beta}
+      \end{aligned}
+    \right.
+  \end{equation*}
+$$
+
+Estimation of $\hat{y} = X\beta$

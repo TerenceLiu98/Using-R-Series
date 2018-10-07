@@ -42,3 +42,31 @@ Six-sided die-tossing example:
 ### Definition Five
 
 If $A$ and $B$ are events in $S$, and $P(B) > 0$, then the **conditional probability of $A$ given $B$**, written $P(A|B)$, is:$P(A|B) = \frac{P(A \cap B)}{P(B)}$
+
+### Example:
+Six-sided die-tossing example:
+* $A$: an odd number is rolled
+* $B$: a number less than $4$ is rolled
+* $P(A|B) = \frac{P(A \cap B)}{P(B)} = \frac{\frac{2}{6}}{\frac{3}{6}} = \frac{2}{3}$d
+
+## Theorem
+
+If $A$ and $B$ are events in $S$, then **Bayes' rule** states:
+$$
+  P(A|B) = \frac{P(B|A)P(A)}{P(B)}
+$$
+### Example:
+Six-sided die-tossing example:
+* $A$: an odd number is rolled
+* $B$: a number less than $4$ is rolled
+* $P(A|B) = \frac{P(B|A)P(A)}{P(B)} = \frac{2/3 * 1/2}{1/2} = \frac{2}{3}$
+
+If $A$ and $B$ are events in $S$, then **Bayes' rule** states:
+$$
+  P(A|B) = \frac{P(B|A)P(A)}{P(B)} = \frac{P(B|A)P(A)}{P(B) + P(B|A^C)P(A^C)}
+$$
+Six-sided die-tossing example:
+* $A$: an odd number is rolled
+* $B$: a number less than $4$ is rolled
+* $A^C$: an even number is rolled
+$P(A|B) = \frac{P(B|A)P(A)}{P(B) + P(B|A^C)P(A^C)} = 
