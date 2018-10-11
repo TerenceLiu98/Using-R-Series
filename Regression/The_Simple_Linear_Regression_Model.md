@@ -216,4 +216,8 @@ $$
   \end{equation*}
 $$
 
-Estimation of $\hat{y} = X\beta$
+$\hat{y} = X\beta$ is an estimator:
+$$
+\hat{y} = X\hat{\beta} =  X(X^TX)^{-1}X^Ty = Hy
+$$
+where $H = X(X^TX)^{-1}X$ is called **Hat Matrix**.
