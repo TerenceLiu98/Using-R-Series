@@ -51,7 +51,7 @@
   \begin{align*}
     Pr(\theta = 1|y = 1) &= \frac{p(\theta=1,\ y = 1)}{p(\theta = 1,\ y = 1) + p(\theta = 2, \ y = 1)} \\
     &= \frac{Pr(\theta = 1)p(y = 1 | \theta = 1)}{Pr(\theta = 1)p(y = 1|\theta = 1) + Pr(\theta = 2)p(y - 1|\theta = 2)} \\
-    &= \frac{0.5N(1|1,2^2)}{0.5N(1|1,2^2) + 0.5N(1|2,2^2)} \approx 0.62
+    &= \frac{0.5N(1|1,2^2)}{0.5N(1|1,2^2) + 0.5N(1|2,2^2)} \approx 0.534
   \end{align*}
   \\
   \\
@@ -68,7 +68,7 @@
   \\
   \\
   \paragraph{\color{red}{Question Three Answer:}}
-  We can just classify the genes: $Xx,xX$ in one group and let $Xx$ represent the group. \\
+  We can just classify the genes: $Xx,xX$ in one group and let $Xx$ represent the group.
   Pr(child is Xx | child has brown eyes , the parents have brown eyes) \\
   \begin{align*}
     &= \frac{0 \times (1-p)^4 + \frac{1}{4}\times (1-p)^3 + \frac{1}{2}\times 4p^2(1-p)^2}{1\times(1-p)^4 + 1\times4p(1-p)^3 + \frac{3}{4}\times 4p^2(1-p)^2} \\
@@ -79,15 +79,16 @@
   Pr(Judy is Xx | n children all have brown eyes , all previous information) = $\frac{\frac{2p}{1+2p}\times (\frac{3}{4})^n}{\frac{2p}{1+2p}\times(\frac{3}{4})^n + \frac{1}{1+2p} \times 1}$ \\
   Also, we know that the Judy's Children has no blue-eyed, if we want Judy's grand that means Judy needs to  be a heterozygote or Judy's child is $Xx$ and Judy is $XX$:
   Pr(Judy’s child is $Xx$ | all information) = \\
-  (Judy’s child is $Xx$ , Judy's child is $Xx$) + (Judy’s child is $XX$ , Judy's child is $Xx$)
+  (Judy is $Xx$ , Judy's child is $Xx$) + (Judy’s child is $XX$ , Judy's child is $Xx$)
   \begin{align*}
     \frac{\frac{2p}{1+2p}\times (\frac{3}{4})^n}{\frac{2p}{1+2p}\times(\frac{3}{4})^n + \frac{1}{1+2p} } \times \frac{2}{3} + \frac{\frac{1}{1+2p}}{\frac{2p}{1+2p}\times\frac{3}{4}^n + \frac{1}{1+2p}}\times \frac{1}{2}
-  \end{align*}
+  \end{align*}\\
   Since her child is $Xx$, the probability of her grandchild having blue eyes is $0,\frac{1}{4}$ and $\frac{1}{2}$ as Judy's Child is $XX$,$Xx$ or $xx$. so Pr(grandchild is $xx$|all the given information) \\
   \begin{align*}
-    &= \frac{\frac{2}{3}\frac{2p}{1+2p}(\frac{3}{4})^n + \frac{1}{2}\frac{1}{1+2p}}\frac{\frac{2p}{1+2p}(\frac{3}{4})^n+ \frac{1}{1+2p}} (\frac{1}{4}2p(1-p) + \frac{1}{2}p^2) \\
-    &= \frac{\frac{2}{3}\frac{2p}{1+2p}(\frac{3}{4})^n + \frac{1}{2}\frac{1}{1+2p}}\frac{\frac{2p}{1+2p}(\frac{3}{4})^n+ \frac{1}{1+2p}}(\frac{1}{2}p)
+    &= \frac{\frac{2}{3}\frac{2p}{1+2p}(\frac{3}{4})^n + \frac{1}{2}\frac{1}{1+2p}}{\frac{2p}{1+2p}(\frac{3}{4})^n+ \frac{1}{1+2p}} (\frac{1}{4}2p(1-p) + \frac{1}{2}p^2) \\
+    &= \frac{\frac{2}{3}\frac{2p}{1+2p}(\frac{3}{4})^n + \frac{1}{2}\frac{1}{1+2p}}{\frac{2p}{1+2p}(\frac{3}{4})^n+ \frac{1}{1+2p}} (\frac{1}{2}p)
   \end{align*}
+
   \paragraph{\color{red}{Quesion Four Answer:}}
   (a) The prior predictive distribution for $y$: \\
   \begin{align*}
