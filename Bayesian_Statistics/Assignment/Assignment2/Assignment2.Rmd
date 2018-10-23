@@ -1,15 +1,21 @@
 ---
 title: "Assignment 2"
-author: Terry Liu 1630005038
+author: "Terry Liu 1630005038"
 output:
   pdf_document: default
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include <- FALSE}
+#setup
 library(LearnBayes)
 library(lattice)
 ```
 ### Question One 
+
+Reproduce the results of example Probability of a girl birth given placenta previa in page 37 of textbook by R
+
 ```{r}
 #Question One
 par(mfrow<-c(1,3))
@@ -33,6 +39,30 @@ quantile(poster,c(0.025,0.975))
 ```
 
 ### Question Two 
+
+Discrete data: Table 2.2 gives the number of fatal accidents and deaths on scheduled airline flights per year over a ten-year period. We use these data as a numerical example for fitting discrete data models.
+
+(a) Assume that the numbers of fatal accidents in each year are independent with a Poisson(θ) distribution. Set a prior distribution for θ and determine the posterior distribution based on the data from 1976 through 1985. Under this model, give a 95% predictive interval for the number of fatal accidents in 1986. You can use the normal approximation to the gamma and Poisson or compute using simulation.
+
+(b) Assume that the numbers of fatal accidents in each year follow independent Poisson
+distributions with a constant rate and an exposure in each year proportional to the
+number of passenger miles flown. Set a prior distribution for θ and determine the
+posterior distribution based on the data for 1976–1985. (Estimate the number of
+passenger miles flown in each year by dividing the appropriate columns of Table 2.2
+and ignoring round-off errors.) Give a 95% predictive interval for the number of fatal accidents in 1986 under the assumption that 8 × 1011 passenger miles are flown that
+year.
+
+(c) Repeat (a) above, replacing ‘fatal accidents’ with 'passenger deaths.'
+
+(d) Repeat (b) above, replacing ‘fatal accidents’ with 'passenger deaths.'
+
+(e) In which of the cases (a)–(d) above does the Poisson model seem more or less reasonable? Why? Discuss based on general principles, without specific reference to the
+numbers in Table 2.2.
+Incidentally, in 1986, there were 22 fatal accidents, 546 passenger deaths, and a death
+rate of 0.06 per 100 million miles flown. We return to this example in Exercises 3.12,
+6.2, 6.3, and 8.14.
+
+
 
 #### Part a
 ```{r}
@@ -69,7 +99,7 @@ quantile(yhat2,c(0.025,0.975))
 sort(yhat2)[c(25,976)]
 
 GE2 <- (n*ybar)/(zbar*n)
-GVar2 < -(ybar*n)/((zbar*n)**2)
+GVar2 <- (ybar*n)/((zbar*n)**2)
 E2 <- 8e11*GE2
 Var2 <- 8e11*GE2+(8e11**2)*(GVar2**2)
 Sd2 <- sqrt(Var2)
