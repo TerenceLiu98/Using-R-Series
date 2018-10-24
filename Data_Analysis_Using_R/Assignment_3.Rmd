@@ -1,0 +1,174 @@
+---
+title: "Assignment 3"
+author: "Terry Liu"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question One
+
+The datat file **Real-Estate.txt** contains information on the homes sold in the Denver area during the yea 2003. The variables in this data file are as follows: 
+
+| Name | Representation |
+| ---- | ------------ |
+|Price|Selling price in $1000|
+|Bedrooms|Number of bedrooms|
+|Size|Size of the home in square feet|
+|Pool|Swimming Pool(1=Yes,0=No)
+|Distance|Distance from the home to the center of the city|
+|Township|Township NO.|
+|Garage|Garage attached(1=Yes,0=No)|
+|Baths|Number of bathrooms|
+
+### Part A
+Give a plot of selling price agaignst distance from the home to the center of the city. Does there seem to be a relationship between the two variables? If so, is the relationship direct or inverse ? 
+
+### Answer: 
+```{r}
+db <- read.table("Real-Estate.txt",header=TRUE)
+names(db)
+
+x <- db$Distance
+y <- db$Price
+
+plot(x,y)
+abline(lm(y~x))
+```
+We can have the conclusion that there is negative relationship between distance and the selling prze.
+
+### Part B
+
+Plot a histogram for selling price. Comment on the shape of the distribution. 
+```{r}
+hist.default(db$Price,xlim=c(50,400),main='Price')
+
+skewness <- function (x, na.rm = FALSE) 
+
+{
+
+  if (na.rm) 
+
+    x <- x[!is.na(x)]
+
+  sum((x - mean(x))^3)/(length(x) * sd(x)^3)
+
+}
+
+
+skewness(db$Price)
+
+```
+We can get the skewness of these data (Selling Price) is equals to $0.4605562$, so, it is Positive Skew. 
+
+### Part C 
+
+Create a side-by-side box plots to compare the distribution of selling price for homes with an attached garage and homes without a garage. Comment on what you observe.
+
+```{r}
+x_1 <- data1$Price[data1$Garage==1]
+x_2 <- data1$Price[data1$Garage==0]
+Garage <- c("with Garage","without Garage")
+boxplot(x_1,x_2,names = Garage, horizontal = TRUE, main = "The Price comparison",xlab="Price")
+```
+Observation: The averge price of those have garage are higher than without garage.
+
+### Part D 
+
+There are five Townships in htis data. Draw a bar plot to compare the number of homes sold in these Townships. 
+
+```{r}
+township_1 <- length(data1$Township[data1$Township == 1])
+township_2 <- length(data1$Township[data1$Township == 2])
+township_3 <- length(data1$Township[data1$Township == 3])
+township_4 <- length(data1$Township[data1$Township == 4])
+township_5 <- length(data1$Township[data1$Township == 5])
+
+name_township <- c("township1", "township2", "township3", "township4", "township5")
+township <- c(township_1, township_2, township_3 ,township_4, township_5)
+tmp <- as.vector(name_township)  
+
+bar <- barplot(township, axes=T, names = name_township, las=2)
+
+
+# axis(side = 1, lwd = 1, tck = -.015, labels = NA)
+# # 添加x轴的坐标轴(包括坐标轴，刻度线和刻度线标签)，但是却未显示刻度线标签
+# axis(side = 2, lwd = 1, tck = -.015, labels = NA) # 添加y轴的坐标轴(包括坐标轴，刻度线和刻度线标签)，但是却未显示刻度线标签
+# axis(side = 1, lwd = 0, line = -.4) # 第二次添加x轴的坐标轴(包括坐标轴，刻度线和刻度线标签)，但是只显示了刻度线标签(通过lwd = 0使坐标轴，刻度线未显示出来)
+# axis(side = 2, lwd = 0, line = -.4, las = 1) # 第二次添加y轴的坐标轴(包括坐标轴，刻度线和刻度线标签)，但是只显示了刻度线标签
+        
+        
+```
+
+### Part E 
+
+Draw a pie chart of the varialbe "Baths" and label the percentage of each number of Bathrooms 
+
+```{r}
+x <- c(unique(data1$Baths))
+
+length_x <- length(x)
+
+
+
+lbls <- x
+pct <- round(x/sum(x)*100)
+lbls <- paste(lbls, pct) # add percents to labels 
+lbls <- paste("Baths=",lbls,"%",sep="") # ad % to labels 
+pie(x,labels = lbls, col=rainbow(length(lbls)),
+  	main="Pie Chart of Baths")
+
+```
+
+## Question Two
+
+Recently, it has been proposed that there is a non-linear relation between the number of perople $N$ in a city, and its economic output per person $Y$ (per captia \gross metropolitan product): 
+$$Y = y_0N^a + \text{ noise }$$
+
+
+Using data from the 366 metropolitan area of the US (as of 2006) to estimate $a$, by minimizing the mean squared error,
+$$\frac{1}{366} \sum_{i=1}^366 (Y_i - y_0N_i^a)^2$$
+over all a. We will ess later in the class how we could estimate both parameters at onece, but for now we'll treat $y_0$ as know, and in particular equal = $6611$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
