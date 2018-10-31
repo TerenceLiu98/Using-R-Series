@@ -94,15 +94,6 @@ township <- c(township_1, township_2, township_3 ,township_4, township_5)
 tmp <- as.vector(name_township)  
 
 bar <- barplot(township, axes=T, names = name_township, las=2)
-
-
-# axis(side = 1, lwd = 1, tck = -.015, labels = NA)
-# # 添加x轴的坐标轴(包括坐标轴，刻度线和刻度线标签)，但是却未显示刻度线标签
-# axis(side = 2, lwd = 1, tck = -.015, labels = NA) # 添加y轴的坐标轴(包括坐标轴，刻度线和刻度线标签)，但是却未显示刻度线标签
-# axis(side = 1, lwd = 0, line = -.4) # 第二次添加x轴的坐标轴(包括坐标轴，刻度线和刻度线标签)，但是只显示了刻度线标签(通过lwd = 0使坐标轴，刻度线未显示出来)
-# axis(side = 2, lwd = 0, line = -.4, las = 1) # 第二次添加y轴的坐标轴(包括坐标轴，刻度线和刻度线标签)，但是只显示了刻度线标签
-        
-        
 ```
 
 ### Part E 
@@ -211,7 +202,7 @@ Using `R` to answer the following questions:
 
 For normal distribution $N(0,1)$, find a number $z^*$ such that $p(-z^* < Z < z^*) = 0.05$ 
 ```{r}
-x <- seq(-10,10,by=0.0000001)
+x <- seq(-10,10,by=0.0001)
 norm_x <- pnorm(x,mean = 0, sd = 1)
 norm_x_inverse <- pnorm(-x, mean = 0, sd = 1)
 
@@ -281,12 +272,25 @@ The file Esti.txt in Ispace contains a set of data which consists of $3000$ obse
 #### Part A
 
 Make a histogram for the data. Which distribution would be a plausible model?
+```{r}
+data3 <- read.table("Esti.txt", header = FALSE)
+
+data3 <- as.numeric(data3)
+hist(data3)
+```
+According to the histogram, I think Exponential distribution model would be a plausible model.
+
 
 #### Part B
 
 Suppose that the exponential distribution would be used to fit the data. Use R to fit the parameters by the method of moments and maximum likelihood. 
 
+```{r}
+lambda <- 1 / mean(data3)
 
+# Using the method of moments
+uniroot(data3,))
+```
 #### Part C
 
 Suppose that the gamma distribution is also used to fit the data. Use R to fit the parameters by the method of moments.
