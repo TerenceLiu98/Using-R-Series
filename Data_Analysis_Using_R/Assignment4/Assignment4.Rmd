@@ -1,0 +1,206 @@
+---
+title: "Assignment 4"
+author: "Terence Lau"
+date: "11/18/2018"
+output: word_document
+---
+
+# Assignment 4
+
+## Question One 
+
+1. The data file **Real-Estate.txt** contains information on the homes sold in the Denver area during the year 2003. The varialbes in this data file are as follow:
+
+| Price     | Sell price in $1000 |
+| :-------: | :------------: |
+| Bedrooms   | Number of bedrooms |
+| Size | Size of the home in square feet |
+| Pool | Swimming Pool (1=yes, 0=no) |
+| Distance | Distatnce from the home to the center of the city |
+| Township | Township No. |
+| Garage | Garage attached (1=yes, 0=no) |
+| Baths | Number of bathrooms |
+
+Use R to: 
+
+(a) Develop a 95 percent confidence interval for the mean selling price of the homes.
+
+(b) Develop a 98 percent confidence interval for the mean distance the home is from the center of the city. 
+
+(c) Develop a 90 percent confidence interval for the proportion of homes with an attached garage. 
+
+(d) Conduct a test of hypothesis to determine if the mean selling price of homes with an attached garage and swimming pool is greater than $200,0000. Use the 0.05 significance level. Specify your conclusion. 
+
+### Answer
+
+#### Part A 
+
+```{r}
+estate <- read.table("Real-Estate.txt", header = T)
+
+t.test(estate$Price) # we can get the conf interval 
+```
+For the 95 percent confidence interval is $[211.9868, 230.2189]$
+
+#### Part B 
+```{r}
+# we can change the conf.int of the t.test 
+t.test(estate$Price, conf.level = 0.98) # we can get the conf interval 
+```
+For the 98 percent confidence interval is $[210,2413, 231.9644]$
+
+#### Part C
+
+```{r}
+num_with_garage <- length(estate$Garage[estate$Garage == 1])
+total_num <- length(estate$Garage)
+
+binom.test(num_with_garage, total_num, conf.level = 0.90)
+```
+The 90 percent confidence interval is $[0.5931949, 0.7515351]$
+
+#### Part D 
+
+```{r}
+xbar <- mean(home_with_garage_pool)
+mu0 <- 200
+xvar <- var(home_with_garage_pool)
+sigma <- sqrt(xvar)
+n <- length(home_with_garage_pool)
+
+z = (xbar - mu0)/(sigma/sqrt(n)) 
+
+alpha <- .05
+z.half.alpha = qnorm(1 - alpha/2) 
+c(-z.half.alpha, z.half.alpha) 
+
+```
+
+#### Part E
+
+```{r}
+home_with_pool_less <- home_with_pool[home_with_pool < home_without_pool]
+home_with_pool_less <- na.omit(home_with_pool_less)
+binom.test(length(home_with_pool_less),length(home_with_pool))
+alpha <- .02
+z.half.alpha = qnorm(1 - alpha/2) 
+c(-z.half.alpha, z.half.alpha) 
+```
+
+#### Part G 
+```{r}
+home_less_median <- estate$Price[estate$Price < median(estate$Price)]
+home_large_median <- estate$Price[estate$Price >= median(estate$Price)]
+var.test(home_less_median, home_large_median)$p.value
+```
+The p-value is 0.00004382044
+
+#### Part H 
+
+## Question Two 
+
+The following is sample information. Using `R` to test the hypothesis at the 0.05 significance level that the treatment means are equal and answer the following questions. 
+
+| Treatment1 | Treatment2 | Treatment3 |
+| :--------: | :--------: | :--------: |
+| 9 | 13 | 10 | 
+| 7 | 20 | 9 | 
+| 11 | 14 | 15 | 
+| 9 | 13 | 14 | 
+| 12 | - | 15 |
+| 10 | - | - |
+
+a.	State the null hypothesis and the alternate hypothesis.
+
+b.	Give the value of SST, SSW and SSG.
+
+c.	Generate an ANOVA table.
+
+d.	State your decision regarding the null hypothesis. 
+
+e.	If the null hypothesis is rejected, can we conclude that treatment 2 and treatment 3 differ? Use the 0.05 significance level. 
+
+### Answer 
+
+* Null hypothesis: The means are not equal.
+* Althernative hypothesis: The means are equal.
+
+```{r}
+treatment1 <- c(9, 7,11,9,12,10)
+treatment2 <- c(13,20,14,13)
+treatment3 <- c(10,9,15,14,15)
+
+mean_total <- (sum(treatment1) + sum(treatment2) + sum(treatment3)) / (length(treatment1) + length(treatment2) + length(treatment3))
+
+SST <- sum(sum((treatment1 - mean_total)^2) + sum((treatment2 - mean_total)^2) + sum((treatment3 - mean_total)^2))
+
+SSW_treatment1 <- sum((treatment1 - mean(treatment1))^2)
+
+SSW_treatment2 <- sum((treatment2 - mean(treatment2))^2)
+
+SSW_treatment3 <- sum((treatment3 - mean(treatment3))^2)
+
+SSW_total <- SSW_treatment1 + SSW_treatment2 + SSW_treatment3
+
+SSG <- length(treatment1) * (mean(treatment1) - mean_total)^2 + length(treatment2) * (mean(treatment2) - mean_total)^2 + length(treatment3) * (mean(treatment3) - mean_total)^2
+
+paste("SSW = ", SSW_total, "SSG = ", SSG, "SST = ", SST)
+```
+
+```{r}
+df_total <- 14
+df_within <- 12
+df_between <- 2 
+
+MSG <- SSG / df_between 
+MSW <- SSW_total / df_within
+
+F_value <- MSG / MSW 
+
+
+paste("df of SSG = ", df_between, "df of SSW", df_within, "df of total", df_total, "MSG = ", MSG, " MSW = ", MSW, "F = ", F_value )
+```
+
+```{r}
+na <- length(treatment1)
+nb <- length(treatment2)
+nc <- length(treatment3)
+type.treatment <- c(rep("1",na),rep("2",nb),rep("3",nc))
+treatment.data <- data.frame(treatment, type.treatment)
+oneway.test(treatment~type.treatment, data = treatment.data, var.equal = T)
+```
+
+## Question Three
+
+A psychologist is working with three types of aptitude tests that may be given to prospective management trainees. In deciding how to structure the testing process, an important issue is the possibility of interaction between test takers and test type. If there was no interaction, only one type of test would be needed. Three tests of each type are given to members of each of four groups of subject type. These were distinguished by rating of poor, fair, good, and excellent in preliminary interview. The scores obtained are listed in the following table. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
