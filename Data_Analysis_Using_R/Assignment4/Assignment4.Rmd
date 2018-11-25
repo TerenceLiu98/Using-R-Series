@@ -2,7 +2,9 @@
 title: "Assignment 4"
 author: "Terence Lau"
 date: "11/18/2018"
-output: word_document
+output:
+  word_document: default
+  pdf_document: default
 ---
 
 # Assignment 4
@@ -52,33 +54,22 @@ For the 98 percent confidence interval is $[210,2413, 231.9644]$
 #### Part C
 
 ```{r}
-num_with_garage <- length(estate$Garage[estate$Garage == 1])
-total_num <- length(estate$Garage)
-
-binom.test(num_with_garage, total_num, conf.level = 0.90)
+prop.test(71, 105, conf <- 0.90)
 ```
 The 90 percent confidence interval is $[0.5931949, 0.7515351]$
 
 #### Part D 
 
 ```{r}
-xbar <- mean(home_with_garage_pool)
-mu0 <- 200
-xvar <- var(home_with_garage_pool)
-sigma <- sqrt(xvar)
-n <- length(home_with_garage_pool)
-
-z = (xbar - mu0)/(sigma/sqrt(n)) 
-
-alpha <- .05
-z.half.alpha = qnorm(1 - alpha/2) 
-c(-z.half.alpha, z.half.alpha) 
-
+PPG <- estate$Price[estate$Pool == 1 & estate$Garage == 1]
+t.test(PPG, mu = 200)
 ```
 
 #### Part E
 
 ```{r}
+home_with_pool <- estate$Price[estate$Pool == 1]
+home_without_pool <- estate$Price[estate$Pool == 0]
 home_with_pool_less <- home_with_pool[home_with_pool < home_without_pool]
 home_with_pool_less <- na.omit(home_with_pool_less)
 binom.test(length(home_with_pool_less),length(home_with_pool))
@@ -162,6 +153,11 @@ paste("df of SSG = ", df_between, "df of SSW", df_within, "df of total", df_tota
 ```
 
 ```{r}
+treatment <- c(9, 7, 11, 9, 12, 10, 13, 20, 14, 13, 10, 9, 15, 14, 15)
+treatment1 <- c(9, 7, 11, 9, 12, 10)
+treatment2 <- c(13, 20, 14, 13)
+treatment3 <- c(10, 9, 15, 14, 15)
+
 na <- length(treatment1)
 nb <- length(treatment2)
 nc <- length(treatment3)
@@ -174,22 +170,58 @@ oneway.test(treatment~type.treatment, data = treatment.data, var.equal = T)
 
 A psychologist is working with three types of aptitude tests that may be given to prospective management trainees. In deciding how to structure the testing process, an important issue is the possibility of interaction between test takers and test type. If there was no interaction, only one type of test would be needed. Three tests of each type are given to members of each of four groups of subject type. These were distinguished by rating of poor, fair, good, and excellent in preliminary interview. The scores obtained are listed in the following table. 
 
+```{r}
+psych_test <- data.frame(score<-c(65,68,62,69,71,67,75,75,78,74,79,76,72,69,69,70, 69, 65,64 ,72, 65,68,73,75,78, 82, 80,83, 82, 84,78, 78, 75,76, 77, 75), test <- gl(3, 12, 36, labels = c("Profile Fit", "Mindbender", "Psych Out")), subject <- gl(4, 3, 36, labels = c("A", "B", "C", "D"))) 
+
+op <- par(mfrow = c(1, 2))
+plot(score ~ test + subject, data = psych_test) 
+bartlett.test(score ~ test, data = psych_test) ## ## Bartlett test of homogeneity of variances ## ## data: time by toxicant 
+
+bartlett.test(score ~ subject, data = psych_test) 
+rats.aov <- aov(score ~ test * subject, data = psych_test) 
+summary(rats.aov)
+```
 
 
+## Question Four 
 
+Refer to the data Real_Estate.txt. Use the selling price of the home as the dependent variable and determine the regression equation with number of bedrooms, size of the house, whether there is a pool, whether there is an attached garage, distance from the home to the center of the city, and the number of bathrooms as independent variables. 
 
+### Part A
+Write out the regression equation. Interpret the coefficient on the distance from the home to the center of the city, the coefficient on size of house, the coefficient on garage and pool.         
 
+### Part B
+Develop a correlation matrix. Which independent variable has the strongest correlation with the dependent variable? 
+	
+### Part C
+Find and interpret the value of and   R_adj^2 .                                                   
+```{r}
+real.Estate <- read.table("Real-Estate.txt", header = T)
+names(real.Estate)
 
+attach(real.Estate)
+pri.dis.size.gar <- pri.dis.size.gar <- lm(Price ~ Distance + Size + Garage, data = real.Estate)
+summary(pri.dis.size.gar)
+```
 
+```{r}
+attach(real.Estate)
+part.a <- cbind.data.frame(Price, Distance, Size, Garage)
+cof <- cov(part.a)
+detach(real.Estate)
+print(cof)
+```
 
+```{r}
+cor.test(x = real.Estate$Bedrooms, y = real.Estate$Price)
+```
 
-
-
-
-
-
-
-
+```{r}
+library(psych)
+res2 <- corr.test(part.a)
+res2$r
+res2$ci.adj
+```
 
 
 

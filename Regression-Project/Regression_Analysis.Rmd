@@ -1,0 +1,32 @@
+---
+title: "Regression_Analysis"
+author: "Terence Lau"
+date: "11/25/2018"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+Beijing_Data <- read.csv("PRSA_data_2010.1.1-2014.12.31.csv", header = T)
+summary(Beijing_Data)
+# No: row number 
+# year: year of data in this row 
+# month: month of data in this row 
+# day: day of data in this row 
+# hour: hour of data in this row 
+# pm2.5: PM2.5 concentration (ug/m^3) 
+# DEWP: Dew Point (â„ƒ) 
+# TEMP: Temperature (â„ƒ) 
+# PRES: Pressure (hPa) 
+# cbwd: Combined wind direction 
+# Iws: Cumulated wind speed (m/s) 
+# Is: Cumulated hours of snow 
+# Ir: Cumulated hours of rain 
+```
+
+
+
+
+
+
+
