@@ -5,10 +5,11 @@ date: "11/25/2018"
 output: word_document
 ---
 
+## Get Ready
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 Beijing_Data <- read.csv("PRSA_data_2010.1.1-2014.12.31.csv", header = T)
-summary(Beijing_Data)
 # No: row number 
 # year: year of data in this row 
 # month: month of data in this row 
@@ -24,8 +25,47 @@ summary(Beijing_Data)
 # Ir: Cumulated hours of rain 
 ```
 
+## Data Summary 
 
+```{r}
+head(Beijing_Data)
+tail(Beijing_Data)
+```
 
+There are $12$ variables in this data set: 
+| Variable Name | Variable Explanation  |
+| :-----------: | :-------------------: |
+| No | row number |
+| Year | year of data in this row |
+| Month | month of data in this row |
+| Day | day of data in this row |
+| Hour | hour of data in this row |
+| PM 2.5 | PM 2.5 concentration (ug/m^3) |
+| DEWP | Dew Point |
+| TEMP | Temperature |
+| PRES | Pressure |
+| cbwd | Combined wind direction | 
+| lws | Cumulated wind speed | 
+| ls | Cumulated hours of snow |
+| lr | Cumulated hours of rain |
+
+We want to find out a model to analyze this data set and predict the fulture data. 
+
+## Data Preprocessing 
+
+### Handling Missing Values 
+
+First, we have to check if there are missing values,
+
+```{r}
+length(Beijing_Data[is.na(Beijing_Data) == T])
+```
+
+There are $2067$ missing values out of all $434824$ obervations of PM2.5 values
+
+```{r}
+beijing$pm2.5 <- impute(beijing$pm2.5, mean) # missing value fill up
+```
 
 
 
