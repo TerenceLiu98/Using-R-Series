@@ -1,84 +1,33 @@
----
-title: "Regression_Analysis"
-author: "Terence Lau"
-date: "11/25/2018"
-output: word_document
----
-
-## Get Ready
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 Beijing_Data <- read.csv("PRSA_data_2010.1.1-2014.12.31.csv", header = T)
-# No: row number 
-# year: year of data in this row 
-# month: month of data in this row 
-# day: day of data in this row 
-# hour: hour of data in this row 
-# pm2.5: PM2.5 concentration (ug/m^3) 
-# DEWP: Dew Point (â„ƒ) 
-# TEMP: Temperature (â„ƒ) 
-# PRES: Pressure (hPa) 
-# cbwd: Combined wind direction 
-# Iws: Cumulated wind speed (m/s) 
-# Is: Cumulated hours of snow 
-# Ir: Cumulated hours of rain 
+# No: row number
+# year: year of data in this row
+# month: month of data in this row
+# day: day of data in this row
+# hour: hour of data in this row
+# pm2.5: PM2.5 concentration (ug/m^3)
+# DEWP: Dew Point (â„ƒ)
+# TEMP: Temperature (â„ƒ)
+# PRES: Pressure (hPa)
+# cbwd: Combined wind direction
+# Iws: Cumulated wind speed (m/s)
+# Is: Cumulated hours of snow
+# Ir: Cumulated hours of rain
 library(dplyr)
-```
 
-## Data Summary 
-
-```{r}
 head(Beijing_Data)
 tail(Beijing_Data)
 Beijing_Data <- Beijing_Data[,-c(1,5,10)]
 head(Beijing_Data)
 tail(Beijing_Data)
-```
 
-There are $12$ variables in this data set: 
-| Variable Name | Variable Explanation  |
-| :-----------: | :-------------------: |
-| No | row number |
-| Year | year of data in this row |
-| Month | month of data in this row |
-| Day | day of data in this row |
-| Hour | hour of data in this row |
-| PM 2.5 | PM 2.5 concentration (ug/m^3) |
-| DEWP | Dew Point |
-| TEMP | Temperature |
-| PRES | Pressure |
-| cbwd | Combined wind direction | 
-| lws | Cumulated wind speed | 
-| ls | Cumulated hours of snow |
-| lr | Cumulated hours of rain |
-
-We want to find out a model to analyze this data set and predict the fulture data. 
-
-## Data Preprocessing 
-
-### Handling Missing Values 
-
-First, we have to check if there are missing values,
-
-```{r}
 length(Beijing_Data[is.na(Beijing_Data) == T])
-```
 
-There are $2067$ missing values out of all $434824$ obervations of PM2.5 values (nearly 4.7%), which we can not omit. We can use interpolated values to approch to those NA by using `R` function: `na.approx` which is using the linear interpolation. After the approximation, we can found that there are still 24 missing value in the column: PM2.5. Since there are the head of this column, there is no initial value for the linear interpolation, that's why we used the closest value (the $25th$ data) to approximate the $1st$ to the $24th$ data
-
-```{r}
 head(Beijing_Data, 25)
 Beijing_Data$pm2.5 <- na.approx(Beijing_Data$pm2.5, na.rm = F, rule = 2)
 Beijing_Data$pm2.5[1:24] <- Beijing_Data$pm2.5[25]
 head(Beijing_Data, 26)
-```
 
-Since this data set is a time series related data set, and in this data set, the it has collected the pm2.5 for every hour. To reduce the the correlation between time and the pm2.5 data, we use the average of values of one day's data. Our model is linear regression. We assume that 
-
-
-```{r}
-# Year One : 2010 
+# Year One : 2010
 # Year One JAN Data
 year1_month1_day1 <- apply(filter(Beijing_Data, year == 2010, month == 1, day == 1, ),2, mean)
 year1_month1_day2 <- apply(filter(Beijing_Data, year == 2010, month == 1, day == 2, ),2, mean)
@@ -112,7 +61,7 @@ year1_month1_day29 <- apply(filter(Beijing_Data, year == 2010, month == 1, day =
 year1_month1_day30 <- apply(filter(Beijing_Data, year == 2010, month == 1, day == 30, ),2, mean)
 year1_month1_day31 <- apply(filter(Beijing_Data, year == 2010, month == 1, day == 31, ),2, mean)
 
-# Year One FEB Data 
+# Year One FEB Data
 year1_month2_day1 <- apply(filter(Beijing_Data, year == 2010, month == 2, day == 1, ),2, mean)
 year1_month2_day2 <- apply(filter(Beijing_Data, year == 2010, month == 2, day == 2, ),2, mean)
 year1_month2_day3 <- apply(filter(Beijing_Data, year == 2010, month == 2, day == 3, ),2, mean)
@@ -175,7 +124,7 @@ year1_month3_day29 <- apply(filter(Beijing_Data, year == 2010, month == 3, day =
 year1_month3_day30 <- apply(filter(Beijing_Data, year == 2010, month == 3, day == 30, ),2, mean)
 year1_month3_day31 <- apply(filter(Beijing_Data, year == 2010, month == 3, day == 31, ),2, mean)
 
-# Year One APR Data 
+# Year One APR Data
 year1_month4_day1 <- apply(filter(Beijing_Data, year == 2010, month == 4, day == 1, ),2, mean)
 year1_month4_day2 <- apply(filter(Beijing_Data, year == 2010, month == 4, day == 2, ),2, mean)
 year1_month4_day3 <- apply(filter(Beijing_Data, year == 2010, month == 4, day == 3, ),2, mean)
@@ -207,7 +156,7 @@ year1_month4_day28 <- apply(filter(Beijing_Data, year == 2010, month == 4, day =
 year1_month4_day29 <- apply(filter(Beijing_Data, year == 2010, month == 4, day == 29, ),2, mean)
 year1_month4_day30 <- apply(filter(Beijing_Data, year == 2010, month == 4, day == 30, ),2, mean)
 
-# Year One May Data 
+# Year One May Data
 year1_month5_day1 <- apply(filter(Beijing_Data, year == 2010, month == 5, day == 1, ),2, mean)
 year1_month5_day2 <- apply(filter(Beijing_Data, year == 2010, month == 5, day == 2, ),2, mean)
 year1_month5_day3 <- apply(filter(Beijing_Data, year == 2010, month == 5, day == 3, ),2, mean)
@@ -240,7 +189,7 @@ year1_month5_day29 <- apply(filter(Beijing_Data, year == 2010, month == 5, day =
 year1_month5_day30 <- apply(filter(Beijing_Data, year == 2010, month == 5, day == 30, ),2, mean)
 year1_month5_day31 <- apply(filter(Beijing_Data, year == 2010, month == 5, day == 31, ),2, mean)
 
-# Year One June Data 
+# Year One June Data
 year1_month6_day1 <- apply(filter(Beijing_Data, year == 2010, month == 6, day == 1, ),2, mean)
 year1_month6_day2 <- apply(filter(Beijing_Data, year == 2010, month == 6, day == 2, ),2, mean)
 year1_month6_day3 <- apply(filter(Beijing_Data, year == 2010, month == 6, day == 3, ),2, mean)
@@ -272,7 +221,7 @@ year1_month6_day28 <- apply(filter(Beijing_Data, year == 2010, month == 6, day =
 year1_month6_day29 <- apply(filter(Beijing_Data, year == 2010, month == 6, day == 29, ),2, mean)
 year1_month6_day30 <- apply(filter(Beijing_Data, year == 2010, month == 6, day == 30, ),2, mean)
 
-# Year One July Data 
+# Year One July Data
 year1_month7_day1 <- apply(filter(Beijing_Data, year == 2010, month == 7, day == 1, ),2, mean)
 year1_month7_day2 <- apply(filter(Beijing_Data, year == 2010, month == 7, day == 2, ),2, mean)
 year1_month7_day3 <- apply(filter(Beijing_Data, year == 2010, month == 7, day == 3, ),2, mean)
@@ -404,7 +353,7 @@ year1_month10_day30 <- apply(filter(Beijing_Data, year == 2010, month == 10, day
 year1_month10_day31 <- apply(filter(Beijing_Data, year == 2010, month == 10, day == 31, ),2, mean)
 
 
-# Year One Nov Data 
+# Year One Nov Data
 year1_month11_day1 <- apply(filter(Beijing_Data, year == 2010, month == 11, day == 1, ),2, mean)
 year1_month11_day2 <- apply(filter(Beijing_Data, year == 2010, month == 11, day == 2, ),2, mean)
 year1_month11_day3 <- apply(filter(Beijing_Data, year == 2010, month == 11, day == 3, ),2, mean)
@@ -469,7 +418,7 @@ year1_month12_day29 <- apply(filter(Beijing_Data, year == 2010, month == 12, day
 year1_month12_day30 <- apply(filter(Beijing_Data, year == 2010, month == 12, day == 30, ),2, mean)
 year1_month12_day31 <- apply(filter(Beijing_Data, year == 2010, month == 12, day == 31, ),2, mean)
 
-# Year Two : 2010 
+# Year Two : 2010
 # Year Two JAN Data
 year2_month1_day1 <- apply(filter(Beijing_Data, year == 2011, month == 1, day == 1, ),2, mean)
 year2_month1_day2 <- apply(filter(Beijing_Data, year == 2011, month == 1, day == 2, ),2, mean)
@@ -503,7 +452,7 @@ year2_month1_day29 <- apply(filter(Beijing_Data, year == 2011, month == 1, day =
 year2_month1_day30 <- apply(filter(Beijing_Data, year == 2011, month == 1, day == 30, ),2, mean)
 year2_month1_day31 <- apply(filter(Beijing_Data, year == 2011, month == 1, day == 31, ),2, mean)
 
-# Year Two FEB Data 
+# Year Two FEB Data
 year2_month2_day1 <- apply(filter(Beijing_Data, year == 2011, month == 2, day == 1, ),2, mean)
 year2_month2_day2 <- apply(filter(Beijing_Data, year == 2011, month == 2, day == 2, ),2, mean)
 year2_month2_day3 <- apply(filter(Beijing_Data, year == 2011, month == 2, day == 3, ),2, mean)
@@ -566,7 +515,7 @@ year2_month3_day29 <- apply(filter(Beijing_Data, year == 2011, month == 3, day =
 year2_month3_day30 <- apply(filter(Beijing_Data, year == 2011, month == 3, day == 30, ),2, mean)
 year2_month3_day31 <- apply(filter(Beijing_Data, year == 2011, month == 3, day == 31, ),2, mean)
 
-# Year Two APR Data 
+# Year Two APR Data
 year2_month4_day1 <- apply(filter(Beijing_Data, year == 2011, month == 4, day == 1, ),2, mean)
 year2_month4_day2 <- apply(filter(Beijing_Data, year == 2011, month == 4, day == 2, ),2, mean)
 year2_month4_day3 <- apply(filter(Beijing_Data, year == 2011, month == 4, day == 3, ),2, mean)
@@ -598,7 +547,7 @@ year2_month4_day28 <- apply(filter(Beijing_Data, year == 2011, month == 4, day =
 year2_month4_day29 <- apply(filter(Beijing_Data, year == 2011, month == 4, day == 29, ),2, mean)
 year2_month4_day30 <- apply(filter(Beijing_Data, year == 2011, month == 4, day == 30, ),2, mean)
 
-# Year Two May Data 
+# Year Two May Data
 year2_month5_day1 <- apply(filter(Beijing_Data, year == 2011, month == 5, day == 1, ),2, mean)
 year2_month5_day2 <- apply(filter(Beijing_Data, year == 2011, month == 5, day == 2, ),2, mean)
 year2_month5_day3 <- apply(filter(Beijing_Data, year == 2011, month == 5, day == 3, ),2, mean)
@@ -631,7 +580,7 @@ year2_month5_day29 <- apply(filter(Beijing_Data, year == 2011, month == 5, day =
 year2_month5_day30 <- apply(filter(Beijing_Data, year == 2011, month == 5, day == 30, ),2, mean)
 year2_month5_day31 <- apply(filter(Beijing_Data, year == 2011, month == 5, day == 31, ),2, mean)
 
-# Year Two June Data 
+# Year Two June Data
 year2_month6_day1 <- apply(filter(Beijing_Data, year == 2011, month == 6, day == 1, ),2, mean)
 year2_month6_day2 <- apply(filter(Beijing_Data, year == 2011, month == 6, day == 2, ),2, mean)
 year2_month6_day3 <- apply(filter(Beijing_Data, year == 2011, month == 6, day == 3, ),2, mean)
@@ -663,7 +612,7 @@ year2_month6_day28 <- apply(filter(Beijing_Data, year == 2011, month == 6, day =
 year2_month6_day29 <- apply(filter(Beijing_Data, year == 2011, month == 6, day == 29, ),2, mean)
 year2_month6_day30 <- apply(filter(Beijing_Data, year == 2011, month == 6, day == 30, ),2, mean)
 
-# Year Two July Data 
+# Year Two July Data
 year2_month7_day1 <- apply(filter(Beijing_Data, year == 2011, month == 7, day == 1, ),2, mean)
 year2_month7_day2 <- apply(filter(Beijing_Data, year == 2011, month == 7, day == 2, ),2, mean)
 year2_month7_day3 <- apply(filter(Beijing_Data, year == 2011, month == 7, day == 3, ),2, mean)
@@ -761,7 +710,7 @@ year2_month9_day28 <- apply(filter(Beijing_Data, year == 2011, month == 8, day =
 year2_month9_day29 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 29, ),2, mean)
 year2_month9_day30 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 30, ),2, mean)
 
-# Year Two Oct Data 
+# Year Two Oct Data
 year2_month10_day1 <- apply(filter(Beijing_Data, year == 2011, month == 10, day == 1, ),2, mean)
 year2_month10_day2 <- apply(filter(Beijing_Data, year == 2011, month == 10, day == 2, ),2, mean)
 year2_month10_day3 <- apply(filter(Beijing_Data, year == 2011, month == 10, day == 3, ),2, mean)
@@ -794,7 +743,7 @@ year2_month10_day29 <- apply(filter(Beijing_Data, year == 2011, month == 10, day
 year2_month10_day30 <- apply(filter(Beijing_Data, year == 2011, month == 10, day == 30, ),2, mean)
 year2_month10_day31 <- apply(filter(Beijing_Data, year == 2011, month == 10, day == 31, ),2, mean)
 
-# Year Two Nov Data 
+# Year Two Nov Data
 year2_month11_day1 <- apply(filter(Beijing_Data, year == 2011, month == 11, day == 1, ),2, mean)
 year2_month11_day2 <- apply(filter(Beijing_Data, year == 2011, month == 11, day == 2, ),2, mean)
 year2_month11_day3 <- apply(filter(Beijing_Data, year == 2011, month == 11, day == 3, ),2, mean)
@@ -859,7 +808,7 @@ year2_month12_day29 <- apply(filter(Beijing_Data, year == 2011, month == 12, day
 year2_month12_day30 <- apply(filter(Beijing_Data, year == 2011, month == 12, day == 30, ),2, mean)
 year2_month12_day31 <- apply(filter(Beijing_Data, year == 2011, month == 12, day == 31, ),2, mean)
 
-# Year Three: 2010 
+# Year Three: 2010
 # Year ThreeJAN Data
 year3_month1_day1 <- apply(filter(Beijing_Data, year == 2012, month == 1, day == 1, ),2, mean)
 year3_month1_day2 <- apply(filter(Beijing_Data, year == 2012, month == 1, day == 2, ),2, mean)
@@ -893,7 +842,7 @@ year3_month1_day29 <- apply(filter(Beijing_Data, year == 2012, month == 1, day =
 year3_month1_day30 <- apply(filter(Beijing_Data, year == 2012, month == 1, day == 30, ),2, mean)
 year3_month1_day31 <- apply(filter(Beijing_Data, year == 2012, month == 1, day == 31, ),2, mean)
 
-# Year ThreeFEB Data 
+# Year ThreeFEB Data
 year3_month2_day1 <- apply(filter(Beijing_Data, year == 2012, month == 2, day == 1, ),2, mean)
 year3_month2_day2 <- apply(filter(Beijing_Data, year == 2012, month == 2, day == 2, ),2, mean)
 year3_month2_day3 <- apply(filter(Beijing_Data, year == 2012, month == 2, day == 3, ),2, mean)
@@ -957,7 +906,7 @@ year3_month3_day29 <- apply(filter(Beijing_Data, year == 2012, month == 3, day =
 year3_month3_day30 <- apply(filter(Beijing_Data, year == 2012, month == 3, day == 30, ),2, mean)
 year3_month3_day31 <- apply(filter(Beijing_Data, year == 2012, month == 3, day == 31, ),2, mean)
 
-# Year Three APR Data 
+# Year Three APR Data
 year3_month4_day1 <- apply(filter(Beijing_Data, year == 2012, month == 4, day == 1, ),2, mean)
 year3_month4_day2 <- apply(filter(Beijing_Data, year == 2012, month == 4, day == 2, ),2, mean)
 year3_month4_day3 <- apply(filter(Beijing_Data, year == 2012, month == 4, day == 3, ),2, mean)
@@ -989,7 +938,7 @@ year3_month4_day28 <- apply(filter(Beijing_Data, year == 2012, month == 4, day =
 year3_month4_day29 <- apply(filter(Beijing_Data, year == 2012, month == 4, day == 29, ),2, mean)
 year3_month4_day30 <- apply(filter(Beijing_Data, year == 2012, month == 4, day == 30, ),2, mean)
 
-# Year ThreeMay Data 
+# Year ThreeMay Data
 year3_month5_day1 <- apply(filter(Beijing_Data, year == 2012, month == 5, day == 1, ),2, mean)
 year3_month5_day2 <- apply(filter(Beijing_Data, year == 2012, month == 5, day == 2, ),2, mean)
 year3_month5_day3 <- apply(filter(Beijing_Data, year == 2012, month == 5, day == 3, ),2, mean)
@@ -1022,7 +971,7 @@ year3_month5_day29 <- apply(filter(Beijing_Data, year == 2012, month == 5, day =
 year3_month5_day30 <- apply(filter(Beijing_Data, year == 2012, month == 5, day == 30, ),2, mean)
 year3_month5_day31 <- apply(filter(Beijing_Data, year == 2012, month == 5, day == 31, ),2, mean)
 
-# Year ThreeJune Data 
+# Year ThreeJune Data
 year3_month6_day1 <- apply(filter(Beijing_Data, year == 2012, month == 6, day == 1, ),2, mean)
 year3_month6_day2 <- apply(filter(Beijing_Data, year == 2012, month == 6, day == 2, ),2, mean)
 year3_month6_day3 <- apply(filter(Beijing_Data, year == 2012, month == 6, day == 3, ),2, mean)
@@ -1054,7 +1003,7 @@ year3_month6_day28 <- apply(filter(Beijing_Data, year == 2012, month == 6, day =
 year3_month6_day29 <- apply(filter(Beijing_Data, year == 2012, month == 6, day == 29, ),2, mean)
 year3_month6_day30 <- apply(filter(Beijing_Data, year == 2012, month == 6, day == 30, ),2, mean)
 
-# Year ThreeJuly Data 
+# Year ThreeJuly Data
 year3_month7_day1 <- apply(filter(Beijing_Data, year == 2012, month == 7, day == 1, ),2, mean)
 year3_month7_day2 <- apply(filter(Beijing_Data, year == 2012, month == 7, day == 2, ),2, mean)
 year3_month7_day3 <- apply(filter(Beijing_Data, year == 2012, month == 7, day == 3, ),2, mean)
@@ -1152,7 +1101,7 @@ year3_month9_day28 <- apply(filter(Beijing_Data, year == 2012, month == 8, day =
 year3_month9_day29 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 29, ),2, mean)
 year3_month9_day30 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 30, ),2, mean)
 
-# Year ThreeOct Data 
+# Year ThreeOct Data
 year3_month10_day1 <- apply(filter(Beijing_Data, year == 2012, month == 10, day == 1, ),2, mean)
 year3_month10_day2 <- apply(filter(Beijing_Data, year == 2012, month == 10, day == 2, ),2, mean)
 year3_month10_day3 <- apply(filter(Beijing_Data, year == 2012, month == 10, day == 3, ),2, mean)
@@ -1185,7 +1134,7 @@ year3_month10_day29 <- apply(filter(Beijing_Data, year == 2012, month == 10, day
 year3_month10_day30 <- apply(filter(Beijing_Data, year == 2012, month == 10, day == 30, ),2, mean)
 year3_month10_day31 <- apply(filter(Beijing_Data, year == 2012, month == 10, day == 31, ),2, mean)
 
-# Year ThreeNov Data 
+# Year ThreeNov Data
 year3_month11_day1 <- apply(filter(Beijing_Data, year == 2012, month == 11, day == 1, ),2, mean)
 year3_month11_day2 <- apply(filter(Beijing_Data, year == 2012, month == 11, day == 2, ),2, mean)
 year3_month11_day3 <- apply(filter(Beijing_Data, year == 2012, month == 11, day == 3, ),2, mean)
@@ -1250,7 +1199,7 @@ year3_month12_day29 <- apply(filter(Beijing_Data, year == 2012, month == 12, day
 year3_month12_day30 <- apply(filter(Beijing_Data, year == 2012, month == 12, day == 30, ),2, mean)
 year3_month12_day31 <- apply(filter(Beijing_Data, year == 2012, month == 12, day == 31, ),2, mean)
 
-# Year Four : 2010 
+# Year Four : 2010
 # Year Four JAN Data
 year4_month1_day1 <- apply(filter(Beijing_Data, year == 2013, month == 1, day == 1, ),2, mean)
 year4_month1_day2 <- apply(filter(Beijing_Data, year == 2013, month == 1, day == 2, ),2, mean)
@@ -1284,7 +1233,7 @@ year4_month1_day29 <- apply(filter(Beijing_Data, year == 2013, month == 1, day =
 year4_month1_day30 <- apply(filter(Beijing_Data, year == 2013, month == 1, day == 30, ),2, mean)
 year4_month1_day31 <- apply(filter(Beijing_Data, year == 2013, month == 1, day == 31, ),2, mean)
 
-# Year Four FEB Data 
+# Year Four FEB Data
 year4_month2_day1 <- apply(filter(Beijing_Data, year == 2013, month == 2, day == 1, ),2, mean)
 year4_month2_day2 <- apply(filter(Beijing_Data, year == 2013, month == 2, day == 2, ),2, mean)
 year4_month2_day3 <- apply(filter(Beijing_Data, year == 2013, month == 2, day == 3, ),2, mean)
@@ -1347,7 +1296,7 @@ year4_month3_day29 <- apply(filter(Beijing_Data, year == 2013, month == 3, day =
 year4_month3_day30 <- apply(filter(Beijing_Data, year == 2013, month == 3, day == 30, ),2, mean)
 year4_month3_day31 <- apply(filter(Beijing_Data, year == 2013, month == 3, day == 31, ),2, mean)
 
-# Year Four  APR Data 
+# Year Four  APR Data
 year4_month4_day1 <- apply(filter(Beijing_Data, year == 2013, month == 4, day == 1, ),2, mean)
 year4_month4_day2 <- apply(filter(Beijing_Data, year == 2013, month == 4, day == 2, ),2, mean)
 year4_month4_day3 <- apply(filter(Beijing_Data, year == 2013, month == 4, day == 3, ),2, mean)
@@ -1379,7 +1328,7 @@ year4_month4_day28 <- apply(filter(Beijing_Data, year == 2013, month == 4, day =
 year4_month4_day29 <- apply(filter(Beijing_Data, year == 2013, month == 4, day == 29, ),2, mean)
 year4_month4_day30 <- apply(filter(Beijing_Data, year == 2013, month == 4, day == 30, ),2, mean)
 
-# Year Four May Data 
+# Year Four May Data
 year4_month5_day1 <- apply(filter(Beijing_Data, year == 2013, month == 5, day == 1, ),2, mean)
 year4_month5_day2 <- apply(filter(Beijing_Data, year == 2013, month == 5, day == 2, ),2, mean)
 year4_month5_day3 <- apply(filter(Beijing_Data, year == 2013, month == 5, day == 3, ),2, mean)
@@ -1412,7 +1361,7 @@ year4_month5_day29 <- apply(filter(Beijing_Data, year == 2013, month == 5, day =
 year4_month5_day30 <- apply(filter(Beijing_Data, year == 2013, month == 5, day == 30, ),2, mean)
 year4_month5_day31 <- apply(filter(Beijing_Data, year == 2013, month == 5, day == 31, ),2, mean)
 
-# Year Four June Data 
+# Year Four June Data
 year4_month6_day1 <- apply(filter(Beijing_Data, year == 2013, month == 6, day == 1, ),2, mean)
 year4_month6_day2 <- apply(filter(Beijing_Data, year == 2013, month == 6, day == 2, ),2, mean)
 year4_month6_day3 <- apply(filter(Beijing_Data, year == 2013, month == 6, day == 3, ),2, mean)
@@ -1444,7 +1393,7 @@ year4_month6_day28 <- apply(filter(Beijing_Data, year == 2013, month == 6, day =
 year4_month6_day29 <- apply(filter(Beijing_Data, year == 2013, month == 6, day == 29, ),2, mean)
 year4_month6_day30 <- apply(filter(Beijing_Data, year == 2013, month == 6, day == 30, ),2, mean)
 
-# Year Four July Data 
+# Year Four July Data
 year4_month7_day1 <- apply(filter(Beijing_Data, year == 2013, month == 7, day == 1, ),2, mean)
 year4_month7_day2 <- apply(filter(Beijing_Data, year == 2013, month == 7, day == 2, ),2, mean)
 year4_month7_day3 <- apply(filter(Beijing_Data, year == 2013, month == 7, day == 3, ),2, mean)
@@ -1576,7 +1525,7 @@ year4_month10_day30 <- apply(filter(Beijing_Data, year == 2013, month == 10, day
 year4_month10_day31 <- apply(filter(Beijing_Data, year == 2013, month == 10, day == 31, ),2, mean)
 
 
-# Year Four Nov Data 
+# Year Four Nov Data
 year4_month11_day1 <- apply(filter(Beijing_Data, year == 2013, month == 11, day == 1, ),2, mean)
 year4_month11_day2 <- apply(filter(Beijing_Data, year == 2013, month == 11, day == 2, ),2, mean)
 year4_month11_day3 <- apply(filter(Beijing_Data, year == 2013, month == 11, day == 3, ),2, mean)
@@ -1641,7 +1590,7 @@ year4_month12_day29 <- apply(filter(Beijing_Data, year == 2013, month == 12, day
 year4_month12_day30 <- apply(filter(Beijing_Data, year == 2013, month == 12, day == 30, ),2, mean)
 year4_month12_day31 <- apply(filter(Beijing_Data, year == 2013, month == 12, day == 31, ),2, mean)
 
-# Year Five : 2010 
+# Year Five : 2010
 # Year Five JAN Data
 year5_month1_day1 <- apply(filter(Beijing_Data, year == 2014, month == 1, day == 1, ),2, mean)
 year5_month1_day2 <- apply(filter(Beijing_Data, year == 2014, month == 1, day == 2, ),2, mean)
@@ -1675,7 +1624,7 @@ year5_month1_day29 <- apply(filter(Beijing_Data, year == 2014, month == 1, day =
 year5_month1_day30 <- apply(filter(Beijing_Data, year == 2014, month == 1, day == 30, ),2, mean)
 year5_month1_day31 <- apply(filter(Beijing_Data, year == 2014, month == 1, day == 31, ),2, mean)
 
-# Year Five FEB Data 
+# Year Five FEB Data
 year5_month2_day1 <- apply(filter(Beijing_Data, year == 2014, month == 2, day == 1, ),2, mean)
 year5_month2_day2 <- apply(filter(Beijing_Data, year == 2014, month == 2, day == 2, ),2, mean)
 year5_month2_day3 <- apply(filter(Beijing_Data, year == 2014, month == 2, day == 3, ),2, mean)
@@ -1738,7 +1687,7 @@ year5_month3_day29 <- apply(filter(Beijing_Data, year == 2014, month == 3, day =
 year5_month3_day30 <- apply(filter(Beijing_Data, year == 2014, month == 3, day == 30, ),2, mean)
 year5_month3_day31 <- apply(filter(Beijing_Data, year == 2014, month == 3, day == 31, ),2, mean)
 
-# Year Five  APR Data 
+# Year Five  APR Data
 year5_month4_day1 <- apply(filter(Beijing_Data, year == 2014, month == 4, day == 1, ),2, mean)
 year5_month4_day2 <- apply(filter(Beijing_Data, year == 2014, month == 4, day == 2, ),2, mean)
 year5_month4_day3 <- apply(filter(Beijing_Data, year == 2014, month == 4, day == 3, ),2, mean)
@@ -1770,7 +1719,7 @@ year5_month4_day28 <- apply(filter(Beijing_Data, year == 2014, month == 4, day =
 year5_month4_day29 <- apply(filter(Beijing_Data, year == 2014, month == 4, day == 29, ),2, mean)
 year5_month4_day30 <- apply(filter(Beijing_Data, year == 2014, month == 4, day == 30, ),2, mean)
 
-# Year Five May Data 
+# Year Five May Data
 year5_month5_day1 <- apply(filter(Beijing_Data, year == 2014, month == 5, day == 1, ),2, mean)
 year5_month5_day2 <- apply(filter(Beijing_Data, year == 2014, month == 5, day == 2, ),2, mean)
 year5_month5_day3 <- apply(filter(Beijing_Data, year == 2014, month == 5, day == 3, ),2, mean)
@@ -1803,7 +1752,7 @@ year5_month5_day29 <- apply(filter(Beijing_Data, year == 2014, month == 5, day =
 year5_month5_day30 <- apply(filter(Beijing_Data, year == 2014, month == 5, day == 30, ),2, mean)
 year5_month5_day31 <- apply(filter(Beijing_Data, year == 2014, month == 5, day == 31, ),2, mean)
 
-# Year Five June Data 
+# Year Five June Data
 year5_month6_day1 <- apply(filter(Beijing_Data, year == 2014, month == 6, day == 1, ),2, mean)
 year5_month6_day2 <- apply(filter(Beijing_Data, year == 2014, month == 6, day == 2, ),2, mean)
 year5_month6_day3 <- apply(filter(Beijing_Data, year == 2014, month == 6, day == 3, ),2, mean)
@@ -1835,7 +1784,7 @@ year5_month6_day28 <- apply(filter(Beijing_Data, year == 2014, month == 6, day =
 year5_month6_day29 <- apply(filter(Beijing_Data, year == 2014, month == 6, day == 29, ),2, mean)
 year5_month6_day30 <- apply(filter(Beijing_Data, year == 2014, month == 6, day == 30, ),2, mean)
 
-# Year Five July Data 
+# Year Five July Data
 year5_month7_day1 <- apply(filter(Beijing_Data, year == 2014, month == 7, day == 1, ),2, mean)
 year5_month7_day2 <- apply(filter(Beijing_Data, year == 2014, month == 7, day == 2, ),2, mean)
 year5_month7_day3 <- apply(filter(Beijing_Data, year == 2014, month == 7, day == 3, ),2, mean)
@@ -1934,7 +1883,7 @@ year5_month9_day29 <- apply(filter(Beijing_Data, year == 2014, month == 8, day =
 year5_month9_day30 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 30, ),2, mean)
 
 
-# Year Five Oct Data 
+# Year Five Oct Data
 year5_month10_day1 <- apply(filter(Beijing_Data, year == 2014, month == 10, day == 1, ),2, mean)
 year5_month10_day2 <- apply(filter(Beijing_Data, year == 2014, month == 10, day == 2, ),2, mean)
 year5_month10_day3 <- apply(filter(Beijing_Data, year == 2014, month == 10, day == 3, ),2, mean)
@@ -1968,7 +1917,7 @@ year5_month10_day30 <- apply(filter(Beijing_Data, year == 2014, month == 10, day
 year5_month10_day31 <- apply(filter(Beijing_Data, year == 2014, month == 10, day == 31, ),2, mean)
 
 
-# Year Five Nov Data 
+# Year Five Nov Data
 year5_month11_day1 <- apply(filter(Beijing_Data, year == 2014, month == 11, day == 1, ),2, mean)
 year5_month11_day2 <- apply(filter(Beijing_Data, year == 2014, month == 11, day == 2, ),2, mean)
 year5_month11_day3 <- apply(filter(Beijing_Data, year == 2014, month == 11, day == 3, ),2, mean)
@@ -2033,1853 +1982,1838 @@ year5_month12_day29 <- apply(filter(Beijing_Data, year == 2014, month == 12, day
 year5_month12_day30 <- apply(filter(Beijing_Data, year == 2014, month == 12, day == 30, ),2, mean)
 year5_month12_day31 <- apply(filter(Beijing_Data, year == 2014, month == 12, day == 31, ),2, mean)
 
-```
-
-
-```{r}
 year1_data <- rbind(
   year1_month1_day1
-,year1_month1_day2
-,year1_month1_day3
-,year1_month1_day4
-,year1_month1_day5
-,year1_month1_day6
-,year1_month1_day7
-,year1_month1_day8
-,year1_month1_day9
-,year1_month1_day10
-,year1_month1_day11
-,year1_month1_day12
-,year1_month1_day13
-,year1_month1_day14
-,year1_month1_day15
-,year1_month1_day16
-,year1_month1_day17
-,year1_month1_day18
-,year1_month1_day19
-,year1_month1_day20
-,year1_month1_day21
-,year1_month1_day22
-,year1_month1_day23
-,year1_month1_day24
-,year1_month1_day25
-,year1_month1_day26
-,year1_month1_day27
-,year1_month1_day28
-,year1_month1_day29
-,year1_month1_day30
-,year1_month1_day31
-,year1_month2_day1
-,year1_month2_day2
-,year1_month2_day3
-,year1_month2_day4
-,year1_month2_day5
-,year1_month2_day6
-,year1_month2_day7
-,year1_month2_day8
-,year1_month2_day9
-,year1_month2_day10
-,year1_month2_day11
-,year1_month2_day12
-,year1_month2_day13
-,year1_month2_day14
-,year1_month2_day15
-,year1_month2_day16
-,year1_month2_day17
-,year1_month2_day18
-,year1_month2_day19
-,year1_month2_day20
-,year1_month2_day21
-,year1_month2_day22
-,year1_month2_day23
-,year1_month2_day24
-,year1_month2_day25
-,year1_month2_day26
-,year1_month2_day27
-,year1_month2_day28
-,year1_month3_day1
-,year1_month3_day2
-,year1_month3_day3
-,year1_month3_day4
-,year1_month3_day5
-,year1_month3_day6
-,year1_month3_day7
-,year1_month3_day8
-,year1_month3_day9
-,year1_month3_day10
-,year1_month3_day11
-,year1_month3_day12
-,year1_month3_day13
-,year1_month3_day14
-,year1_month3_day15
-,year1_month3_day16
-,year1_month3_day17
-,year1_month3_day18
-,year1_month3_day19
-,year1_month3_day20
-,year1_month3_day21
-,year1_month3_day22
-,year1_month3_day23
-,year1_month3_day24
-,year1_month3_day25
-,year1_month3_day26
-,year1_month3_day27
-,year1_month3_day28
-,year1_month3_day29
-,year1_month3_day30
-,year1_month3_day31
-,year1_month4_day1
-,year1_month4_day2
-,year1_month4_day3
-,year1_month4_day4
-,year1_month4_day5
-,year1_month4_day6
-,year1_month4_day7
-,year1_month4_day8
-,year1_month4_day9
-,year1_month4_day10
-,year1_month4_day11
-,year1_month4_day12
-,year1_month4_day13
-,year1_month4_day14
-,year1_month4_day15
-,year1_month4_day16
-,year1_month4_day17
-,year1_month4_day18
-,year1_month4_day19
-,year1_month4_day20
-,year1_month4_day21
-,year1_month4_day22
-,year1_month4_day23
-,year1_month4_day24
-,year1_month4_day25
-,year1_month4_day26
-,year1_month4_day27
-,year1_month4_day28
-,year1_month4_day29
-,year1_month4_day30
-,year1_month5_day1
-,year1_month5_day2
-,year1_month5_day3
-,year1_month5_day4
-,year1_month5_day5
-,year1_month5_day6
-,year1_month5_day7
-,year1_month5_day8
-,year1_month5_day9
-,year1_month5_day10
-,year1_month5_day11
-,year1_month5_day12
-,year1_month5_day13
-,year1_month5_day14
-,year1_month5_day15
-,year1_month5_day16
-,year1_month5_day17
-,year1_month5_day18
-,year1_month5_day19
-,year1_month5_day20
-,year1_month5_day21
-,year1_month5_day22
-,year1_month5_day23
-,year1_month5_day24
-,year1_month5_day25
-,year1_month5_day26
-,year1_month5_day27
-,year1_month5_day28
-,year1_month5_day29
-,year1_month5_day30
-,year1_month5_day31
-,year1_month6_day1
-,year1_month6_day2
-,year1_month6_day3
-,year1_month6_day4
-,year1_month6_day5
-,year1_month6_day6
-,year1_month6_day7
-,year1_month6_day8
-,year1_month6_day9
-,year1_month6_day10
-,year1_month6_day11
-,year1_month6_day12
-,year1_month6_day13
-,year1_month6_day14
-,year1_month6_day15
-,year1_month6_day16
-,year1_month6_day17
-,year1_month6_day18
-,year1_month6_day19
-,year1_month6_day20
-,year1_month6_day21
-,year1_month6_day22
-,year1_month6_day23
-,year1_month6_day24
-,year1_month6_day25
-,year1_month6_day26
-,year1_month6_day27
-,year1_month6_day28
-,year1_month6_day29
-,year1_month6_day30
-,year1_month7_day1
-,year1_month7_day2
-,year1_month7_day3
-,year1_month7_day4
-,year1_month7_day5
-,year1_month7_day6
-,year1_month7_day7
-,year1_month7_day8
-,year1_month7_day9
-,year1_month7_day10
-,year1_month7_day11
-,year1_month7_day12
-,year1_month7_day13
-,year1_month7_day14
-,year1_month7_day15
-,year1_month7_day16
-,year1_month7_day17
-,year1_month7_day18
-,year1_month7_day19
-,year1_month7_day20
-,year1_month7_day21
-,year1_month7_day22
-,year1_month7_day23
-,year1_month7_day24
-,year1_month7_day25
-,year1_month7_day26
-,year1_month7_day27
-,year1_month7_day28
-,year1_month7_day29
-,year1_month7_day30
-,year1_month7_day31
-,year1_month8_day1
-,year1_month8_day2
-,year1_month8_day3
-,year1_month8_day4
-,year1_month8_day5
-,year1_month8_day6
-,year1_month8_day7
-,year1_month8_day8
-,year1_month8_day9
-,year1_month8_day10
-,year1_month8_day11
-,year1_month8_day12
-,year1_month8_day13
-,year1_month8_day14
-,year1_month8_day15
-,year1_month8_day16
-,year1_month8_day17
-,year1_month8_day18
-,year1_month8_day19
-,year1_month8_day20
-,year1_month8_day21
-,year1_month8_day22
-,year1_month8_day23
-,year1_month8_day24
-,year1_month8_day25
-,year1_month8_day26
-,year1_month8_day27
-,year1_month8_day28
-,year1_month8_day29
-,year1_month8_day30
-,year1_month8_day31
-,year1_month9_day1
-,year1_month9_day2
-,year1_month9_day3
-,year1_month9_day4
-,year1_month9_day5
-,year1_month9_day6
-,year1_month9_day7
-,year1_month9_day8
-,year1_month9_day9
-,year1_month9_day10
-,year1_month9_day11
-,year1_month9_day12
-,year1_month9_day13
-,year1_month9_day14
-,year1_month9_day15
-,year1_month9_day16
-,year1_month9_day17
-,year1_month9_day18
-,year1_month9_day19
-,year1_month9_day20
-,year1_month9_day21
-,year1_month9_day22
-,year1_month9_day23
-,year1_month9_day24
-,year1_month9_day25
-,year1_month9_day26
-,year1_month9_day27
-,year1_month9_day28
-,year1_month9_day29
-,year1_month9_day30
-,year1_month10_day1
-,year1_month10_day2
-,year1_month10_day3
-,year1_month10_day4
-,year1_month10_day5
-,year1_month10_day6
-,year1_month10_day7
-,year1_month10_day8
-,year1_month10_day9
-,year1_month10_day10
-,year1_month10_day11
-,year1_month10_day12
-,year1_month10_day13
-,year1_month10_day14
-,year1_month10_day15
-,year1_month10_day16
-,year1_month10_day17
-,year1_month10_day18
-,year1_month10_day19
-,year1_month10_day20
-,year1_month10_day21
-,year1_month10_day22
-,year1_month10_day23
-,year1_month10_day24
-,year1_month10_day25
-,year1_month10_day26
-,year1_month10_day27
-,year1_month10_day28
-,year1_month10_day29
-,year1_month10_day30
-,year1_month10_day31
-,year1_month11_day1
-,year1_month11_day2
-,year1_month11_day3
-,year1_month11_day4
-,year1_month11_day5
-,year1_month11_day6
-,year1_month11_day7
-,year1_month11_day8
-,year1_month11_day9
-,year1_month11_day10
-,year1_month11_day11
-,year1_month11_day12
-,year1_month11_day13
-,year1_month11_day14
-,year1_month11_day15
-,year1_month11_day16
-,year1_month11_day17
-,year1_month11_day18
-,year1_month11_day19
-,year1_month11_day20
-,year1_month11_day21
-,year1_month11_day22
-,year1_month11_day23
-,year1_month11_day24
-,year1_month11_day25
-,year1_month11_day26
-,year1_month11_day27
-,year1_month11_day28
-,year1_month11_day29
-,year1_month11_day30
-,year1_month12_day1
-,year1_month12_day2
-,year1_month12_day3
-,year1_month12_day4
-,year1_month12_day5
-,year1_month12_day6
-,year1_month12_day7
-,year1_month12_day8
-,year1_month12_day9
-,year1_month12_day10
-,year1_month12_day11
-,year1_month12_day12
-,year1_month12_day13
-,year1_month12_day14
-,year1_month12_day15
-,year1_month12_day16
-,year1_month12_day17
-,year1_month12_day18
-,year1_month12_day19
-,year1_month12_day20
-,year1_month12_day21
-,year1_month12_day22
-,year1_month12_day23
-,year1_month12_day24
-,year1_month12_day25
-,year1_month12_day26
-,year1_month12_day27
-,year1_month12_day28
-,year1_month12_day29
-,year1_month12_day30
-,year1_month12_day31)
+  ,year1_month1_day2
+  ,year1_month1_day3
+  ,year1_month1_day4
+  ,year1_month1_day5
+  ,year1_month1_day6
+  ,year1_month1_day7
+  ,year1_month1_day8
+  ,year1_month1_day9
+  ,year1_month1_day10
+  ,year1_month1_day11
+  ,year1_month1_day12
+  ,year1_month1_day13
+  ,year1_month1_day14
+  ,year1_month1_day15
+  ,year1_month1_day16
+  ,year1_month1_day17
+  ,year1_month1_day18
+  ,year1_month1_day19
+  ,year1_month1_day20
+  ,year1_month1_day21
+  ,year1_month1_day22
+  ,year1_month1_day23
+  ,year1_month1_day24
+  ,year1_month1_day25
+  ,year1_month1_day26
+  ,year1_month1_day27
+  ,year1_month1_day28
+  ,year1_month1_day29
+  ,year1_month1_day30
+  ,year1_month1_day31
+  ,year1_month2_day1
+  ,year1_month2_day2
+  ,year1_month2_day3
+  ,year1_month2_day4
+  ,year1_month2_day5
+  ,year1_month2_day6
+  ,year1_month2_day7
+  ,year1_month2_day8
+  ,year1_month2_day9
+  ,year1_month2_day10
+  ,year1_month2_day11
+  ,year1_month2_day12
+  ,year1_month2_day13
+  ,year1_month2_day14
+  ,year1_month2_day15
+  ,year1_month2_day16
+  ,year1_month2_day17
+  ,year1_month2_day18
+  ,year1_month2_day19
+  ,year1_month2_day20
+  ,year1_month2_day21
+  ,year1_month2_day22
+  ,year1_month2_day23
+  ,year1_month2_day24
+  ,year1_month2_day25
+  ,year1_month2_day26
+  ,year1_month2_day27
+  ,year1_month2_day28
+  ,year1_month3_day1
+  ,year1_month3_day2
+  ,year1_month3_day3
+  ,year1_month3_day4
+  ,year1_month3_day5
+  ,year1_month3_day6
+  ,year1_month3_day7
+  ,year1_month3_day8
+  ,year1_month3_day9
+  ,year1_month3_day10
+  ,year1_month3_day11
+  ,year1_month3_day12
+  ,year1_month3_day13
+  ,year1_month3_day14
+  ,year1_month3_day15
+  ,year1_month3_day16
+  ,year1_month3_day17
+  ,year1_month3_day18
+  ,year1_month3_day19
+  ,year1_month3_day20
+  ,year1_month3_day21
+  ,year1_month3_day22
+  ,year1_month3_day23
+  ,year1_month3_day24
+  ,year1_month3_day25
+  ,year1_month3_day26
+  ,year1_month3_day27
+  ,year1_month3_day28
+  ,year1_month3_day29
+  ,year1_month3_day30
+  ,year1_month3_day31
+  ,year1_month4_day1
+  ,year1_month4_day2
+  ,year1_month4_day3
+  ,year1_month4_day4
+  ,year1_month4_day5
+  ,year1_month4_day6
+  ,year1_month4_day7
+  ,year1_month4_day8
+  ,year1_month4_day9
+  ,year1_month4_day10
+  ,year1_month4_day11
+  ,year1_month4_day12
+  ,year1_month4_day13
+  ,year1_month4_day14
+  ,year1_month4_day15
+  ,year1_month4_day16
+  ,year1_month4_day17
+  ,year1_month4_day18
+  ,year1_month4_day19
+  ,year1_month4_day20
+  ,year1_month4_day21
+  ,year1_month4_day22
+  ,year1_month4_day23
+  ,year1_month4_day24
+  ,year1_month4_day25
+  ,year1_month4_day26
+  ,year1_month4_day27
+  ,year1_month4_day28
+  ,year1_month4_day29
+  ,year1_month4_day30
+  ,year1_month5_day1
+  ,year1_month5_day2
+  ,year1_month5_day3
+  ,year1_month5_day4
+  ,year1_month5_day5
+  ,year1_month5_day6
+  ,year1_month5_day7
+  ,year1_month5_day8
+  ,year1_month5_day9
+  ,year1_month5_day10
+  ,year1_month5_day11
+  ,year1_month5_day12
+  ,year1_month5_day13
+  ,year1_month5_day14
+  ,year1_month5_day15
+  ,year1_month5_day16
+  ,year1_month5_day17
+  ,year1_month5_day18
+  ,year1_month5_day19
+  ,year1_month5_day20
+  ,year1_month5_day21
+  ,year1_month5_day22
+  ,year1_month5_day23
+  ,year1_month5_day24
+  ,year1_month5_day25
+  ,year1_month5_day26
+  ,year1_month5_day27
+  ,year1_month5_day28
+  ,year1_month5_day29
+  ,year1_month5_day30
+  ,year1_month5_day31
+  ,year1_month6_day1
+  ,year1_month6_day2
+  ,year1_month6_day3
+  ,year1_month6_day4
+  ,year1_month6_day5
+  ,year1_month6_day6
+  ,year1_month6_day7
+  ,year1_month6_day8
+  ,year1_month6_day9
+  ,year1_month6_day10
+  ,year1_month6_day11
+  ,year1_month6_day12
+  ,year1_month6_day13
+  ,year1_month6_day14
+  ,year1_month6_day15
+  ,year1_month6_day16
+  ,year1_month6_day17
+  ,year1_month6_day18
+  ,year1_month6_day19
+  ,year1_month6_day20
+  ,year1_month6_day21
+  ,year1_month6_day22
+  ,year1_month6_day23
+  ,year1_month6_day24
+  ,year1_month6_day25
+  ,year1_month6_day26
+  ,year1_month6_day27
+  ,year1_month6_day28
+  ,year1_month6_day29
+  ,year1_month6_day30
+  ,year1_month7_day1
+  ,year1_month7_day2
+  ,year1_month7_day3
+  ,year1_month7_day4
+  ,year1_month7_day5
+  ,year1_month7_day6
+  ,year1_month7_day7
+  ,year1_month7_day8
+  ,year1_month7_day9
+  ,year1_month7_day10
+  ,year1_month7_day11
+  ,year1_month7_day12
+  ,year1_month7_day13
+  ,year1_month7_day14
+  ,year1_month7_day15
+  ,year1_month7_day16
+  ,year1_month7_day17
+  ,year1_month7_day18
+  ,year1_month7_day19
+  ,year1_month7_day20
+  ,year1_month7_day21
+  ,year1_month7_day22
+  ,year1_month7_day23
+  ,year1_month7_day24
+  ,year1_month7_day25
+  ,year1_month7_day26
+  ,year1_month7_day27
+  ,year1_month7_day28
+  ,year1_month7_day29
+  ,year1_month7_day30
+  ,year1_month7_day31
+  ,year1_month8_day1
+  ,year1_month8_day2
+  ,year1_month8_day3
+  ,year1_month8_day4
+  ,year1_month8_day5
+  ,year1_month8_day6
+  ,year1_month8_day7
+  ,year1_month8_day8
+  ,year1_month8_day9
+  ,year1_month8_day10
+  ,year1_month8_day11
+  ,year1_month8_day12
+  ,year1_month8_day13
+  ,year1_month8_day14
+  ,year1_month8_day15
+  ,year1_month8_day16
+  ,year1_month8_day17
+  ,year1_month8_day18
+  ,year1_month8_day19
+  ,year1_month8_day20
+  ,year1_month8_day21
+  ,year1_month8_day22
+  ,year1_month8_day23
+  ,year1_month8_day24
+  ,year1_month8_day25
+  ,year1_month8_day26
+  ,year1_month8_day27
+  ,year1_month8_day28
+  ,year1_month8_day29
+  ,year1_month8_day30
+  ,year1_month8_day31
+  ,year1_month9_day1
+  ,year1_month9_day2
+  ,year1_month9_day3
+  ,year1_month9_day4
+  ,year1_month9_day5
+  ,year1_month9_day6
+  ,year1_month9_day7
+  ,year1_month9_day8
+  ,year1_month9_day9
+  ,year1_month9_day10
+  ,year1_month9_day11
+  ,year1_month9_day12
+  ,year1_month9_day13
+  ,year1_month9_day14
+  ,year1_month9_day15
+  ,year1_month9_day16
+  ,year1_month9_day17
+  ,year1_month9_day18
+  ,year1_month9_day19
+  ,year1_month9_day20
+  ,year1_month9_day21
+  ,year1_month9_day22
+  ,year1_month9_day23
+  ,year1_month9_day24
+  ,year1_month9_day25
+  ,year1_month9_day26
+  ,year1_month9_day27
+  ,year1_month9_day28
+  ,year1_month9_day29
+  ,year1_month9_day30
+  ,year1_month10_day1
+  ,year1_month10_day2
+  ,year1_month10_day3
+  ,year1_month10_day4
+  ,year1_month10_day5
+  ,year1_month10_day6
+  ,year1_month10_day7
+  ,year1_month10_day8
+  ,year1_month10_day9
+  ,year1_month10_day10
+  ,year1_month10_day11
+  ,year1_month10_day12
+  ,year1_month10_day13
+  ,year1_month10_day14
+  ,year1_month10_day15
+  ,year1_month10_day16
+  ,year1_month10_day17
+  ,year1_month10_day18
+  ,year1_month10_day19
+  ,year1_month10_day20
+  ,year1_month10_day21
+  ,year1_month10_day22
+  ,year1_month10_day23
+  ,year1_month10_day24
+  ,year1_month10_day25
+  ,year1_month10_day26
+  ,year1_month10_day27
+  ,year1_month10_day28
+  ,year1_month10_day29
+  ,year1_month10_day30
+  ,year1_month10_day31
+  ,year1_month11_day1
+  ,year1_month11_day2
+  ,year1_month11_day3
+  ,year1_month11_day4
+  ,year1_month11_day5
+  ,year1_month11_day6
+  ,year1_month11_day7
+  ,year1_month11_day8
+  ,year1_month11_day9
+  ,year1_month11_day10
+  ,year1_month11_day11
+  ,year1_month11_day12
+  ,year1_month11_day13
+  ,year1_month11_day14
+  ,year1_month11_day15
+  ,year1_month11_day16
+  ,year1_month11_day17
+  ,year1_month11_day18
+  ,year1_month11_day19
+  ,year1_month11_day20
+  ,year1_month11_day21
+  ,year1_month11_day22
+  ,year1_month11_day23
+  ,year1_month11_day24
+  ,year1_month11_day25
+  ,year1_month11_day26
+  ,year1_month11_day27
+  ,year1_month11_day28
+  ,year1_month11_day29
+  ,year1_month11_day30
+  ,year1_month12_day1
+  ,year1_month12_day2
+  ,year1_month12_day3
+  ,year1_month12_day4
+  ,year1_month12_day5
+  ,year1_month12_day6
+  ,year1_month12_day7
+  ,year1_month12_day8
+  ,year1_month12_day9
+  ,year1_month12_day10
+  ,year1_month12_day11
+  ,year1_month12_day12
+  ,year1_month12_day13
+  ,year1_month12_day14
+  ,year1_month12_day15
+  ,year1_month12_day16
+  ,year1_month12_day17
+  ,year1_month12_day18
+  ,year1_month12_day19
+  ,year1_month12_day20
+  ,year1_month12_day21
+  ,year1_month12_day22
+  ,year1_month12_day23
+  ,year1_month12_day24
+  ,year1_month12_day25
+  ,year1_month12_day26
+  ,year1_month12_day27
+  ,year1_month12_day28
+  ,year1_month12_day29
+  ,year1_month12_day30
+  ,year1_month12_day31)
 
 year2_data <- rbind(
   year2_month1_day1
-,year2_month1_day2
-,year2_month1_day3
-,year2_month1_day4
-,year2_month1_day5
-,year2_month1_day6
-,year2_month1_day7
-,year2_month1_day8
-,year2_month1_day9
-,year2_month1_day10
-,year2_month1_day11
-,year2_month1_day12
-,year2_month1_day13
-,year2_month1_day14
-,year2_month1_day15
-,year2_month1_day16
-,year2_month1_day17
-,year2_month1_day18
-,year2_month1_day19
-,year2_month1_day20
-,year2_month1_day21
-,year2_month1_day22
-,year2_month1_day23
-,year2_month1_day24
-,year2_month1_day25
-,year2_month1_day26
-,year2_month1_day27
-,year2_month1_day28
-,year2_month1_day29
-,year2_month1_day30
-,year2_month1_day31
-,year2_month2_day1
-,year2_month2_day2
-,year2_month2_day3
-,year2_month2_day4
-,year2_month2_day5
-,year2_month2_day6
-,year2_month2_day7
-,year2_month2_day8
-,year2_month2_day9
-,year2_month2_day10
-,year2_month2_day11
-,year2_month2_day12
-,year2_month2_day13
-,year2_month2_day14
-,year2_month2_day15
-,year2_month2_day16
-,year2_month2_day17
-,year2_month2_day18
-,year2_month2_day19
-,year2_month2_day20
-,year2_month2_day21
-,year2_month2_day22
-,year2_month2_day23
-,year2_month2_day24
-,year2_month2_day25
-,year2_month2_day26
-,year2_month2_day27
-,year2_month2_day28
-,year2_month3_day1
-,year2_month3_day2
-,year2_month3_day3
-,year2_month3_day4
-,year2_month3_day5
-,year2_month3_day6
-,year2_month3_day7
-,year2_month3_day8
-,year2_month3_day9
-,year2_month3_day10
-,year2_month3_day11
-,year2_month3_day12
-,year2_month3_day13
-,year2_month3_day14
-,year2_month3_day15
-,year2_month3_day16
-,year2_month3_day17
-,year2_month3_day18
-,year2_month3_day19
-,year2_month3_day20
-,year2_month3_day21
-,year2_month3_day22
-,year2_month3_day23
-,year2_month3_day24
-,year2_month3_day25
-,year2_month3_day26
-,year2_month3_day27
-,year2_month3_day28
-,year2_month3_day29
-,year2_month3_day30
-,year2_month3_day31
-,year2_month4_day1
-,year2_month4_day2
-,year2_month4_day3
-,year2_month4_day4
-,year2_month4_day5
-,year2_month4_day6
-,year2_month4_day7
-,year2_month4_day8
-,year2_month4_day9
-,year2_month4_day10
-,year2_month4_day11
-,year2_month4_day12
-,year2_month4_day13
-,year2_month4_day14
-,year2_month4_day15
-,year2_month4_day16
-,year2_month4_day17
-,year2_month4_day18
-,year2_month4_day19
-,year2_month4_day20
-,year2_month4_day21
-,year2_month4_day22
-,year2_month4_day23
-,year2_month4_day24
-,year2_month4_day25
-,year2_month4_day26
-,year2_month4_day27
-,year2_month4_day28
-,year2_month4_day29
-,year2_month4_day30
-,year2_month5_day1
-,year2_month5_day2
-,year2_month5_day3
-,year2_month5_day4
-,year2_month5_day5
-,year2_month5_day6
-,year2_month5_day7
-,year2_month5_day8
-,year2_month5_day9
-,year2_month5_day10
-,year2_month5_day11
-,year2_month5_day12
-,year2_month5_day13
-,year2_month5_day14
-,year2_month5_day15
-,year2_month5_day16
-,year2_month5_day17
-,year2_month5_day18
-,year2_month5_day19
-,year2_month5_day20
-,year2_month5_day21
-,year2_month5_day22
-,year2_month5_day23
-,year2_month5_day24
-,year2_month5_day25
-,year2_month5_day26
-,year2_month5_day27
-,year2_month5_day28
-,year2_month5_day29
-,year2_month5_day30
-,year2_month5_day31
-,year2_month6_day1
-,year2_month6_day2
-,year2_month6_day3
-,year2_month6_day4
-,year2_month6_day5
-,year2_month6_day6
-,year2_month6_day7
-,year2_month6_day8
-,year2_month6_day9
-,year2_month6_day10
-,year2_month6_day11
-,year2_month6_day12
-,year2_month6_day13
-,year2_month6_day14
-,year2_month6_day15
-,year2_month6_day16
-,year2_month6_day17
-,year2_month6_day18
-,year2_month6_day19
-,year2_month6_day20
-,year2_month6_day21
-,year2_month6_day22
-,year2_month6_day23
-,year2_month6_day24
-,year2_month6_day25
-,year2_month6_day26
-,year2_month6_day27
-,year2_month6_day28
-,year2_month6_day29
-,year2_month6_day30
-,year2_month7_day1
-,year2_month7_day2
-,year2_month7_day3
-,year2_month7_day4
-,year2_month7_day5
-,year2_month7_day6
-,year2_month7_day7
-,year2_month7_day8
-,year2_month7_day9
-,year2_month7_day10
-,year2_month7_day11
-,year2_month7_day12
-,year2_month7_day13
-,year2_month7_day14
-,year2_month7_day15
-,year2_month7_day16
-,year2_month7_day17
-,year2_month7_day18
-,year2_month7_day19
-,year2_month7_day20
-,year2_month7_day21
-,year2_month7_day22
-,year2_month7_day23
-,year2_month7_day24
-,year2_month7_day25
-,year2_month7_day26
-,year2_month7_day27
-,year2_month7_day28
-,year2_month7_day29
-,year2_month7_day30
-,year2_month7_day31
-,year2_month8_day1
-,year2_month8_day2
-,year2_month8_day3
-,year2_month8_day4
-,year2_month8_day5
-,year2_month8_day6
-,year2_month8_day7
-,year2_month8_day8
-,year2_month8_day9
-,year2_month8_day10
-,year2_month8_day11
-,year2_month8_day12
-,year2_month8_day13
-,year2_month8_day14
-,year2_month8_day15
-,year2_month8_day16
-,year2_month8_day17
-,year2_month8_day18
-,year2_month8_day19
-,year2_month8_day20
-,year2_month8_day21
-,year2_month8_day22
-,year2_month8_day23
-,year2_month8_day24
-,year2_month8_day25
-,year2_month8_day26
-,year2_month8_day27
-,year2_month8_day28
-,year2_month8_day29
-,year2_month8_day30
-,year2_month8_day31
-,year2_month9_day1
-,year2_month9_day2
-,year2_month9_day3
-,year2_month9_day4
-,year2_month9_day5
-,year2_month9_day6
-,year2_month9_day7
-,year2_month9_day8
-,year2_month9_day9
-,year2_month9_day10
-,year2_month9_day11
-,year2_month9_day12
-,year2_month9_day13
-,year2_month9_day14
-,year2_month9_day15
-,year2_month9_day16
-,year2_month9_day17
-,year2_month9_day18
-,year2_month9_day19
-,year2_month9_day20
-,year2_month9_day21
-,year2_month9_day22
-,year2_month9_day23
-,year2_month9_day24
-,year2_month9_day25
-,year2_month9_day26
-,year2_month9_day27
-,year2_month9_day28
-,year2_month9_day29
-,year2_month9_day30
-,year2_month10_day1
-,year2_month10_day2
-,year2_month10_day3
-,year2_month10_day4
-,year2_month10_day5
-,year2_month10_day6
-,year2_month10_day7
-,year2_month10_day8
-,year2_month10_day9
-,year2_month10_day10
-,year2_month10_day11
-,year2_month10_day12
-,year2_month10_day13
-,year2_month10_day14
-,year2_month10_day15
-,year2_month10_day16
-,year2_month10_day17
-,year2_month10_day18
-,year2_month10_day19
-,year2_month10_day20
-,year2_month10_day21
-,year2_month10_day22
-,year2_month10_day23
-,year2_month10_day24
-,year2_month10_day25
-,year2_month10_day26
-,year2_month10_day27
-,year2_month10_day28
-,year2_month10_day29
-,year2_month10_day30
-,year2_month10_day31
-,year2_month11_day1
-,year2_month11_day2
-,year2_month11_day3
-,year2_month11_day4
-,year2_month11_day5
-,year2_month11_day6
-,year2_month11_day7
-,year2_month11_day8
-,year2_month11_day9
-,year2_month11_day10
-,year2_month11_day11
-,year2_month11_day12
-,year2_month11_day13
-,year2_month11_day14
-,year2_month11_day15
-,year2_month11_day16
-,year2_month11_day17
-,year2_month11_day18
-,year2_month11_day19
-,year2_month11_day20
-,year2_month11_day21
-,year2_month11_day22
-,year2_month11_day23
-,year2_month11_day24
-,year2_month11_day25
-,year2_month11_day26
-,year2_month11_day27
-,year2_month11_day28
-,year2_month11_day29
-,year2_month11_day30
-,year2_month12_day1
-,year2_month12_day2
-,year2_month12_day3
-,year2_month12_day4
-,year2_month12_day5
-,year2_month12_day6
-,year2_month12_day7
-,year2_month12_day8
-,year2_month12_day9
-,year2_month12_day10
-,year2_month12_day11
-,year2_month12_day12
-,year2_month12_day13
-,year2_month12_day14
-,year2_month12_day15
-,year2_month12_day16
-,year2_month12_day17
-,year2_month12_day18
-,year2_month12_day19
-,year2_month12_day20
-,year2_month12_day21
-,year2_month12_day22
-,year2_month12_day23
-,year2_month12_day24
-,year2_month12_day25
-,year2_month12_day26
-,year2_month12_day27
-,year2_month12_day28
-,year2_month12_day29
-,year2_month12_day30
-,year2_month12_day31)
+  ,year2_month1_day2
+  ,year2_month1_day3
+  ,year2_month1_day4
+  ,year2_month1_day5
+  ,year2_month1_day6
+  ,year2_month1_day7
+  ,year2_month1_day8
+  ,year2_month1_day9
+  ,year2_month1_day10
+  ,year2_month1_day11
+  ,year2_month1_day12
+  ,year2_month1_day13
+  ,year2_month1_day14
+  ,year2_month1_day15
+  ,year2_month1_day16
+  ,year2_month1_day17
+  ,year2_month1_day18
+  ,year2_month1_day19
+  ,year2_month1_day20
+  ,year2_month1_day21
+  ,year2_month1_day22
+  ,year2_month1_day23
+  ,year2_month1_day24
+  ,year2_month1_day25
+  ,year2_month1_day26
+  ,year2_month1_day27
+  ,year2_month1_day28
+  ,year2_month1_day29
+  ,year2_month1_day30
+  ,year2_month1_day31
+  ,year2_month2_day1
+  ,year2_month2_day2
+  ,year2_month2_day3
+  ,year2_month2_day4
+  ,year2_month2_day5
+  ,year2_month2_day6
+  ,year2_month2_day7
+  ,year2_month2_day8
+  ,year2_month2_day9
+  ,year2_month2_day10
+  ,year2_month2_day11
+  ,year2_month2_day12
+  ,year2_month2_day13
+  ,year2_month2_day14
+  ,year2_month2_day15
+  ,year2_month2_day16
+  ,year2_month2_day17
+  ,year2_month2_day18
+  ,year2_month2_day19
+  ,year2_month2_day20
+  ,year2_month2_day21
+  ,year2_month2_day22
+  ,year2_month2_day23
+  ,year2_month2_day24
+  ,year2_month2_day25
+  ,year2_month2_day26
+  ,year2_month2_day27
+  ,year2_month2_day28
+  ,year2_month3_day1
+  ,year2_month3_day2
+  ,year2_month3_day3
+  ,year2_month3_day4
+  ,year2_month3_day5
+  ,year2_month3_day6
+  ,year2_month3_day7
+  ,year2_month3_day8
+  ,year2_month3_day9
+  ,year2_month3_day10
+  ,year2_month3_day11
+  ,year2_month3_day12
+  ,year2_month3_day13
+  ,year2_month3_day14
+  ,year2_month3_day15
+  ,year2_month3_day16
+  ,year2_month3_day17
+  ,year2_month3_day18
+  ,year2_month3_day19
+  ,year2_month3_day20
+  ,year2_month3_day21
+  ,year2_month3_day22
+  ,year2_month3_day23
+  ,year2_month3_day24
+  ,year2_month3_day25
+  ,year2_month3_day26
+  ,year2_month3_day27
+  ,year2_month3_day28
+  ,year2_month3_day29
+  ,year2_month3_day30
+  ,year2_month3_day31
+  ,year2_month4_day1
+  ,year2_month4_day2
+  ,year2_month4_day3
+  ,year2_month4_day4
+  ,year2_month4_day5
+  ,year2_month4_day6
+  ,year2_month4_day7
+  ,year2_month4_day8
+  ,year2_month4_day9
+  ,year2_month4_day10
+  ,year2_month4_day11
+  ,year2_month4_day12
+  ,year2_month4_day13
+  ,year2_month4_day14
+  ,year2_month4_day15
+  ,year2_month4_day16
+  ,year2_month4_day17
+  ,year2_month4_day18
+  ,year2_month4_day19
+  ,year2_month4_day20
+  ,year2_month4_day21
+  ,year2_month4_day22
+  ,year2_month4_day23
+  ,year2_month4_day24
+  ,year2_month4_day25
+  ,year2_month4_day26
+  ,year2_month4_day27
+  ,year2_month4_day28
+  ,year2_month4_day29
+  ,year2_month4_day30
+  ,year2_month5_day1
+  ,year2_month5_day2
+  ,year2_month5_day3
+  ,year2_month5_day4
+  ,year2_month5_day5
+  ,year2_month5_day6
+  ,year2_month5_day7
+  ,year2_month5_day8
+  ,year2_month5_day9
+  ,year2_month5_day10
+  ,year2_month5_day11
+  ,year2_month5_day12
+  ,year2_month5_day13
+  ,year2_month5_day14
+  ,year2_month5_day15
+  ,year2_month5_day16
+  ,year2_month5_day17
+  ,year2_month5_day18
+  ,year2_month5_day19
+  ,year2_month5_day20
+  ,year2_month5_day21
+  ,year2_month5_day22
+  ,year2_month5_day23
+  ,year2_month5_day24
+  ,year2_month5_day25
+  ,year2_month5_day26
+  ,year2_month5_day27
+  ,year2_month5_day28
+  ,year2_month5_day29
+  ,year2_month5_day30
+  ,year2_month5_day31
+  ,year2_month6_day1
+  ,year2_month6_day2
+  ,year2_month6_day3
+  ,year2_month6_day4
+  ,year2_month6_day5
+  ,year2_month6_day6
+  ,year2_month6_day7
+  ,year2_month6_day8
+  ,year2_month6_day9
+  ,year2_month6_day10
+  ,year2_month6_day11
+  ,year2_month6_day12
+  ,year2_month6_day13
+  ,year2_month6_day14
+  ,year2_month6_day15
+  ,year2_month6_day16
+  ,year2_month6_day17
+  ,year2_month6_day18
+  ,year2_month6_day19
+  ,year2_month6_day20
+  ,year2_month6_day21
+  ,year2_month6_day22
+  ,year2_month6_day23
+  ,year2_month6_day24
+  ,year2_month6_day25
+  ,year2_month6_day26
+  ,year2_month6_day27
+  ,year2_month6_day28
+  ,year2_month6_day29
+  ,year2_month6_day30
+  ,year2_month7_day1
+  ,year2_month7_day2
+  ,year2_month7_day3
+  ,year2_month7_day4
+  ,year2_month7_day5
+  ,year2_month7_day6
+  ,year2_month7_day7
+  ,year2_month7_day8
+  ,year2_month7_day9
+  ,year2_month7_day10
+  ,year2_month7_day11
+  ,year2_month7_day12
+  ,year2_month7_day13
+  ,year2_month7_day14
+  ,year2_month7_day15
+  ,year2_month7_day16
+  ,year2_month7_day17
+  ,year2_month7_day18
+  ,year2_month7_day19
+  ,year2_month7_day20
+  ,year2_month7_day21
+  ,year2_month7_day22
+  ,year2_month7_day23
+  ,year2_month7_day24
+  ,year2_month7_day25
+  ,year2_month7_day26
+  ,year2_month7_day27
+  ,year2_month7_day28
+  ,year2_month7_day29
+  ,year2_month7_day30
+  ,year2_month7_day31
+  ,year2_month8_day1
+  ,year2_month8_day2
+  ,year2_month8_day3
+  ,year2_month8_day4
+  ,year2_month8_day5
+  ,year2_month8_day6
+  ,year2_month8_day7
+  ,year2_month8_day8
+  ,year2_month8_day9
+  ,year2_month8_day10
+  ,year2_month8_day11
+  ,year2_month8_day12
+  ,year2_month8_day13
+  ,year2_month8_day14
+  ,year2_month8_day15
+  ,year2_month8_day16
+  ,year2_month8_day17
+  ,year2_month8_day18
+  ,year2_month8_day19
+  ,year2_month8_day20
+  ,year2_month8_day21
+  ,year2_month8_day22
+  ,year2_month8_day23
+  ,year2_month8_day24
+  ,year2_month8_day25
+  ,year2_month8_day26
+  ,year2_month8_day27
+  ,year2_month8_day28
+  ,year2_month8_day29
+  ,year2_month8_day30
+  ,year2_month8_day31
+  ,year2_month9_day1
+  ,year2_month9_day2
+  ,year2_month9_day3
+  ,year2_month9_day4
+  ,year2_month9_day5
+  ,year2_month9_day6
+  ,year2_month9_day7
+  ,year2_month9_day8
+  ,year2_month9_day9
+  ,year2_month9_day10
+  ,year2_month9_day11
+  ,year2_month9_day12
+  ,year2_month9_day13
+  ,year2_month9_day14
+  ,year2_month9_day15
+  ,year2_month9_day16
+  ,year2_month9_day17
+  ,year2_month9_day18
+  ,year2_month9_day19
+  ,year2_month9_day20
+  ,year2_month9_day21
+  ,year2_month9_day22
+  ,year2_month9_day23
+  ,year2_month9_day24
+  ,year2_month9_day25
+  ,year2_month9_day26
+  ,year2_month9_day27
+  ,year2_month9_day28
+  ,year2_month9_day29
+  ,year2_month9_day30
+  ,year2_month10_day1
+  ,year2_month10_day2
+  ,year2_month10_day3
+  ,year2_month10_day4
+  ,year2_month10_day5
+  ,year2_month10_day6
+  ,year2_month10_day7
+  ,year2_month10_day8
+  ,year2_month10_day9
+  ,year2_month10_day10
+  ,year2_month10_day11
+  ,year2_month10_day12
+  ,year2_month10_day13
+  ,year2_month10_day14
+  ,year2_month10_day15
+  ,year2_month10_day16
+  ,year2_month10_day17
+  ,year2_month10_day18
+  ,year2_month10_day19
+  ,year2_month10_day20
+  ,year2_month10_day21
+  ,year2_month10_day22
+  ,year2_month10_day23
+  ,year2_month10_day24
+  ,year2_month10_day25
+  ,year2_month10_day26
+  ,year2_month10_day27
+  ,year2_month10_day28
+  ,year2_month10_day29
+  ,year2_month10_day30
+  ,year2_month10_day31
+  ,year2_month11_day1
+  ,year2_month11_day2
+  ,year2_month11_day3
+  ,year2_month11_day4
+  ,year2_month11_day5
+  ,year2_month11_day6
+  ,year2_month11_day7
+  ,year2_month11_day8
+  ,year2_month11_day9
+  ,year2_month11_day10
+  ,year2_month11_day11
+  ,year2_month11_day12
+  ,year2_month11_day13
+  ,year2_month11_day14
+  ,year2_month11_day15
+  ,year2_month11_day16
+  ,year2_month11_day17
+  ,year2_month11_day18
+  ,year2_month11_day19
+  ,year2_month11_day20
+  ,year2_month11_day21
+  ,year2_month11_day22
+  ,year2_month11_day23
+  ,year2_month11_day24
+  ,year2_month11_day25
+  ,year2_month11_day26
+  ,year2_month11_day27
+  ,year2_month11_day28
+  ,year2_month11_day29
+  ,year2_month11_day30
+  ,year2_month12_day1
+  ,year2_month12_day2
+  ,year2_month12_day3
+  ,year2_month12_day4
+  ,year2_month12_day5
+  ,year2_month12_day6
+  ,year2_month12_day7
+  ,year2_month12_day8
+  ,year2_month12_day9
+  ,year2_month12_day10
+  ,year2_month12_day11
+  ,year2_month12_day12
+  ,year2_month12_day13
+  ,year2_month12_day14
+  ,year2_month12_day15
+  ,year2_month12_day16
+  ,year2_month12_day17
+  ,year2_month12_day18
+  ,year2_month12_day19
+  ,year2_month12_day20
+  ,year2_month12_day21
+  ,year2_month12_day22
+  ,year2_month12_day23
+  ,year2_month12_day24
+  ,year2_month12_day25
+  ,year2_month12_day26
+  ,year2_month12_day27
+  ,year2_month12_day28
+  ,year2_month12_day29
+  ,year2_month12_day30
+  ,year2_month12_day31)
 
 year3_data <- rbind(
- year3_month1_day1
-,year3_month1_day2
-,year3_month1_day3
-,year3_month1_day4
-,year3_month1_day5
-,year3_month1_day6
-,year3_month1_day7
-,year3_month1_day8
-,year3_month1_day9
-,year3_month1_day10
-,year3_month1_day11
-,year3_month1_day12
-,year3_month1_day13
-,year3_month1_day14
-,year3_month1_day15
-,year3_month1_day16
-,year3_month1_day17
-,year3_month1_day18
-,year3_month1_day19
-,year3_month1_day20
-,year3_month1_day21
-,year3_month1_day22
-,year3_month1_day23
-,year3_month1_day24
-,year3_month1_day25
-,year3_month1_day26
-,year3_month1_day27
-,year3_month1_day28
-,year3_month1_day29
-,year3_month1_day30
-,year3_month1_day31
-,year3_month2_day1
-,year3_month2_day2
-,year3_month2_day3
-,year3_month2_day4
-,year3_month2_day5
-,year3_month2_day6
-,year3_month2_day7
-,year3_month2_day8
-,year3_month2_day9
-,year3_month2_day10
-,year3_month2_day11
-,year3_month2_day12
-,year3_month2_day13
-,year3_month2_day14
-,year3_month2_day15
-,year3_month2_day16
-,year3_month2_day17
-,year3_month2_day18
-,year3_month2_day19
-,year3_month2_day20
-,year3_month2_day21
-,year3_month2_day22
-,year3_month2_day23
-,year3_month2_day24
-,year3_month2_day25
-,year3_month2_day26
-,year3_month2_day27
-,year3_month2_day28
-,year3_month2_day29
-,year3_month3_day1
-,year3_month3_day2
-,year3_month3_day3
-,year3_month3_day4
-,year3_month3_day5
-,year3_month3_day6
-,year3_month3_day7
-,year3_month3_day8
-,year3_month3_day9
-,year3_month3_day10
-,year3_month3_day11
-,year3_month3_day12
-,year3_month3_day13
-,year3_month3_day14
-,year3_month3_day15
-,year3_month3_day16
-,year3_month3_day17
-,year3_month3_day18
-,year3_month3_day19
-,year3_month3_day20
-,year3_month3_day21
-,year3_month3_day22
-,year3_month3_day23
-,year3_month3_day24
-,year3_month3_day25
-,year3_month3_day26
-,year3_month3_day27
-,year3_month3_day28
-,year3_month3_day29
-,year3_month3_day30
-,year3_month3_day31
-,year3_month4_day1
-,year3_month4_day2
-,year3_month4_day3
-,year3_month4_day4
-,year3_month4_day5
-,year3_month4_day6
-,year3_month4_day7
-,year3_month4_day8
-,year3_month4_day9
-,year3_month4_day10
-,year3_month4_day11
-,year3_month4_day12
-,year3_month4_day13
-,year3_month4_day14
-,year3_month4_day15
-,year3_month4_day16
-,year3_month4_day17
-,year3_month4_day18
-,year3_month4_day19
-,year3_month4_day20
-,year3_month4_day21
-,year3_month4_day22
-,year3_month4_day23
-,year3_month4_day24
-,year3_month4_day25
-,year3_month4_day26
-,year3_month4_day27
-,year3_month4_day28
-,year3_month4_day29
-,year3_month4_day30
-,year3_month5_day1
-,year3_month5_day2
-,year3_month5_day3
-,year3_month5_day4
-,year3_month5_day5
-,year3_month5_day6
-,year3_month5_day7
-,year3_month5_day8
-,year3_month5_day9
-,year3_month5_day10
-,year3_month5_day11
-,year3_month5_day12
-,year3_month5_day13
-,year3_month5_day14
-,year3_month5_day15
-,year3_month5_day16
-,year3_month5_day17
-,year3_month5_day18
-,year3_month5_day19
-,year3_month5_day20
-,year3_month5_day21
-,year3_month5_day22
-,year3_month5_day23
-,year3_month5_day24
-,year3_month5_day25
-,year3_month5_day26
-,year3_month5_day27
-,year3_month5_day28
-,year3_month5_day29
-,year3_month5_day30
-,year3_month5_day31
-,year3_month6_day1
-,year3_month6_day2
-,year3_month6_day3
-,year3_month6_day4
-,year3_month6_day5
-,year3_month6_day6
-,year3_month6_day7
-,year3_month6_day8
-,year3_month6_day9
-,year3_month6_day10
-,year3_month6_day11
-,year3_month6_day12
-,year3_month6_day13
-,year3_month6_day14
-,year3_month6_day15
-,year3_month6_day16
-,year3_month6_day17
-,year3_month6_day18
-,year3_month6_day19
-,year3_month6_day20
-,year3_month6_day21
-,year3_month6_day22
-,year3_month6_day23
-,year3_month6_day24
-,year3_month6_day25
-,year3_month6_day26
-,year3_month6_day27
-,year3_month6_day28
-,year3_month6_day29
-,year3_month6_day30
-,year3_month7_day1
-,year3_month7_day2
-,year3_month7_day3
-,year3_month7_day4
-,year3_month7_day5
-,year3_month7_day6
-,year3_month7_day7
-,year3_month7_day8
-,year3_month7_day9
-,year3_month7_day10
-,year3_month7_day11
-,year3_month7_day12
-,year3_month7_day13
-,year3_month7_day14
-,year3_month7_day15
-,year3_month7_day16
-,year3_month7_day17
-,year3_month7_day18
-,year3_month7_day19
-,year3_month7_day20
-,year3_month7_day21
-,year3_month7_day22
-,year3_month7_day23
-,year3_month7_day24
-,year3_month7_day25
-,year3_month7_day26
-,year3_month7_day27
-,year3_month7_day28
-,year3_month7_day29
-,year3_month7_day30
-,year3_month7_day31
-,year3_month8_day1
-,year3_month8_day2
-,year3_month8_day3
-,year3_month8_day4
-,year3_month8_day5
-,year3_month8_day6
-,year3_month8_day7
-,year3_month8_day8
-,year3_month8_day9
-,year3_month8_day10
-,year3_month8_day11
-,year3_month8_day12
-,year3_month8_day13
-,year3_month8_day14
-,year3_month8_day15
-,year3_month8_day16
-,year3_month8_day17
-,year3_month8_day18
-,year3_month8_day19
-,year3_month8_day20
-,year3_month8_day21
-,year3_month8_day22
-,year3_month8_day23
-,year3_month8_day24
-,year3_month8_day25
-,year3_month8_day26
-,year3_month8_day27
-,year3_month8_day28
-,year3_month8_day29
-,year3_month8_day30
-,year3_month8_day31
-,year3_month9_day1
-,year3_month9_day2
-,year3_month9_day3
-,year3_month9_day4
-,year3_month9_day5
-,year3_month9_day6
-,year3_month9_day7
-,year3_month9_day8
-,year3_month9_day9
-,year3_month9_day10
-,year3_month9_day11
-,year3_month9_day12
-,year3_month9_day13
-,year3_month9_day14
-,year3_month9_day15
-,year3_month9_day16
-,year3_month9_day17
-,year3_month9_day18
-,year3_month9_day19
-,year3_month9_day20
-,year3_month9_day21
-,year3_month9_day22
-,year3_month9_day23
-,year3_month9_day24
-,year3_month9_day25
-,year3_month9_day26
-,year3_month9_day27
-,year3_month9_day28
-,year3_month9_day29
-,year3_month9_day30
-,year3_month10_day1
-,year3_month10_day2
-,year3_month10_day3
-,year3_month10_day4
-,year3_month10_day5
-,year3_month10_day6
-,year3_month10_day7
-,year3_month10_day8
-,year3_month10_day9
-,year3_month10_day10
-,year3_month10_day11
-,year3_month10_day12
-,year3_month10_day13
-,year3_month10_day14
-,year3_month10_day15
-,year3_month10_day16
-,year3_month10_day17
-,year3_month10_day18
-,year3_month10_day19
-,year3_month10_day20
-,year3_month10_day21
-,year3_month10_day22
-,year3_month10_day23
-,year3_month10_day24
-,year3_month10_day25
-,year3_month10_day26
-,year3_month10_day27
-,year3_month10_day28
-,year3_month10_day29
-,year3_month10_day30
-,year3_month10_day31
-,year3_month11_day1
-,year3_month11_day2
-,year3_month11_day3
-,year3_month11_day4
-,year3_month11_day5
-,year3_month11_day6
-,year3_month11_day7
-,year3_month11_day8
-,year3_month11_day9
-,year3_month11_day10
-,year3_month11_day11
-,year3_month11_day12
-,year3_month11_day13
-,year3_month11_day14
-,year3_month11_day15
-,year3_month11_day16
-,year3_month11_day17
-,year3_month11_day18
-,year3_month11_day19
-,year3_month11_day20
-,year3_month11_day21
-,year3_month11_day22
-,year3_month11_day23
-,year3_month11_day24
-,year3_month11_day25
-,year3_month11_day26
-,year3_month11_day27
-,year3_month11_day28
-,year3_month11_day29
-,year3_month11_day30
-,year3_month12_day1
-,year3_month12_day2
-,year3_month12_day3
-,year3_month12_day4
-,year3_month12_day5
-,year3_month12_day6
-,year3_month12_day7
-,year3_month12_day8
-,year3_month12_day9
-,year3_month12_day10
-,year3_month12_day11
-,year3_month12_day12
-,year3_month12_day13
-,year3_month12_day14
-,year3_month12_day15
-,year3_month12_day16
-,year3_month12_day17
-,year3_month12_day18
-,year3_month12_day19
-,year3_month12_day20
-,year3_month12_day21
-,year3_month12_day22
-,year3_month12_day23
-,year3_month12_day24
-,year3_month12_day25
-,year3_month12_day26
-,year3_month12_day27
-,year3_month12_day28
-,year3_month12_day29
-,year3_month12_day30
-,year3_month12_day31)
+  year3_month1_day1
+  ,year3_month1_day2
+  ,year3_month1_day3
+  ,year3_month1_day4
+  ,year3_month1_day5
+  ,year3_month1_day6
+  ,year3_month1_day7
+  ,year3_month1_day8
+  ,year3_month1_day9
+  ,year3_month1_day10
+  ,year3_month1_day11
+  ,year3_month1_day12
+  ,year3_month1_day13
+  ,year3_month1_day14
+  ,year3_month1_day15
+  ,year3_month1_day16
+  ,year3_month1_day17
+  ,year3_month1_day18
+  ,year3_month1_day19
+  ,year3_month1_day20
+  ,year3_month1_day21
+  ,year3_month1_day22
+  ,year3_month1_day23
+  ,year3_month1_day24
+  ,year3_month1_day25
+  ,year3_month1_day26
+  ,year3_month1_day27
+  ,year3_month1_day28
+  ,year3_month1_day29
+  ,year3_month1_day30
+  ,year3_month1_day31
+  ,year3_month2_day1
+  ,year3_month2_day2
+  ,year3_month2_day3
+  ,year3_month2_day4
+  ,year3_month2_day5
+  ,year3_month2_day6
+  ,year3_month2_day7
+  ,year3_month2_day8
+  ,year3_month2_day9
+  ,year3_month2_day10
+  ,year3_month2_day11
+  ,year3_month2_day12
+  ,year3_month2_day13
+  ,year3_month2_day14
+  ,year3_month2_day15
+  ,year3_month2_day16
+  ,year3_month2_day17
+  ,year3_month2_day18
+  ,year3_month2_day19
+  ,year3_month2_day20
+  ,year3_month2_day21
+  ,year3_month2_day22
+  ,year3_month2_day23
+  ,year3_month2_day24
+  ,year3_month2_day25
+  ,year3_month2_day26
+  ,year3_month2_day27
+  ,year3_month2_day28
+  ,year3_month2_day29
+  ,year3_month3_day1
+  ,year3_month3_day2
+  ,year3_month3_day3
+  ,year3_month3_day4
+  ,year3_month3_day5
+  ,year3_month3_day6
+  ,year3_month3_day7
+  ,year3_month3_day8
+  ,year3_month3_day9
+  ,year3_month3_day10
+  ,year3_month3_day11
+  ,year3_month3_day12
+  ,year3_month3_day13
+  ,year3_month3_day14
+  ,year3_month3_day15
+  ,year3_month3_day16
+  ,year3_month3_day17
+  ,year3_month3_day18
+  ,year3_month3_day19
+  ,year3_month3_day20
+  ,year3_month3_day21
+  ,year3_month3_day22
+  ,year3_month3_day23
+  ,year3_month3_day24
+  ,year3_month3_day25
+  ,year3_month3_day26
+  ,year3_month3_day27
+  ,year3_month3_day28
+  ,year3_month3_day29
+  ,year3_month3_day30
+  ,year3_month3_day31
+  ,year3_month4_day1
+  ,year3_month4_day2
+  ,year3_month4_day3
+  ,year3_month4_day4
+  ,year3_month4_day5
+  ,year3_month4_day6
+  ,year3_month4_day7
+  ,year3_month4_day8
+  ,year3_month4_day9
+  ,year3_month4_day10
+  ,year3_month4_day11
+  ,year3_month4_day12
+  ,year3_month4_day13
+  ,year3_month4_day14
+  ,year3_month4_day15
+  ,year3_month4_day16
+  ,year3_month4_day17
+  ,year3_month4_day18
+  ,year3_month4_day19
+  ,year3_month4_day20
+  ,year3_month4_day21
+  ,year3_month4_day22
+  ,year3_month4_day23
+  ,year3_month4_day24
+  ,year3_month4_day25
+  ,year3_month4_day26
+  ,year3_month4_day27
+  ,year3_month4_day28
+  ,year3_month4_day29
+  ,year3_month4_day30
+  ,year3_month5_day1
+  ,year3_month5_day2
+  ,year3_month5_day3
+  ,year3_month5_day4
+  ,year3_month5_day5
+  ,year3_month5_day6
+  ,year3_month5_day7
+  ,year3_month5_day8
+  ,year3_month5_day9
+  ,year3_month5_day10
+  ,year3_month5_day11
+  ,year3_month5_day12
+  ,year3_month5_day13
+  ,year3_month5_day14
+  ,year3_month5_day15
+  ,year3_month5_day16
+  ,year3_month5_day17
+  ,year3_month5_day18
+  ,year3_month5_day19
+  ,year3_month5_day20
+  ,year3_month5_day21
+  ,year3_month5_day22
+  ,year3_month5_day23
+  ,year3_month5_day24
+  ,year3_month5_day25
+  ,year3_month5_day26
+  ,year3_month5_day27
+  ,year3_month5_day28
+  ,year3_month5_day29
+  ,year3_month5_day30
+  ,year3_month5_day31
+  ,year3_month6_day1
+  ,year3_month6_day2
+  ,year3_month6_day3
+  ,year3_month6_day4
+  ,year3_month6_day5
+  ,year3_month6_day6
+  ,year3_month6_day7
+  ,year3_month6_day8
+  ,year3_month6_day9
+  ,year3_month6_day10
+  ,year3_month6_day11
+  ,year3_month6_day12
+  ,year3_month6_day13
+  ,year3_month6_day14
+  ,year3_month6_day15
+  ,year3_month6_day16
+  ,year3_month6_day17
+  ,year3_month6_day18
+  ,year3_month6_day19
+  ,year3_month6_day20
+  ,year3_month6_day21
+  ,year3_month6_day22
+  ,year3_month6_day23
+  ,year3_month6_day24
+  ,year3_month6_day25
+  ,year3_month6_day26
+  ,year3_month6_day27
+  ,year3_month6_day28
+  ,year3_month6_day29
+  ,year3_month6_day30
+  ,year3_month7_day1
+  ,year3_month7_day2
+  ,year3_month7_day3
+  ,year3_month7_day4
+  ,year3_month7_day5
+  ,year3_month7_day6
+  ,year3_month7_day7
+  ,year3_month7_day8
+  ,year3_month7_day9
+  ,year3_month7_day10
+  ,year3_month7_day11
+  ,year3_month7_day12
+  ,year3_month7_day13
+  ,year3_month7_day14
+  ,year3_month7_day15
+  ,year3_month7_day16
+  ,year3_month7_day17
+  ,year3_month7_day18
+  ,year3_month7_day19
+  ,year3_month7_day20
+  ,year3_month7_day21
+  ,year3_month7_day22
+  ,year3_month7_day23
+  ,year3_month7_day24
+  ,year3_month7_day25
+  ,year3_month7_day26
+  ,year3_month7_day27
+  ,year3_month7_day28
+  ,year3_month7_day29
+  ,year3_month7_day30
+  ,year3_month7_day31
+  ,year3_month8_day1
+  ,year3_month8_day2
+  ,year3_month8_day3
+  ,year3_month8_day4
+  ,year3_month8_day5
+  ,year3_month8_day6
+  ,year3_month8_day7
+  ,year3_month8_day8
+  ,year3_month8_day9
+  ,year3_month8_day10
+  ,year3_month8_day11
+  ,year3_month8_day12
+  ,year3_month8_day13
+  ,year3_month8_day14
+  ,year3_month8_day15
+  ,year3_month8_day16
+  ,year3_month8_day17
+  ,year3_month8_day18
+  ,year3_month8_day19
+  ,year3_month8_day20
+  ,year3_month8_day21
+  ,year3_month8_day22
+  ,year3_month8_day23
+  ,year3_month8_day24
+  ,year3_month8_day25
+  ,year3_month8_day26
+  ,year3_month8_day27
+  ,year3_month8_day28
+  ,year3_month8_day29
+  ,year3_month8_day30
+  ,year3_month8_day31
+  ,year3_month9_day1
+  ,year3_month9_day2
+  ,year3_month9_day3
+  ,year3_month9_day4
+  ,year3_month9_day5
+  ,year3_month9_day6
+  ,year3_month9_day7
+  ,year3_month9_day8
+  ,year3_month9_day9
+  ,year3_month9_day10
+  ,year3_month9_day11
+  ,year3_month9_day12
+  ,year3_month9_day13
+  ,year3_month9_day14
+  ,year3_month9_day15
+  ,year3_month9_day16
+  ,year3_month9_day17
+  ,year3_month9_day18
+  ,year3_month9_day19
+  ,year3_month9_day20
+  ,year3_month9_day21
+  ,year3_month9_day22
+  ,year3_month9_day23
+  ,year3_month9_day24
+  ,year3_month9_day25
+  ,year3_month9_day26
+  ,year3_month9_day27
+  ,year3_month9_day28
+  ,year3_month9_day29
+  ,year3_month9_day30
+  ,year3_month10_day1
+  ,year3_month10_day2
+  ,year3_month10_day3
+  ,year3_month10_day4
+  ,year3_month10_day5
+  ,year3_month10_day6
+  ,year3_month10_day7
+  ,year3_month10_day8
+  ,year3_month10_day9
+  ,year3_month10_day10
+  ,year3_month10_day11
+  ,year3_month10_day12
+  ,year3_month10_day13
+  ,year3_month10_day14
+  ,year3_month10_day15
+  ,year3_month10_day16
+  ,year3_month10_day17
+  ,year3_month10_day18
+  ,year3_month10_day19
+  ,year3_month10_day20
+  ,year3_month10_day21
+  ,year3_month10_day22
+  ,year3_month10_day23
+  ,year3_month10_day24
+  ,year3_month10_day25
+  ,year3_month10_day26
+  ,year3_month10_day27
+  ,year3_month10_day28
+  ,year3_month10_day29
+  ,year3_month10_day30
+  ,year3_month10_day31
+  ,year3_month11_day1
+  ,year3_month11_day2
+  ,year3_month11_day3
+  ,year3_month11_day4
+  ,year3_month11_day5
+  ,year3_month11_day6
+  ,year3_month11_day7
+  ,year3_month11_day8
+  ,year3_month11_day9
+  ,year3_month11_day10
+  ,year3_month11_day11
+  ,year3_month11_day12
+  ,year3_month11_day13
+  ,year3_month11_day14
+  ,year3_month11_day15
+  ,year3_month11_day16
+  ,year3_month11_day17
+  ,year3_month11_day18
+  ,year3_month11_day19
+  ,year3_month11_day20
+  ,year3_month11_day21
+  ,year3_month11_day22
+  ,year3_month11_day23
+  ,year3_month11_day24
+  ,year3_month11_day25
+  ,year3_month11_day26
+  ,year3_month11_day27
+  ,year3_month11_day28
+  ,year3_month11_day29
+  ,year3_month11_day30
+  ,year3_month12_day1
+  ,year3_month12_day2
+  ,year3_month12_day3
+  ,year3_month12_day4
+  ,year3_month12_day5
+  ,year3_month12_day6
+  ,year3_month12_day7
+  ,year3_month12_day8
+  ,year3_month12_day9
+  ,year3_month12_day10
+  ,year3_month12_day11
+  ,year3_month12_day12
+  ,year3_month12_day13
+  ,year3_month12_day14
+  ,year3_month12_day15
+  ,year3_month12_day16
+  ,year3_month12_day17
+  ,year3_month12_day18
+  ,year3_month12_day19
+  ,year3_month12_day20
+  ,year3_month12_day21
+  ,year3_month12_day22
+  ,year3_month12_day23
+  ,year3_month12_day24
+  ,year3_month12_day25
+  ,year3_month12_day26
+  ,year3_month12_day27
+  ,year3_month12_day28
+  ,year3_month12_day29
+  ,year3_month12_day30
+  ,year3_month12_day31)
 
 year4_data <- rbind(
   year4_month1_day1
-,year4_month1_day2
-,year4_month1_day3
-,year4_month1_day4
-,year4_month1_day5
-,year4_month1_day6
-,year4_month1_day7
-,year4_month1_day8
-,year4_month1_day9
-,year4_month1_day10
-,year4_month1_day11
-,year4_month1_day12
-,year4_month1_day13
-,year4_month1_day14
-,year4_month1_day15
-,year4_month1_day16
-,year4_month1_day17
-,year4_month1_day18
-,year4_month1_day19
-,year4_month1_day20
-,year4_month1_day21
-,year4_month1_day22
-,year4_month1_day23
-,year4_month1_day24
-,year4_month1_day25
-,year4_month1_day26
-,year4_month1_day27
-,year4_month1_day28
-,year4_month1_day29
-,year4_month1_day30
-,year4_month1_day31
-,year4_month2_day1
-,year4_month2_day2
-,year4_month2_day3
-,year4_month2_day4
-,year4_month2_day5
-,year4_month2_day6
-,year4_month2_day7
-,year4_month2_day8
-,year4_month2_day9
-,year4_month2_day10
-,year4_month2_day11
-,year4_month2_day12
-,year4_month2_day13
-,year4_month2_day14
-,year4_month2_day15
-,year4_month2_day16
-,year4_month2_day17
-,year4_month2_day18
-,year4_month2_day19
-,year4_month2_day20
-,year4_month2_day21
-,year4_month2_day22
-,year4_month2_day23
-,year4_month2_day24
-,year4_month2_day25
-,year4_month2_day26
-,year4_month2_day27
-,year4_month2_day28
-,year4_month3_day1
-,year4_month3_day2
-,year4_month3_day3
-,year4_month3_day4
-,year4_month3_day5
-,year4_month3_day6
-,year4_month3_day7
-,year4_month3_day8
-,year4_month3_day9
-,year4_month3_day10
-,year4_month3_day11
-,year4_month3_day12
-,year4_month3_day13
-,year4_month3_day14
-,year4_month3_day15
-,year4_month3_day16
-,year4_month3_day17
-,year4_month3_day18
-,year4_month3_day19
-,year4_month3_day20
-,year4_month3_day21
-,year4_month3_day22
-,year4_month3_day23
-,year4_month3_day24
-,year4_month3_day25
-,year4_month3_day26
-,year4_month3_day27
-,year4_month3_day28
-,year4_month3_day29
-,year4_month3_day30
-,year4_month3_day31
-,year4_month4_day1
-,year4_month4_day2
-,year4_month4_day3
-,year4_month4_day4
-,year4_month4_day5
-,year4_month4_day6
-,year4_month4_day7
-,year4_month4_day8
-,year4_month4_day9
-,year4_month4_day10
-,year4_month4_day11
-,year4_month4_day12
-,year4_month4_day13
-,year4_month4_day14
-,year4_month4_day15
-,year4_month4_day16
-,year4_month4_day17
-,year4_month4_day18
-,year4_month4_day19
-,year4_month4_day20
-,year4_month4_day21
-,year4_month4_day22
-,year4_month4_day23
-,year4_month4_day24
-,year4_month4_day25
-,year4_month4_day26
-,year4_month4_day27
-,year4_month4_day28
-,year4_month4_day29
-,year4_month4_day30
-,year4_month5_day1
-,year4_month5_day2
-,year4_month5_day3
-,year4_month5_day4
-,year4_month5_day5
-,year4_month5_day6
-,year4_month5_day7
-,year4_month5_day8
-,year4_month5_day9
-,year4_month5_day10
-,year4_month5_day11
-,year4_month5_day12
-,year4_month5_day13
-,year4_month5_day14
-,year4_month5_day15
-,year4_month5_day16
-,year4_month5_day17
-,year4_month5_day18
-,year4_month5_day19
-,year4_month5_day20
-,year4_month5_day21
-,year4_month5_day22
-,year4_month5_day23
-,year4_month5_day24
-,year4_month5_day25
-,year4_month5_day26
-,year4_month5_day27
-,year4_month5_day28
-,year4_month5_day29
-,year4_month5_day30
-,year4_month5_day31
-,year4_month6_day1
-,year4_month6_day2
-,year4_month6_day3
-,year4_month6_day4
-,year4_month6_day5
-,year4_month6_day6
-,year4_month6_day7
-,year4_month6_day8
-,year4_month6_day9
-,year4_month6_day10
-,year4_month6_day11
-,year4_month6_day12
-,year4_month6_day13
-,year4_month6_day14
-,year4_month6_day15
-,year4_month6_day16
-,year4_month6_day17
-,year4_month6_day18
-,year4_month6_day19
-,year4_month6_day20
-,year4_month6_day21
-,year4_month6_day22
-,year4_month6_day23
-,year4_month6_day24
-,year4_month6_day25
-,year4_month6_day26
-,year4_month6_day27
-,year4_month6_day28
-,year4_month6_day29
-,year4_month6_day30
-,year4_month7_day1
-,year4_month7_day2
-,year4_month7_day3
-,year4_month7_day4
-,year4_month7_day5
-,year4_month7_day6
-,year4_month7_day7
-,year4_month7_day8
-,year4_month7_day9
-,year4_month7_day10
-,year4_month7_day11
-,year4_month7_day12
-,year4_month7_day13
-,year4_month7_day14
-,year4_month7_day15
-,year4_month7_day16
-,year4_month7_day17
-,year4_month7_day18
-,year4_month7_day19
-,year4_month7_day20
-,year4_month7_day21
-,year4_month7_day22
-,year4_month7_day23
-,year4_month7_day24
-,year4_month7_day25
-,year4_month7_day26
-,year4_month7_day27
-,year4_month7_day28
-,year4_month7_day29
-,year4_month7_day30
-,year4_month7_day31
-,year4_month8_day1
-,year4_month8_day2
-,year4_month8_day3
-,year4_month8_day4
-,year4_month8_day5
-,year4_month8_day6
-,year4_month8_day7
-,year4_month8_day8
-,year4_month8_day9
-,year4_month8_day10
-,year4_month8_day11
-,year4_month8_day12
-,year4_month8_day13
-,year4_month8_day14
-,year4_month8_day15
-,year4_month8_day16
-,year4_month8_day17
-,year4_month8_day18
-,year4_month8_day19
-,year4_month8_day20
-,year4_month8_day21
-,year4_month8_day22
-,year4_month8_day23
-,year4_month8_day24
-,year4_month8_day25
-,year4_month8_day26
-,year4_month8_day27
-,year4_month8_day28
-,year4_month8_day29
-,year4_month8_day30
-,year4_month8_day31
-,year4_month9_day1
-,year4_month9_day2
-,year4_month9_day3
-,year4_month9_day4
-,year4_month9_day5
-,year4_month9_day6
-,year4_month9_day7
-,year4_month9_day8
-,year4_month9_day9
-,year4_month9_day10
-,year4_month9_day11
-,year4_month9_day12
-,year4_month9_day13
-,year4_month9_day14
-,year4_month9_day15
-,year4_month9_day16
-,year4_month9_day17
-,year4_month9_day18
-,year4_month9_day19
-,year4_month9_day20
-,year4_month9_day21
-,year4_month9_day22
-,year4_month9_day23
-,year4_month9_day24
-,year4_month9_day25
-,year4_month9_day26
-,year4_month9_day27
-,year4_month9_day28
-,year4_month9_day29
-,year4_month9_day30
-,year4_month10_day1
-,year4_month10_day2
-,year4_month10_day3
-,year4_month10_day4
-,year4_month10_day5
-,year4_month10_day6
-,year4_month10_day7
-,year4_month10_day8
-,year4_month10_day9
-,year4_month10_day10
-,year4_month10_day11
-,year4_month10_day12
-,year4_month10_day13
-,year4_month10_day14
-,year4_month10_day15
-,year4_month10_day16
-,year4_month10_day17
-,year4_month10_day18
-,year4_month10_day19
-,year4_month10_day20
-,year4_month10_day21
-,year4_month10_day22
-,year4_month10_day23
-,year4_month10_day24
-,year4_month10_day25
-,year4_month10_day26
-,year4_month10_day27
-,year4_month10_day28
-,year4_month10_day29
-,year4_month10_day30
-,year4_month10_day31
-,year4_month11_day1
-,year4_month11_day2
-,year4_month11_day3
-,year4_month11_day4
-,year4_month11_day5
-,year4_month11_day6
-,year4_month11_day7
-,year4_month11_day8
-,year4_month11_day9
-,year4_month11_day10
-,year4_month11_day11
-,year4_month11_day12
-,year4_month11_day13
-,year4_month11_day14
-,year4_month11_day15
-,year4_month11_day16
-,year4_month11_day17
-,year4_month11_day18
-,year4_month11_day19
-,year4_month11_day20
-,year4_month11_day21
-,year4_month11_day22
-,year4_month11_day23
-,year4_month11_day24
-,year4_month11_day25
-,year4_month11_day26
-,year4_month11_day27
-,year4_month11_day28
-,year4_month11_day29
-,year4_month11_day30
-,year4_month12_day1
-,year4_month12_day2
-,year4_month12_day3
-,year4_month12_day4
-,year4_month12_day5
-,year4_month12_day6
-,year4_month12_day7
-,year4_month12_day8
-,year4_month12_day9
-,year4_month12_day10
-,year4_month12_day11
-,year4_month12_day12
-,year4_month12_day13
-,year4_month12_day14
-,year4_month12_day15
-,year4_month12_day16
-,year4_month12_day17
-,year4_month12_day18
-,year4_month12_day19
-,year4_month12_day20
-,year4_month12_day21
-,year4_month12_day22
-,year4_month12_day23
-,year4_month12_day24
-,year4_month12_day25
-,year4_month12_day26
-,year4_month12_day27
-,year4_month12_day28
-,year4_month12_day29
-,year4_month12_day30
-,year4_month12_day31)
+  ,year4_month1_day2
+  ,year4_month1_day3
+  ,year4_month1_day4
+  ,year4_month1_day5
+  ,year4_month1_day6
+  ,year4_month1_day7
+  ,year4_month1_day8
+  ,year4_month1_day9
+  ,year4_month1_day10
+  ,year4_month1_day11
+  ,year4_month1_day12
+  ,year4_month1_day13
+  ,year4_month1_day14
+  ,year4_month1_day15
+  ,year4_month1_day16
+  ,year4_month1_day17
+  ,year4_month1_day18
+  ,year4_month1_day19
+  ,year4_month1_day20
+  ,year4_month1_day21
+  ,year4_month1_day22
+  ,year4_month1_day23
+  ,year4_month1_day24
+  ,year4_month1_day25
+  ,year4_month1_day26
+  ,year4_month1_day27
+  ,year4_month1_day28
+  ,year4_month1_day29
+  ,year4_month1_day30
+  ,year4_month1_day31
+  ,year4_month2_day1
+  ,year4_month2_day2
+  ,year4_month2_day3
+  ,year4_month2_day4
+  ,year4_month2_day5
+  ,year4_month2_day6
+  ,year4_month2_day7
+  ,year4_month2_day8
+  ,year4_month2_day9
+  ,year4_month2_day10
+  ,year4_month2_day11
+  ,year4_month2_day12
+  ,year4_month2_day13
+  ,year4_month2_day14
+  ,year4_month2_day15
+  ,year4_month2_day16
+  ,year4_month2_day17
+  ,year4_month2_day18
+  ,year4_month2_day19
+  ,year4_month2_day20
+  ,year4_month2_day21
+  ,year4_month2_day22
+  ,year4_month2_day23
+  ,year4_month2_day24
+  ,year4_month2_day25
+  ,year4_month2_day26
+  ,year4_month2_day27
+  ,year4_month2_day28
+  ,year4_month3_day1
+  ,year4_month3_day2
+  ,year4_month3_day3
+  ,year4_month3_day4
+  ,year4_month3_day5
+  ,year4_month3_day6
+  ,year4_month3_day7
+  ,year4_month3_day8
+  ,year4_month3_day9
+  ,year4_month3_day10
+  ,year4_month3_day11
+  ,year4_month3_day12
+  ,year4_month3_day13
+  ,year4_month3_day14
+  ,year4_month3_day15
+  ,year4_month3_day16
+  ,year4_month3_day17
+  ,year4_month3_day18
+  ,year4_month3_day19
+  ,year4_month3_day20
+  ,year4_month3_day21
+  ,year4_month3_day22
+  ,year4_month3_day23
+  ,year4_month3_day24
+  ,year4_month3_day25
+  ,year4_month3_day26
+  ,year4_month3_day27
+  ,year4_month3_day28
+  ,year4_month3_day29
+  ,year4_month3_day30
+  ,year4_month3_day31
+  ,year4_month4_day1
+  ,year4_month4_day2
+  ,year4_month4_day3
+  ,year4_month4_day4
+  ,year4_month4_day5
+  ,year4_month4_day6
+  ,year4_month4_day7
+  ,year4_month4_day8
+  ,year4_month4_day9
+  ,year4_month4_day10
+  ,year4_month4_day11
+  ,year4_month4_day12
+  ,year4_month4_day13
+  ,year4_month4_day14
+  ,year4_month4_day15
+  ,year4_month4_day16
+  ,year4_month4_day17
+  ,year4_month4_day18
+  ,year4_month4_day19
+  ,year4_month4_day20
+  ,year4_month4_day21
+  ,year4_month4_day22
+  ,year4_month4_day23
+  ,year4_month4_day24
+  ,year4_month4_day25
+  ,year4_month4_day26
+  ,year4_month4_day27
+  ,year4_month4_day28
+  ,year4_month4_day29
+  ,year4_month4_day30
+  ,year4_month5_day1
+  ,year4_month5_day2
+  ,year4_month5_day3
+  ,year4_month5_day4
+  ,year4_month5_day5
+  ,year4_month5_day6
+  ,year4_month5_day7
+  ,year4_month5_day8
+  ,year4_month5_day9
+  ,year4_month5_day10
+  ,year4_month5_day11
+  ,year4_month5_day12
+  ,year4_month5_day13
+  ,year4_month5_day14
+  ,year4_month5_day15
+  ,year4_month5_day16
+  ,year4_month5_day17
+  ,year4_month5_day18
+  ,year4_month5_day19
+  ,year4_month5_day20
+  ,year4_month5_day21
+  ,year4_month5_day22
+  ,year4_month5_day23
+  ,year4_month5_day24
+  ,year4_month5_day25
+  ,year4_month5_day26
+  ,year4_month5_day27
+  ,year4_month5_day28
+  ,year4_month5_day29
+  ,year4_month5_day30
+  ,year4_month5_day31
+  ,year4_month6_day1
+  ,year4_month6_day2
+  ,year4_month6_day3
+  ,year4_month6_day4
+  ,year4_month6_day5
+  ,year4_month6_day6
+  ,year4_month6_day7
+  ,year4_month6_day8
+  ,year4_month6_day9
+  ,year4_month6_day10
+  ,year4_month6_day11
+  ,year4_month6_day12
+  ,year4_month6_day13
+  ,year4_month6_day14
+  ,year4_month6_day15
+  ,year4_month6_day16
+  ,year4_month6_day17
+  ,year4_month6_day18
+  ,year4_month6_day19
+  ,year4_month6_day20
+  ,year4_month6_day21
+  ,year4_month6_day22
+  ,year4_month6_day23
+  ,year4_month6_day24
+  ,year4_month6_day25
+  ,year4_month6_day26
+  ,year4_month6_day27
+  ,year4_month6_day28
+  ,year4_month6_day29
+  ,year4_month6_day30
+  ,year4_month7_day1
+  ,year4_month7_day2
+  ,year4_month7_day3
+  ,year4_month7_day4
+  ,year4_month7_day5
+  ,year4_month7_day6
+  ,year4_month7_day7
+  ,year4_month7_day8
+  ,year4_month7_day9
+  ,year4_month7_day10
+  ,year4_month7_day11
+  ,year4_month7_day12
+  ,year4_month7_day13
+  ,year4_month7_day14
+  ,year4_month7_day15
+  ,year4_month7_day16
+  ,year4_month7_day17
+  ,year4_month7_day18
+  ,year4_month7_day19
+  ,year4_month7_day20
+  ,year4_month7_day21
+  ,year4_month7_day22
+  ,year4_month7_day23
+  ,year4_month7_day24
+  ,year4_month7_day25
+  ,year4_month7_day26
+  ,year4_month7_day27
+  ,year4_month7_day28
+  ,year4_month7_day29
+  ,year4_month7_day30
+  ,year4_month7_day31
+  ,year4_month8_day1
+  ,year4_month8_day2
+  ,year4_month8_day3
+  ,year4_month8_day4
+  ,year4_month8_day5
+  ,year4_month8_day6
+  ,year4_month8_day7
+  ,year4_month8_day8
+  ,year4_month8_day9
+  ,year4_month8_day10
+  ,year4_month8_day11
+  ,year4_month8_day12
+  ,year4_month8_day13
+  ,year4_month8_day14
+  ,year4_month8_day15
+  ,year4_month8_day16
+  ,year4_month8_day17
+  ,year4_month8_day18
+  ,year4_month8_day19
+  ,year4_month8_day20
+  ,year4_month8_day21
+  ,year4_month8_day22
+  ,year4_month8_day23
+  ,year4_month8_day24
+  ,year4_month8_day25
+  ,year4_month8_day26
+  ,year4_month8_day27
+  ,year4_month8_day28
+  ,year4_month8_day29
+  ,year4_month8_day30
+  ,year4_month8_day31
+  ,year4_month9_day1
+  ,year4_month9_day2
+  ,year4_month9_day3
+  ,year4_month9_day4
+  ,year4_month9_day5
+  ,year4_month9_day6
+  ,year4_month9_day7
+  ,year4_month9_day8
+  ,year4_month9_day9
+  ,year4_month9_day10
+  ,year4_month9_day11
+  ,year4_month9_day12
+  ,year4_month9_day13
+  ,year4_month9_day14
+  ,year4_month9_day15
+  ,year4_month9_day16
+  ,year4_month9_day17
+  ,year4_month9_day18
+  ,year4_month9_day19
+  ,year4_month9_day20
+  ,year4_month9_day21
+  ,year4_month9_day22
+  ,year4_month9_day23
+  ,year4_month9_day24
+  ,year4_month9_day25
+  ,year4_month9_day26
+  ,year4_month9_day27
+  ,year4_month9_day28
+  ,year4_month9_day29
+  ,year4_month9_day30
+  ,year4_month10_day1
+  ,year4_month10_day2
+  ,year4_month10_day3
+  ,year4_month10_day4
+  ,year4_month10_day5
+  ,year4_month10_day6
+  ,year4_month10_day7
+  ,year4_month10_day8
+  ,year4_month10_day9
+  ,year4_month10_day10
+  ,year4_month10_day11
+  ,year4_month10_day12
+  ,year4_month10_day13
+  ,year4_month10_day14
+  ,year4_month10_day15
+  ,year4_month10_day16
+  ,year4_month10_day17
+  ,year4_month10_day18
+  ,year4_month10_day19
+  ,year4_month10_day20
+  ,year4_month10_day21
+  ,year4_month10_day22
+  ,year4_month10_day23
+  ,year4_month10_day24
+  ,year4_month10_day25
+  ,year4_month10_day26
+  ,year4_month10_day27
+  ,year4_month10_day28
+  ,year4_month10_day29
+  ,year4_month10_day30
+  ,year4_month10_day31
+  ,year4_month11_day1
+  ,year4_month11_day2
+  ,year4_month11_day3
+  ,year4_month11_day4
+  ,year4_month11_day5
+  ,year4_month11_day6
+  ,year4_month11_day7
+  ,year4_month11_day8
+  ,year4_month11_day9
+  ,year4_month11_day10
+  ,year4_month11_day11
+  ,year4_month11_day12
+  ,year4_month11_day13
+  ,year4_month11_day14
+  ,year4_month11_day15
+  ,year4_month11_day16
+  ,year4_month11_day17
+  ,year4_month11_day18
+  ,year4_month11_day19
+  ,year4_month11_day20
+  ,year4_month11_day21
+  ,year4_month11_day22
+  ,year4_month11_day23
+  ,year4_month11_day24
+  ,year4_month11_day25
+  ,year4_month11_day26
+  ,year4_month11_day27
+  ,year4_month11_day28
+  ,year4_month11_day29
+  ,year4_month11_day30
+  ,year4_month12_day1
+  ,year4_month12_day2
+  ,year4_month12_day3
+  ,year4_month12_day4
+  ,year4_month12_day5
+  ,year4_month12_day6
+  ,year4_month12_day7
+  ,year4_month12_day8
+  ,year4_month12_day9
+  ,year4_month12_day10
+  ,year4_month12_day11
+  ,year4_month12_day12
+  ,year4_month12_day13
+  ,year4_month12_day14
+  ,year4_month12_day15
+  ,year4_month12_day16
+  ,year4_month12_day17
+  ,year4_month12_day18
+  ,year4_month12_day19
+  ,year4_month12_day20
+  ,year4_month12_day21
+  ,year4_month12_day22
+  ,year4_month12_day23
+  ,year4_month12_day24
+  ,year4_month12_day25
+  ,year4_month12_day26
+  ,year4_month12_day27
+  ,year4_month12_day28
+  ,year4_month12_day29
+  ,year4_month12_day30
+  ,year4_month12_day31)
 
 year5_data <- rbind(
   year5_month1_day1
-,year5_month1_day2
-,year5_month1_day3
-,year5_month1_day4
-,year5_month1_day5
-,year5_month1_day6
-,year5_month1_day7
-,year5_month1_day8
-,year5_month1_day9
-,year5_month1_day10
-,year5_month1_day11
-,year5_month1_day12
-,year5_month1_day13
-,year5_month1_day14
-,year5_month1_day15
-,year5_month1_day16
-,year5_month1_day17
-,year5_month1_day18
-,year5_month1_day19
-,year5_month1_day20
-,year5_month1_day21
-,year5_month1_day22
-,year5_month1_day23
-,year5_month1_day24
-,year5_month1_day25
-,year5_month1_day26
-,year5_month1_day27
-,year5_month1_day28
-,year5_month1_day29
-,year5_month1_day30
-,year5_month1_day31
-,year5_month2_day1
-,year5_month2_day2
-,year5_month2_day3
-,year5_month2_day4
-,year5_month2_day5
-,year5_month2_day6
-,year5_month2_day7
-,year5_month2_day8
-,year5_month2_day9
-,year5_month2_day10
-,year5_month2_day11
-,year5_month2_day12
-,year5_month2_day13
-,year5_month2_day14
-,year5_month2_day15
-,year5_month2_day16
-,year5_month2_day17
-,year5_month2_day18
-,year5_month2_day19
-,year5_month2_day20
-,year5_month2_day21
-,year5_month2_day22
-,year5_month2_day23
-,year5_month2_day24
-,year5_month2_day25
-,year5_month2_day26
-,year5_month2_day27
-,year5_month2_day28
-,year5_month3_day1
-,year5_month3_day2
-,year5_month3_day3
-,year5_month3_day4
-,year5_month3_day5
-,year5_month3_day6
-,year5_month3_day7
-,year5_month3_day8
-,year5_month3_day9
-,year5_month3_day10
-,year5_month3_day11
-,year5_month3_day12
-,year5_month3_day13
-,year5_month3_day14
-,year5_month3_day15
-,year5_month3_day16
-,year5_month3_day17
-,year5_month3_day18
-,year5_month3_day19
-,year5_month3_day20
-,year5_month3_day21
-,year5_month3_day22
-,year5_month3_day23
-,year5_month3_day24
-,year5_month3_day25
-,year5_month3_day26
-,year5_month3_day27
-,year5_month3_day28
-,year5_month3_day29
-,year5_month3_day30
-,year5_month3_day31
-,year5_month4_day1
-,year5_month4_day2
-,year5_month4_day3
-,year5_month4_day4
-,year5_month4_day5
-,year5_month4_day6
-,year5_month4_day7
-,year5_month4_day8
-,year5_month4_day9
-,year5_month4_day10
-,year5_month4_day11
-,year5_month4_day12
-,year5_month4_day13
-,year5_month4_day14
-,year5_month4_day15
-,year5_month4_day16
-,year5_month4_day17
-,year5_month4_day18
-,year5_month4_day19
-,year5_month4_day20
-,year5_month4_day21
-,year5_month4_day22
-,year5_month4_day23
-,year5_month4_day24
-,year5_month4_day25
-,year5_month4_day26
-,year5_month4_day27
-,year5_month4_day28
-,year5_month4_day29
-,year5_month4_day30
-,year5_month5_day1
-,year5_month5_day2
-,year5_month5_day3
-,year5_month5_day4
-,year5_month5_day5
-,year5_month5_day6
-,year5_month5_day7
-,year5_month5_day8
-,year5_month5_day9
-,year5_month5_day10
-,year5_month5_day11
-,year5_month5_day12
-,year5_month5_day13
-,year5_month5_day14
-,year5_month5_day15
-,year5_month5_day16
-,year5_month5_day17
-,year5_month5_day18
-,year5_month5_day19
-,year5_month5_day20
-,year5_month5_day21
-,year5_month5_day22
-,year5_month5_day23
-,year5_month5_day24
-,year5_month5_day25
-,year5_month5_day26
-,year5_month5_day27
-,year5_month5_day28
-,year5_month5_day29
-,year5_month5_day30
-,year5_month5_day31
-,year5_month6_day1
-,year5_month6_day2
-,year5_month6_day3
-,year5_month6_day4
-,year5_month6_day5
-,year5_month6_day6
-,year5_month6_day7
-,year5_month6_day8
-,year5_month6_day9
-,year5_month6_day10
-,year5_month6_day11
-,year5_month6_day12
-,year5_month6_day13
-,year5_month6_day14
-,year5_month6_day15
-,year5_month6_day16
-,year5_month6_day17
-,year5_month6_day18
-,year5_month6_day19
-,year5_month6_day20
-,year5_month6_day21
-,year5_month6_day22
-,year5_month6_day23
-,year5_month6_day24
-,year5_month6_day25
-,year5_month6_day26
-,year5_month6_day27
-,year5_month6_day28
-,year5_month6_day29
-,year5_month6_day30
-,year5_month7_day1
-,year5_month7_day2
-,year5_month7_day3
-,year5_month7_day4
-,year5_month7_day5
-,year5_month7_day6
-,year5_month7_day7
-,year5_month7_day8
-,year5_month7_day9
-,year5_month7_day10
-,year5_month7_day11
-,year5_month7_day12
-,year5_month7_day13
-,year5_month7_day14
-,year5_month7_day15
-,year5_month7_day16
-,year5_month7_day17
-,year5_month7_day18
-,year5_month7_day19
-,year5_month7_day20
-,year5_month7_day21
-,year5_month7_day22
-,year5_month7_day23
-,year5_month7_day24
-,year5_month7_day25
-,year5_month7_day26
-,year5_month7_day27
-,year5_month7_day28
-,year5_month7_day29
-,year5_month7_day30
-,year5_month7_day31
-,year5_month8_day1
-,year5_month8_day2
-,year5_month8_day3
-,year5_month8_day4
-,year5_month8_day5
-,year5_month8_day6
-,year5_month8_day7
-,year5_month8_day8
-,year5_month8_day9
-,year5_month8_day10
-,year5_month8_day11
-,year5_month8_day12
-,year5_month8_day13
-,year5_month8_day14
-,year5_month8_day15
-,year5_month8_day16
-,year5_month8_day17
-,year5_month8_day18
-,year5_month8_day19
-,year5_month8_day20
-,year5_month8_day21
-,year5_month8_day22
-,year5_month8_day23
-,year5_month8_day24
-,year5_month8_day25
-,year5_month8_day26
-,year5_month8_day27
-,year5_month8_day28
-,year5_month8_day29
-,year5_month8_day30
-,year5_month8_day31
-,year5_month9_day1
-,year5_month9_day2
-,year5_month9_day3
-,year5_month9_day4
-,year5_month9_day5
-,year5_month9_day6
-,year5_month9_day7
-,year5_month9_day8
-,year5_month9_day9
-,year5_month9_day10
-,year5_month9_day11
-,year5_month9_day12
-,year5_month9_day13
-,year5_month9_day14
-,year5_month9_day15
-,year5_month9_day16
-,year5_month9_day17
-,year5_month9_day18
-,year5_month9_day19
-,year5_month9_day20
-,year5_month9_day21
-,year5_month9_day22
-,year5_month9_day23
-,year5_month9_day24
-,year5_month9_day25
-,year5_month9_day26
-,year5_month9_day27
-,year5_month9_day28
-,year5_month9_day29
-,year5_month9_day30
-,year5_month10_day1
-,year5_month10_day2
-,year5_month10_day3
-,year5_month10_day4
-,year5_month10_day5
-,year5_month10_day6
-,year5_month10_day7
-,year5_month10_day8
-,year5_month10_day9
-,year5_month10_day10
-,year5_month10_day11
-,year5_month10_day12
-,year5_month10_day13
-,year5_month10_day14
-,year5_month10_day15
-,year5_month10_day16
-,year5_month10_day17
-,year5_month10_day18
-,year5_month10_day19
-,year5_month10_day20
-,year5_month10_day21
-,year5_month10_day22
-,year5_month10_day23
-,year5_month10_day24
-,year5_month10_day25
-,year5_month10_day26
-,year5_month10_day27
-,year5_month10_day28
-,year5_month10_day29
-,year5_month10_day30
-,year5_month10_day31
-,year5_month11_day1
-,year5_month11_day2
-,year5_month11_day3
-,year5_month11_day4
-,year5_month11_day5
-,year5_month11_day6
-,year5_month11_day7
-,year5_month11_day8
-,year5_month11_day9
-,year5_month11_day10
-,year5_month11_day11
-,year5_month11_day12
-,year5_month11_day13
-,year5_month11_day14
-,year5_month11_day15
-,year5_month11_day16
-,year5_month11_day17
-,year5_month11_day18
-,year5_month11_day19
-,year5_month11_day20
-,year5_month11_day21
-,year5_month11_day22
-,year5_month11_day23
-,year5_month11_day24
-,year5_month11_day25
-,year5_month11_day26
-,year5_month11_day27
-,year5_month11_day28
-,year5_month11_day29
-,year5_month11_day30
-,year5_month12_day1
-,year5_month12_day2
-,year5_month12_day3
-,year5_month12_day4
-,year5_month12_day5
-,year5_month12_day6
-,year5_month12_day7
-,year5_month12_day8
-,year5_month12_day9
-,year5_month12_day10
-,year5_month12_day11
-,year5_month12_day12
-,year5_month12_day13
-,year5_month12_day14
-,year5_month12_day15
-,year5_month12_day16
-,year5_month12_day17
-,year5_month12_day18
-,year5_month12_day19
-,year5_month12_day20
-,year5_month12_day21
-,year5_month12_day22
-,year5_month12_day23
-,year5_month12_day24
-,year5_month12_day25
-,year5_month12_day26
-,year5_month12_day27
-,year5_month12_day28
-,year5_month12_day29
-,year5_month12_day30
-,year5_month12_day31)
-````
-
-
-```{r}
-new.Beijing.data <- rbind(year1_data, year2_data, year3_data, year4_data, year5_data)
-new.Beijing.data <- as.data.frame(new.Beijing.data)
-```
-
-
-
-
+  ,year5_month1_day2
+  ,year5_month1_day3
+  ,year5_month1_day4
+  ,year5_month1_day5
+  ,year5_month1_day6
+  ,year5_month1_day7
+  ,year5_month1_day8
+  ,year5_month1_day9
+  ,year5_month1_day10
+  ,year5_month1_day11
+  ,year5_month1_day12
+  ,year5_month1_day13
+  ,year5_month1_day14
+  ,year5_month1_day15
+  ,year5_month1_day16
+  ,year5_month1_day17
+  ,year5_month1_day18
+  ,year5_month1_day19
+  ,year5_month1_day20
+  ,year5_month1_day21
+  ,year5_month1_day22
+  ,year5_month1_day23
+  ,year5_month1_day24
+  ,year5_month1_day25
+  ,year5_month1_day26
+  ,year5_month1_day27
+  ,year5_month1_day28
+  ,year5_month1_day29
+  ,year5_month1_day30
+  ,year5_month1_day31
+  ,year5_month2_day1
+  ,year5_month2_day2
+  ,year5_month2_day3
+  ,year5_month2_day4
+  ,year5_month2_day5
+  ,year5_month2_day6
+  ,year5_month2_day7
+  ,year5_month2_day8
+  ,year5_month2_day9
+  ,year5_month2_day10
+  ,year5_month2_day11
+  ,year5_month2_day12
+  ,year5_month2_day13
+  ,year5_month2_day14
+  ,year5_month2_day15
+  ,year5_month2_day16
+  ,year5_month2_day17
+  ,year5_month2_day18
+  ,year5_month2_day19
+  ,year5_month2_day20
+  ,year5_month2_day21
+  ,year5_month2_day22
+  ,year5_month2_day23
+  ,year5_month2_day24
+  ,year5_month2_day25
+  ,year5_month2_day26
+  ,year5_month2_day27
+  ,year5_month2_day28
+  ,year5_month3_day1
+  ,year5_month3_day2
+  ,year5_month3_day3
+  ,year5_month3_day4
+  ,year5_month3_day5
+  ,year5_month3_day6
+  ,year5_month3_day7
+  ,year5_month3_day8
+  ,year5_month3_day9
+  ,year5_month3_day10
+  ,year5_month3_day11
+  ,year5_month3_day12
+  ,year5_month3_day13
+  ,year5_month3_day14
+  ,year5_month3_day15
+  ,year5_month3_day16
+  ,year5_month3_day17
+  ,year5_month3_day18
+  ,year5_month3_day19
+  ,year5_month3_day20
+  ,year5_month3_day21
+  ,year5_month3_day22
+  ,year5_month3_day23
+  ,year5_month3_day24
+  ,year5_month3_day25
+  ,year5_month3_day26
+  ,year5_month3_day27
+  ,year5_month3_day28
+  ,year5_month3_day29
+  ,year5_month3_day30
+  ,year5_month3_day31
+  ,year5_month4_day1
+  ,year5_month4_day2
+  ,year5_month4_day3
+  ,year5_month4_day4
+  ,year5_month4_day5
+  ,year5_month4_day6
+  ,year5_month4_day7
+  ,year5_month4_day8
+  ,year5_month4_day9
+  ,year5_month4_day10
+  ,year5_month4_day11
+  ,year5_month4_day12
+  ,year5_month4_day13
+  ,year5_month4_day14
+  ,year5_month4_day15
+  ,year5_month4_day16
+  ,year5_month4_day17
+  ,year5_month4_day18
+  ,year5_month4_day19
+  ,year5_month4_day20
+  ,year5_month4_day21
+  ,year5_month4_day22
+  ,year5_month4_day23
+  ,year5_month4_day24
+  ,year5_month4_day25
+  ,year5_month4_day26
+  ,year5_month4_day27
+  ,year5_month4_day28
+  ,year5_month4_day29
+  ,year5_month4_day30
+  ,year5_month5_day1
+  ,year5_month5_day2
+  ,year5_month5_day3
+  ,year5_month5_day4
+  ,year5_month5_day5
+  ,year5_month5_day6
+  ,year5_month5_day7
+  ,year5_month5_day8
+  ,year5_month5_day9
+  ,year5_month5_day10
+  ,year5_month5_day11
+  ,year5_month5_day12
+  ,year5_month5_day13
+  ,year5_month5_day14
+  ,year5_month5_day15
+  ,year5_month5_day16
+  ,year5_month5_day17
+  ,year5_month5_day18
+  ,year5_month5_day19
+  ,year5_month5_day20
+  ,year5_month5_day21
+  ,year5_month5_day22
+  ,year5_month5_day23
+  ,year5_month5_day24
+  ,year5_month5_day25
+  ,year5_month5_day26
+  ,year5_month5_day27
+  ,year5_month5_day28
+  ,year5_month5_day29
+  ,year5_month5_day30
+  ,year5_month5_day31
+  ,year5_month6_day1
+  ,year5_month6_day2
+  ,year5_month6_day3
+  ,year5_month6_day4
+  ,year5_month6_day5
+  ,year5_month6_day6
+  ,year5_month6_day7
+  ,year5_month6_day8
+  ,year5_month6_day9
+  ,year5_month6_day10
+  ,year5_month6_day11
+  ,year5_month6_day12
+  ,year5_month6_day13
+  ,year5_month6_day14
+  ,year5_month6_day15
+  ,year5_month6_day16
+  ,year5_month6_day17
+  ,year5_month6_day18
+  ,year5_month6_day19
+  ,year5_month6_day20
+  ,year5_month6_day21
+  ,year5_month6_day22
+  ,year5_month6_day23
+  ,year5_month6_day24
+  ,year5_month6_day25
+  ,year5_month6_day26
+  ,year5_month6_day27
+  ,year5_month6_day28
+  ,year5_month6_day29
+  ,year5_month6_day30
+  ,year5_month7_day1
+  ,year5_month7_day2
+  ,year5_month7_day3
+  ,year5_month7_day4
+  ,year5_month7_day5
+  ,year5_month7_day6
+  ,year5_month7_day7
+  ,year5_month7_day8
+  ,year5_month7_day9
+  ,year5_month7_day10
+  ,year5_month7_day11
+  ,year5_month7_day12
+  ,year5_month7_day13
+  ,year5_month7_day14
+  ,year5_month7_day15
+  ,year5_month7_day16
+  ,year5_month7_day17
+  ,year5_month7_day18
+  ,year5_month7_day19
+  ,year5_month7_day20
+  ,year5_month7_day21
+  ,year5_month7_day22
+  ,year5_month7_day23
+  ,year5_month7_day24
+  ,year5_month7_day25
+  ,year5_month7_day26
+  ,year5_month7_day27
+  ,year5_month7_day28
+  ,year5_month7_day29
+  ,year5_month7_day30
+  ,year5_month7_day31
+  ,year5_month8_day1
+  ,year5_month8_day2
+  ,year5_month8_day3
+  ,year5_month8_day4
+  ,year5_month8_day5
+  ,year5_month8_day6
+  ,year5_month8_day7
+  ,year5_month8_day8
+  ,year5_month8_day9
+  ,year5_month8_day10
+  ,year5_month8_day11
+  ,year5_month8_day12
+  ,year5_month8_day13
+  ,year5_month8_day14
+  ,year5_month8_day15
+  ,year5_month8_day16
+  ,year5_month8_day17
+  ,year5_month8_day18
+  ,year5_month8_day19
+  ,year5_month8_day20
+  ,year5_month8_day21
+  ,year5_month8_day22
+  ,year5_month8_day23
+  ,year5_month8_day24
+  ,year5_month8_day25
+  ,year5_month8_day26
+  ,year5_month8_day27
+  ,year5_month8_day28
+  ,year5_month8_day29
+  ,year5_month8_day30
+  ,year5_month8_day31
+  ,year5_month9_day1
+  ,year5_month9_day2
+  ,year5_month9_day3
+  ,year5_month9_day4
+  ,year5_month9_day5
+  ,year5_month9_day6
+  ,year5_month9_day7
+  ,year5_month9_day8
+  ,year5_month9_day9
+  ,year5_month9_day10
+  ,year5_month9_day11
+  ,year5_month9_day12
+  ,year5_month9_day13
+  ,year5_month9_day14
+  ,year5_month9_day15
+  ,year5_month9_day16
+  ,year5_month9_day17
+  ,year5_month9_day18
+  ,year5_month9_day19
+  ,year5_month9_day20
+  ,year5_month9_day21
+  ,year5_month9_day22
+  ,year5_month9_day23
+  ,year5_month9_day24
+  ,year5_month9_day25
+  ,year5_month9_day26
+  ,year5_month9_day27
+  ,year5_month9_day28
+  ,year5_month9_day29
+  ,year5_month9_day30
+  ,year5_month10_day1
+  ,year5_month10_day2
+  ,year5_month10_day3
+  ,year5_month10_day4
+  ,year5_month10_day5
+  ,year5_month10_day6
+  ,year5_month10_day7
+  ,year5_month10_day8
+  ,year5_month10_day9
+  ,year5_month10_day10
+  ,year5_month10_day11
+  ,year5_month10_day12
+  ,year5_month10_day13
+  ,year5_month10_day14
+  ,year5_month10_day15
+  ,year5_month10_day16
+  ,year5_month10_day17
+  ,year5_month10_day18
+  ,year5_month10_day19
+  ,year5_month10_day20
+  ,year5_month10_day21
+  ,year5_month10_day22
+  ,year5_month10_day23
+  ,year5_month10_day24
+  ,year5_month10_day25
+  ,year5_month10_day26
+  ,year5_month10_day27
+  ,year5_month10_day28
+  ,year5_month10_day29
+  ,year5_month10_day30
+  ,year5_month10_day31
+  ,year5_month11_day1
+  ,year5_month11_day2
+  ,year5_month11_day3
+  ,year5_month11_day4
+  ,year5_month11_day5
+  ,year5_month11_day6
+  ,year5_month11_day7
+  ,year5_month11_day8
+  ,year5_month11_day9
+  ,year5_month11_day10
+  ,year5_month11_day11
+  ,year5_month11_day12
+  ,year5_month11_day13
+  ,year5_month11_day14
+  ,year5_month11_day15
+  ,year5_month11_day16
+  ,year5_month11_day17
+  ,year5_month11_day18
+  ,year5_month11_day19
+  ,year5_month11_day20
+  ,year5_month11_day21
+  ,year5_month11_day22
+  ,year5_month11_day23
+  ,year5_month11_day24
+  ,year5_month11_day25
+  ,year5_month11_day26
+  ,year5_month11_day27
+  ,year5_month11_day28
+  ,year5_month11_day29
+  ,year5_month11_day30
+  ,year5_month12_day1
+  ,year5_month12_day2
+  ,year5_month12_day3
+  ,year5_month12_day4
+  ,year5_month12_day5
+  ,year5_month12_day6
+  ,year5_month12_day7
+  ,year5_month12_day8
+  ,year5_month12_day9
+  ,year5_month12_day10
+  ,year5_month12_day11
+  ,year5_month12_day12
+  ,year5_month12_day13
+  ,year5_month12_day14
+  ,year5_month12_day15
+  ,year5_month12_day16
+  ,year5_month12_day17
+  ,year5_month12_day18
+  ,year5_month12_day19
+  ,year5_month12_day20
+  ,year5_month12_day21
+  ,year5_month12_day22
+  ,year5_month12_day23
+  ,year5_month12_day24
+  ,year5_month12_day25
+  ,year5_month12_day26
+  ,year5_month12_day27
+  ,year5_month12_day28
+  ,year5_month12_day29
+  ,year5_month12_day30
+  ,year5_month12_day31)
