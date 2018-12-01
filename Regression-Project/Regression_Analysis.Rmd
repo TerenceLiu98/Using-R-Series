@@ -24,6 +24,13 @@ Beijing_Data <- read.csv("PRSA_data_2010.1.1-2014.12.31.csv", header = T)
 # Is: Cumulated hours of snow 
 # Ir: Cumulated hours of rain 
 library(dplyr)
+library(zoo)
+library(lars)
+library(ridge)
+library(car)
+library(MASS)
+library(Hmisc)
+library(car)
 ```
 
 ## Data Summary 
@@ -31,6 +38,7 @@ library(dplyr)
 ```{r}
 head(Beijing_Data)
 tail(Beijing_Data)
+cbwd <- Beijing_Data$cbwd
 Beijing_Data <- Beijing_Data[,-c(1,5,10)]
 head(Beijing_Data)
 tail(Beijing_Data)
@@ -3872,7 +3880,7 @@ year5_data <- rbind(
 ,year5_month12_day29
 ,year5_month12_day30
 ,year5_month12_day31)
-````
+```
 
 
 ```{r}
@@ -3881,5 +3889,12 @@ new.Beijing.data <- as.data.frame(new.Beijing.data)
 ```
 
 
+```{r}
+lm1 <- lm(pm2.5~., data = new.Beijing.data)
+```
 
-
+Prediction Computation
+```{r}
+lm.step <- stepAIC(lm1)
+dfp <- predict(lm.step, interval = "prediction")
+```
