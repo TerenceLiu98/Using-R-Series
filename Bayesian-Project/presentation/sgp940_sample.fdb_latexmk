@@ -1,9 +1,9 @@
 # Fdb version 3
-["xdvipdfmx"] 1543034113 "sgp940_sample.xdv" "sgp940_sample.pdf" "sgp940_sample" 1543034114
+["xdvipdfmx"] 1543034113 "sgp940_sample.xdv" "sgp940_sample.pdf" "sgp940_sample" 1543687809
   "sgp940_sample.xdv" 1543034113 97164 b6c0e79b11358e29392afbe6ed32902f "xelatex"
   (generated)
   "sgp940_sample.pdf"
-["xelatex"] 1543034112 "sgp940_sample.tex" "sgp940_sample.xdv" "sgp940_sample" 1543034114
+["xelatex"] 1543034112 "sgp940_sample.tex" "sgp940_sample.xdv" "sgp940_sample" 1543687809
   "/usr/local/texlive/2018/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
   "/usr/local/texlive/2018/texmf-dist/fonts/tfm/adobe/zapfding/pzdr.tfm" 1480098689 1528 f853c4d1b4e0550255e02831fdc8496f ""
   "/usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1480098698 1004 54797486969f23fa377b128694d548df ""
@@ -174,15 +174,15 @@
   "sgp940_sample.aux" 1543034113 5228 4585cd97683bac26c24c124c93e5afe8 ""
   "sgp940_sample.nav" 1543034113 2630 4d206df2b1319fcbe7ac671e78f49d36 ""
   "sgp940_sample.out" 1543034113 285 807fdf600dcf4425d0ece8bea3752196 ""
-  "sgp940_sample.tex" 1543034111 5509 460a415fc782684a82e1d84473dfb61f ""
+  "sgp940_sample.tex" 1543687809 5509 460a415fc782684a82e1d84473dfb61f ""
   "sgp940_sample.toc" 1543034113 279 fdc2e3f2e3690576377628d39102d12a ""
   "sgp940_sample.vrb" 1543034113 217 83a4f5a79bc60cebde5df0f6846697c8 ""
   (generated)
-  "sgp940_sample.log"
   "sgp940_sample.snm"
-  "sgp940_sample.aux"
-  "sgp940_sample.xdv"
-  "sgp940_sample.nav"
-  "sgp940_sample.toc"
-  "sgp940_sample.out"
   "sgp940_sample.vrb"
+  "sgp940_sample.log"
+  "sgp940_sample.toc"
+  "sgp940_sample.nav"
+  "sgp940_sample.out"
+  "sgp940_sample.xdv"
+  "sgp940_sample.aux"

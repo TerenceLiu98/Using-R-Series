@@ -28,8 +28,8 @@ boxTidwell.default <- function(y, x1, x2=NULL, max.iter=25, tol=.001, verbose=FA
 	var.names <- if(is.null(colnames(x1))) seq(length.out=ncol(x1)) else colnames(x1)
 	k.x1 <- length(var.names)
 	x.log.x <- x1*log(x1)
-	mod.1 <- lm(y ~ cbind(x1, x2), ...)
-	mod.2 <- lm(y ~ cbind(x.log.x, x1, x2), ...)
+	mod.1 <- lrm(y ~ cbind(x1, x2), ...)
+	mod.2 <- lrm(y ~ cbind(x.log.x, x1, x2), ...)
 	seb <- sqrt(diag(vcov(mod.2)))
 	which.coefs <- 2:(1 + k.x1)
 	t.vals <- ((coefficients(mod.2))/seb)[which.coefs]
@@ -41,8 +41,8 @@ boxTidwell.default <- function(y, x1, x2=NULL, max.iter=25, tol=.001, verbose=FA
 		iter <- iter+1
 		x1.p <- x1^matrix(powers, nrow=nrow(x1), ncol=ncol(x1), byrow=TRUE)
 		x.log.x <- x1.p*log(x1.p)
-		mod.1 <- lm.fit(cbind(1, x1.p, x2), y, ...)
-		mod.2 <- lm.fit(cbind(1, x.log.x, x1.p, x2), y, ...)
+		mod.1 <- lrm.fit(cbind(1, x1.p, x2), y, ...)
+		mod.2 <- lrm.fit(cbind(1, x.log.x, x1.p, x2), y, ...)
 		last.powers <- powers
 		powers <- powers * (1 + coefficients(mod.2)[which.coefs]/coefficients(mod.1)[which.coefs])
 		if (verbose) cat(" iter =", iter, "    powers =", powers, "\n")
