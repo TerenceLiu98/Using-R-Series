@@ -1,0 +1,111 @@
+---
+title: "regression_new"
+author: "Terence Lau"
+date: "12/5/2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(VIM) # function aggr: visualize the missing value 
+library(tidyverse) #To use ggplot2, tidyr, dplyr
+library(plotly) #To create interactive plots
+library(DT) #To display the data
+library(magrittr) #To pipe operators
+library(ggplot2) #To make and customize quickly plots
+library(devtools) #To Make Developing R Packages Easier
+```
+
+## Data Preparation 
+
+The data set we chosen is from the UCI Machine Learning Repository datasets, it has collected BEijing PM2.5 data from 2010 to 2014 
+```{r}
+beijing.data <- read.csv("PRSA_data_2010.1.1-2014.12.31.csv", header = T) # load the data set
+head(beijing.data)
+tail(beijing.data)
+
+sum(is.na(beijing.data))
+aggr(beijing.data, prop = T, number = T)
+
+i <- NULL
+j <- 1
+compare_value_j <- 1
+for ( i in 2010:2014){
+  data_i <- beijing.data[beijing.data$year == i,]
+  if (compare_value_j < length(na.omit(data_i$pm2.5))){
+    compare_value_j <- length(na.omit(data_i$pm2.5))
+    j <- j + 1
+  }
+  print(j + 2009) # the year will least missing value 
+}
+beijing.data <- as_tibble(beijing.data)
+```
+
+In this data sets, its collection is based on hours, and from the original data set we can see that there are lots of missing value. We need to delete the missing data. In order to reduce the impact of deleting missing values on data, we select the data of the fourth year, namely 2013. 
+
+```{r, add the season column}
+i <- NULL
+for ( i in 1:length(beijing.data$No)){
+  if(beijing.data$month[i] == 1){
+    beijing.data$season[i] <- 1
+  }
+  if(beijing.data$month[i] == 2){
+    beijing.data$season[i] <- 1
+  }
+  if(beijing.data$month[i] == 3){
+    beijing.data$season[i] <- 1
+  }
+  if(beijing.data$month[i] == 4){
+    beijing.data$season[i] <- 2
+  }
+  if(beijing.data$month[i] == 5){
+    beijing.data$season[i] <- 2
+  }
+  if(beijing.data$month[i] == 6){
+    beijing.data$season[i] <- 2
+  }
+  if(beijing.data$month[i] == 7){
+    beijing.data$season[i] <- 3
+  }
+  if(beijing.data$month[i] == 8){
+    beijing.data$season[i] <- 3
+  }
+  if(beijing.data$month[i] == 9){
+    beijing.data$season[i] <- 3
+  }
+  if(beijing.data$month[i] == 10){
+    beijing.data$season[i] <- 4
+  }
+  if(beijing.data$month[i] == 11){
+    beijing.data$season[i] <- 4
+  }
+  if(beijing.data$month[i] == 12){
+    beijing.data$season[i] <- 4
+  }
+}
+head(beijing.data)
+```
+## Data cleaning 
+
+```{r}
+cleanbeijing <-select(beijing.data,c("year","month","day","pm2.5","hour","season", "TEMP","PRES", "cbwd","Iws")) %>% 
+  na.omit() %>% 
+  filter(year >= 2013) %>%
+  unite(timebyday, c("year", "month", "day"), remove = FALSE, sep = "-")
+datatable(cleanbeijing, option = list(scrollX = TRUE))
+```
+
+# PM2.5 changes by season
+```{r}
+cleanbeijing$quality <- ifelse(cleanbeijing$pm2.5 <= 50, "good", 
+                                 ifelse(cleanbeijing$pm2.5 <= 100, "moderate", 
+                                        ifelse(cleanbeijing$pm2.5 <= 300, "unhealthy", "posisonous")))
+seasonpm<- (cleanbeijing) %>%
+  group_by(season,quality)%>%
+  count()%>%
+  as_tibble()
+
+ggplot(seasonpm, aes(x = factor(season) , y = n,fill = quality)) + geom_bar(stat = 'identity', position = 'fill')+
+  theme(legend.title = element_blank())
+
+```

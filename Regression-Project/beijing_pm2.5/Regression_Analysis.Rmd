@@ -40,8 +40,7 @@ head(Beijing_Data)
 tail(Beijing_Data)
 cbwd <- Beijing_Data$cbwd
 Beijing_Data <- Beijing_Data[,-c(1,5,10)]
-head(Beijing_Data)
-tail(Beijing_Data)
+
 ```
 
 There are $12$ variables in this data set: 
@@ -80,6 +79,7 @@ head(Beijing_Data, 25)
 Beijing_Data$pm2.5 <- na.approx(Beijing_Data$pm2.5, na.rm = F, rule = 2)
 Beijing_Data$pm2.5[1:24] <- Beijing_Data$pm2.5[25]
 head(Beijing_Data, 26)
+tail(Beijing_Data)
 ```
 
 Since this data set is a time series related data set, and in this data set, the it has collected the pm2.5 for every hour. To reduce the the correlation between time and the pm2.5 data, we use the average of values of one day's data. Our model is linear regression. We assume that 
@@ -351,36 +351,36 @@ year1_month8_day30 <- apply(filter(Beijing_Data, year == 2010, month == 8, day =
 year1_month8_day31 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 31, ),2, mean)
 
 # Year One SEP Data
-year1_month9_day1 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 1, ),2, mean)
-year1_month9_day2 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 2, ),2, mean)
-year1_month9_day3 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 3, ),2, mean)
-year1_month9_day4 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 4, ),2, mean)
-year1_month9_day5 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 5, ),2, mean)
-year1_month9_day6 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 6, ),2, mean)
-year1_month9_day7 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 7, ),2, mean)
-year1_month9_day8 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 8, ),2, mean)
-year1_month9_day9 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 9, ),2, mean)
-year1_month9_day10 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 10, ),2, mean)
-year1_month9_day11 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 11, ),2, mean)
-year1_month9_day12 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 12, ),2, mean)
-year1_month9_day13 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 13, ),2, mean)
-year1_month9_day14 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 14, ),2, mean)
-year1_month9_day15 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 15, ),2, mean)
-year1_month9_day16 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 16, ),2, mean)
-year1_month9_day17 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 17, ),2, mean)
-year1_month9_day18 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 18, ),2, mean)
-year1_month9_day19 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 19, ),2, mean)
-year1_month9_day20 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 20, ),2, mean)
-year1_month9_day21 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 21, ),2, mean)
-year1_month9_day22 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 22, ),2, mean)
-year1_month9_day23 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 23, ),2, mean)
-year1_month9_day24 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 24, ),2, mean)
-year1_month9_day25 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 25, ),2, mean)
-year1_month9_day26 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 26, ),2, mean)
-year1_month9_day27 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 27, ),2, mean)
-year1_month9_day28 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 28, ),2, mean)
-year1_month9_day29 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 29, ),2, mean)
-year1_month9_day30 <- apply(filter(Beijing_Data, year == 2010, month == 8, day == 30, ),2, mean)
+year1_month9_day1 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 1, ),2, mean)
+year1_month9_day2 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 2, ),2, mean)
+year1_month9_day3 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 3, ),2, mean)
+year1_month9_day4 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 4, ),2, mean)
+year1_month9_day5 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 5, ),2, mean)
+year1_month9_day6 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 6, ),2, mean)
+year1_month9_day7 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 7, ),2, mean)
+year1_month9_day8 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 8, ),2, mean)
+year1_month9_day9 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 9, ),2, mean)
+year1_month9_day10 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 10, ),2, mean)
+year1_month9_day11 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 11, ),2, mean)
+year1_month9_day12 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 12, ),2, mean)
+year1_month9_day13 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 13, ),2, mean)
+year1_month9_day14 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 14, ),2, mean)
+year1_month9_day15 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 15, ),2, mean)
+year1_month9_day16 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 16, ),2, mean)
+year1_month9_day17 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 17, ),2, mean)
+year1_month9_day18 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 18, ),2, mean)
+year1_month9_day19 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 19, ),2, mean)
+year1_month9_day20 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 20, ),2, mean)
+year1_month9_day21 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 21, ),2, mean)
+year1_month9_day22 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 22, ),2, mean)
+year1_month9_day23 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 23, ),2, mean)
+year1_month9_day24 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 24, ),2, mean)
+year1_month9_day25 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 25, ),2, mean)
+year1_month9_day26 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 26, ),2, mean)
+year1_month9_day27 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 27, ),2, mean)
+year1_month9_day28 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 28, ),2, mean)
+year1_month9_day29 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 29, ),2, mean)
+year1_month9_day30 <- apply(filter(Beijing_Data, year == 2010, month == 9, day == 30, ),2, mean)
 
 # Year One Oct Data
 year1_month10_day1 <- apply(filter(Beijing_Data, year == 2010, month == 10, day == 1, ),2, mean)
@@ -742,36 +742,36 @@ year2_month8_day30 <- apply(filter(Beijing_Data, year == 2011, month == 8, day =
 year2_month8_day31 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 31, ),2, mean)
 
 # Year Two SEP Data
-year2_month9_day1 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 1, ),2, mean)
-year2_month9_day2 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 2, ),2, mean)
-year2_month9_day3 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 3, ),2, mean)
-year2_month9_day4 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 4, ),2, mean)
-year2_month9_day5 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 5, ),2, mean)
-year2_month9_day6 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 6, ),2, mean)
-year2_month9_day7 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 7, ),2, mean)
-year2_month9_day8 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 8, ),2, mean)
-year2_month9_day9 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 9, ),2, mean)
-year2_month9_day10 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 10, ),2, mean)
-year2_month9_day11 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 11, ),2, mean)
-year2_month9_day12 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 12, ),2, mean)
-year2_month9_day13 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 13, ),2, mean)
-year2_month9_day14 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 14, ),2, mean)
-year2_month9_day15 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 15, ),2, mean)
-year2_month9_day16 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 16, ),2, mean)
-year2_month9_day17 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 17, ),2, mean)
-year2_month9_day18 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 18, ),2, mean)
-year2_month9_day19 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 19, ),2, mean)
-year2_month9_day20 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 20, ),2, mean)
-year2_month9_day21 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 21, ),2, mean)
-year2_month9_day22 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 22, ),2, mean)
-year2_month9_day23 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 23, ),2, mean)
-year2_month9_day24 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 24, ),2, mean)
-year2_month9_day25 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 25, ),2, mean)
-year2_month9_day26 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 26, ),2, mean)
-year2_month9_day27 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 27, ),2, mean)
-year2_month9_day28 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 28, ),2, mean)
-year2_month9_day29 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 29, ),2, mean)
-year2_month9_day30 <- apply(filter(Beijing_Data, year == 2011, month == 8, day == 30, ),2, mean)
+year2_month9_day1 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 1, ),2, mean)
+year2_month9_day2 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 2, ),2, mean)
+year2_month9_day3 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 3, ),2, mean)
+year2_month9_day4 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 4, ),2, mean)
+year2_month9_day5 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 5, ),2, mean)
+year2_month9_day6 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 6, ),2, mean)
+year2_month9_day7 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 7, ),2, mean)
+year2_month9_day8 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 8, ),2, mean)
+year2_month9_day9 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 9, ),2, mean)
+year2_month9_day10 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 10, ),2, mean)
+year2_month9_day11 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 11, ),2, mean)
+year2_month9_day12 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 12, ),2, mean)
+year2_month9_day13 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 13, ),2, mean)
+year2_month9_day14 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 14, ),2, mean)
+year2_month9_day15 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 15, ),2, mean)
+year2_month9_day16 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 16, ),2, mean)
+year2_month9_day17 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 17, ),2, mean)
+year2_month9_day18 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 18, ),2, mean)
+year2_month9_day19 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 19, ),2, mean)
+year2_month9_day20 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 20, ),2, mean)
+year2_month9_day21 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 21, ),2, mean)
+year2_month9_day22 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 22, ),2, mean)
+year2_month9_day23 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 23, ),2, mean)
+year2_month9_day24 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 24, ),2, mean)
+year2_month9_day25 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 25, ),2, mean)
+year2_month9_day26 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 26, ),2, mean)
+year2_month9_day27 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 27, ),2, mean)
+year2_month9_day28 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 28, ),2, mean)
+year2_month9_day29 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 29, ),2, mean)
+year2_month9_day30 <- apply(filter(Beijing_Data, year == 2011, month == 9, day == 30, ),2, mean)
 
 # Year Two Oct Data 
 year2_month10_day1 <- apply(filter(Beijing_Data, year == 2011, month == 10, day == 1, ),2, mean)
@@ -1133,36 +1133,36 @@ year3_month8_day30 <- apply(filter(Beijing_Data, year == 2012, month == 8, day =
 year3_month8_day31 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 31, ),2, mean)
 
 # Year ThreeSEP Data
-year3_month9_day1 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 1, ),2, mean)
-year3_month9_day2 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 2, ),2, mean)
-year3_month9_day3 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 3, ),2, mean)
-year3_month9_day4 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 4, ),2, mean)
-year3_month9_day5 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 5, ),2, mean)
-year3_month9_day6 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 6, ),2, mean)
-year3_month9_day7 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 7, ),2, mean)
-year3_month9_day8 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 8, ),2, mean)
-year3_month9_day9 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 9, ),2, mean)
-year3_month9_day10 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 10, ),2, mean)
-year3_month9_day11 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 11, ),2, mean)
-year3_month9_day12 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 12, ),2, mean)
-year3_month9_day13 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 13, ),2, mean)
-year3_month9_day14 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 14, ),2, mean)
-year3_month9_day15 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 15, ),2, mean)
-year3_month9_day16 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 16, ),2, mean)
-year3_month9_day17 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 17, ),2, mean)
-year3_month9_day18 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 18, ),2, mean)
-year3_month9_day19 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 19, ),2, mean)
-year3_month9_day20 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 20, ),2, mean)
-year3_month9_day21 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 21, ),2, mean)
-year3_month9_day22 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 22, ),2, mean)
-year3_month9_day23 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 23, ),2, mean)
-year3_month9_day24 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 24, ),2, mean)
-year3_month9_day25 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 25, ),2, mean)
-year3_month9_day26 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 26, ),2, mean)
-year3_month9_day27 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 27, ),2, mean)
-year3_month9_day28 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 28, ),2, mean)
-year3_month9_day29 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 29, ),2, mean)
-year3_month9_day30 <- apply(filter(Beijing_Data, year == 2012, month == 8, day == 30, ),2, mean)
+year3_month9_day1 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 1, ),2, mean)
+year3_month9_day2 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 2, ),2, mean)
+year3_month9_day3 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 3, ),2, mean)
+year3_month9_day4 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 4, ),2, mean)
+year3_month9_day5 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 5, ),2, mean)
+year3_month9_day6 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 6, ),2, mean)
+year3_month9_day7 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 7, ),2, mean)
+year3_month9_day8 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 8, ),2, mean)
+year3_month9_day9 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 9, ),2, mean)
+year3_month9_day10 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 10, ),2, mean)
+year3_month9_day11 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 11, ),2, mean)
+year3_month9_day12 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 12, ),2, mean)
+year3_month9_day13 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 13, ),2, mean)
+year3_month9_day14 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 14, ),2, mean)
+year3_month9_day15 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 15, ),2, mean)
+year3_month9_day16 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 16, ),2, mean)
+year3_month9_day17 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 17, ),2, mean)
+year3_month9_day18 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 18, ),2, mean)
+year3_month9_day19 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 19, ),2, mean)
+year3_month9_day20 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 20, ),2, mean)
+year3_month9_day21 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 21, ),2, mean)
+year3_month9_day22 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 22, ),2, mean)
+year3_month9_day23 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 23, ),2, mean)
+year3_month9_day24 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 24, ),2, mean)
+year3_month9_day25 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 25, ),2, mean)
+year3_month9_day26 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 26, ),2, mean)
+year3_month9_day27 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 27, ),2, mean)
+year3_month9_day28 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 28, ),2, mean)
+year3_month9_day29 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 29, ),2, mean)
+year3_month9_day30 <- apply(filter(Beijing_Data, year == 2012, month == 9, day == 30, ),2, mean)
 
 # Year ThreeOct Data 
 year3_month10_day1 <- apply(filter(Beijing_Data, year == 2012, month == 10, day == 1, ),2, mean)
@@ -1523,36 +1523,36 @@ year4_month8_day30 <- apply(filter(Beijing_Data, year == 2013, month == 8, day =
 year4_month8_day31 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 31, ),2, mean)
 
 # Year Four SEP Data
-year4_month9_day1 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 1, ),2, mean)
-year4_month9_day2 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 2, ),2, mean)
-year4_month9_day3 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 3, ),2, mean)
-year4_month9_day4 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 4, ),2, mean)
-year4_month9_day5 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 5, ),2, mean)
-year4_month9_day6 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 6, ),2, mean)
-year4_month9_day7 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 7, ),2, mean)
-year4_month9_day8 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 8, ),2, mean)
-year4_month9_day9 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 9, ),2, mean)
-year4_month9_day10 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 10, ),2, mean)
-year4_month9_day11 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 11, ),2, mean)
-year4_month9_day12 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 12, ),2, mean)
-year4_month9_day13 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 13, ),2, mean)
-year4_month9_day14 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 14, ),2, mean)
-year4_month9_day15 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 15, ),2, mean)
-year4_month9_day16 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 16, ),2, mean)
-year4_month9_day17 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 17, ),2, mean)
-year4_month9_day18 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 18, ),2, mean)
-year4_month9_day19 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 19, ),2, mean)
-year4_month9_day20 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 20, ),2, mean)
-year4_month9_day21 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 21, ),2, mean)
-year4_month9_day22 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 22, ),2, mean)
-year4_month9_day23 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 23, ),2, mean)
-year4_month9_day24 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 24, ),2, mean)
-year4_month9_day25 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 25, ),2, mean)
-year4_month9_day26 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 26, ),2, mean)
-year4_month9_day27 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 27, ),2, mean)
-year4_month9_day28 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 28, ),2, mean)
-year4_month9_day29 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 29, ),2, mean)
-year4_month9_day30 <- apply(filter(Beijing_Data, year == 2013, month == 8, day == 30, ),2, mean)
+year4_month9_day1 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 1, ),2, mean)
+year4_month9_day2 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 2, ),2, mean)
+year4_month9_day3 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 3, ),2, mean)
+year4_month9_day4 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 4, ),2, mean)
+year4_month9_day5 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 5, ),2, mean)
+year4_month9_day6 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 6, ),2, mean)
+year4_month9_day7 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 7, ),2, mean)
+year4_month9_day8 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 8, ),2, mean)
+year4_month9_day9 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 9, ),2, mean)
+year4_month9_day10 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 10, ),2, mean)
+year4_month9_day11 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 11, ),2, mean)
+year4_month9_day12 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 12, ),2, mean)
+year4_month9_day13 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 13, ),2, mean)
+year4_month9_day14 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 14, ),2, mean)
+year4_month9_day15 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 15, ),2, mean)
+year4_month9_day16 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 16, ),2, mean)
+year4_month9_day17 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 17, ),2, mean)
+year4_month9_day18 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 18, ),2, mean)
+year4_month9_day19 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 19, ),2, mean)
+year4_month9_day20 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 20, ),2, mean)
+year4_month9_day21 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 21, ),2, mean)
+year4_month9_day22 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 22, ),2, mean)
+year4_month9_day23 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 23, ),2, mean)
+year4_month9_day24 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 24, ),2, mean)
+year4_month9_day25 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 25, ),2, mean)
+year4_month9_day26 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 26, ),2, mean)
+year4_month9_day27 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 27, ),2, mean)
+year4_month9_day28 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 28, ),2, mean)
+year4_month9_day29 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 29, ),2, mean)
+year4_month9_day30 <- apply(filter(Beijing_Data, year == 2013, month == 9, day == 30, ),2, mean)
 
 # Year Four Oct Data
 year4_month10_day1 <- apply(filter(Beijing_Data, year == 2013, month == 10, day == 1, ),2, mean)
@@ -1914,36 +1914,36 @@ year5_month8_day30 <- apply(filter(Beijing_Data, year == 2014, month == 8, day =
 year5_month8_day31 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 31, ),2, mean)
 
 # Year Five SEP Data
-year5_month9_day1 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 1, ),2, mean)
-year5_month9_day2 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 2, ),2, mean)
-year5_month9_day3 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 3, ),2, mean)
-year5_month9_day4 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 4, ),2, mean)
-year5_month9_day5 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 5, ),2, mean)
-year5_month9_day6 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 6, ),2, mean)
-year5_month9_day7 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 7, ),2, mean)
-year5_month9_day8 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 8, ),2, mean)
-year5_month9_day9 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 9, ),2, mean)
-year5_month9_day10 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 10, ),2, mean)
-year5_month9_day11 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 11, ),2, mean)
-year5_month9_day12 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 12, ),2, mean)
-year5_month9_day13 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 13, ),2, mean)
-year5_month9_day14 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 14, ),2, mean)
-year5_month9_day15 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 15, ),2, mean)
-year5_month9_day16 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 16, ),2, mean)
-year5_month9_day17 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 17, ),2, mean)
-year5_month9_day18 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 18, ),2, mean)
-year5_month9_day19 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 19, ),2, mean)
-year5_month9_day20 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 20, ),2, mean)
-year5_month9_day21 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 21, ),2, mean)
-year5_month9_day22 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 22, ),2, mean)
-year5_month9_day23 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 23, ),2, mean)
-year5_month9_day24 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 24, ),2, mean)
-year5_month9_day25 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 25, ),2, mean)
-year5_month9_day26 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 26, ),2, mean)
-year5_month9_day27 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 27, ),2, mean)
-year5_month9_day28 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 28, ),2, mean)
-year5_month9_day29 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 29, ),2, mean)
-year5_month9_day30 <- apply(filter(Beijing_Data, year == 2014, month == 8, day == 30, ),2, mean)
+year5_month9_day1 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 1, ),2, mean)
+year5_month9_day2 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 2, ),2, mean)
+year5_month9_day3 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 3, ),2, mean)
+year5_month9_day4 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 4, ),2, mean)
+year5_month9_day5 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 5, ),2, mean)
+year5_month9_day6 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 6, ),2, mean)
+year5_month9_day7 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 7, ),2, mean)
+year5_month9_day8 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 8, ),2, mean)
+year5_month9_day9 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 9, ),2, mean)
+year5_month9_day10 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 10, ),2, mean)
+year5_month9_day11 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 11, ),2, mean)
+year5_month9_day12 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 12, ),2, mean)
+year5_month9_day13 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 13, ),2, mean)
+year5_month9_day14 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 14, ),2, mean)
+year5_month9_day15 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 15, ),2, mean)
+year5_month9_day16 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 16, ),2, mean)
+year5_month9_day17 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 17, ),2, mean)
+year5_month9_day18 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 18, ),2, mean)
+year5_month9_day19 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 19, ),2, mean)
+year5_month9_day20 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 20, ),2, mean)
+year5_month9_day21 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 21, ),2, mean)
+year5_month9_day22 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 22, ),2, mean)
+year5_month9_day23 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 23, ),2, mean)
+year5_month9_day24 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 24, ),2, mean)
+year5_month9_day25 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 25, ),2, mean)
+year5_month9_day26 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 26, ),2, mean)
+year5_month9_day27 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 27, ),2, mean)
+year5_month9_day28 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 28, ),2, mean)
+year5_month9_day29 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 29, ),2, mean)
+year5_month9_day30 <- apply(filter(Beijing_Data, year == 2014, month == 9, day == 30, ),2, mean)
 
 
 # Year Five Oct Data 
@@ -3889,44 +3889,57 @@ year5_data <- rbind(
 
 ```{r}
 new.Beijing.data <- rbind(year1_data, year2_data, year3_data, year4_data, year5_data)
-
 new.Beijing.data <- as.data.frame(new.Beijing.data)
+new.Beijing.data <- new.Beijing.data[,-(1:2)]
+norm.Beijing.data <- scale(new.Beijing.data)
+norm.Beijing.data <- as.data.frame(norm.Beijing.data)
+new.Beijing.data$day <- seq(1, 1826, by = 1)
 ```
 
+Data visualize
+
+```{r}
+i <- NULL
+for(i in 4:10){
+  hist(new.Beijing.data[,i],freq = F, col = "blue")
+}
+names(new.Beijing.data[,4:10])
+```
 
 ```{r}
 lm1 <- lm(pm2.5~., data = new.Beijing.data) # full model
 par(mfrow=c(2,2))
 plot(lm1)
-names(new.Beijing.data)
+summary(lm1)
 ```
 
 Since the Q-Q plot's line has a curling up 's tail, so we can note that the distribution is right skew. We can do the numerical transformation 
 
 ```{r}
-lm.formula <- "log(pm2.5)~year + month + day + DEWP + TEMP + PRES + Iws + Is^2 + Ir^2"
-lm2 <- lm(as.formula(lm.formula), data = new.Beijing.data, interval = "confidence") # take the natural logarithm to PM2.5 data
+lm2 <- lm(log(pm2.5)~year + month + day + DEWP + TEMP + PRES + Iws + Is + Ir, data = new.Beijing.data) # take the natural logarithm to PM2.5 data
 par(mfrow=c(2,2))
 plot(lm2)
 ```
+
+## Model Diagnostics
+
+To chack if the model is useful, we have to verify and diagnose it:
+1. independent variables and dependent variable have a linear correlation;
+2. the residuasl are following the normal distribution;
+3. the residuals' variance are the same. (homoscedasticity);
+4. residuals are i.i.d..
+
 ```{r}
 lm.step <- step(lm2) # AIC selection 
-summary(lm2)
-summary(lm.step)
+par(mfrow= c(2,2))
+plot(lm.step)
 ```
-
-```{R}
-# AIC BIC- backwards
-lm.AIC <- step(lm2,direction="backward", data = new.Beijing.data)
-lm.BIC <- step(lm2,direction="backward", data = new.Beijing.data, k=log(1826))
-
-#forward selection
-lm.forward <- lm(pm2.5~.,data = new.Beijing.data)
+```{r}
+lm.norm <- lm(log(pm2.5)~., data = norm.Beijing.data)
+summary(lm.norm)
+par(mfrow=c(2,2))
+plot(lm.norm)
 ```
-
-
-
-
 
 
 
