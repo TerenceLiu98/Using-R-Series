@@ -1,0 +1,557 @@
+---
+title: "R-Weather prediction"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+## 读取中国的数据
+## 全国县级城市201512实时天气数据(预处理后).csv
+## 该数据集包括全国县级城市在2015年12月每个监测点的实时监测数据
+## 加载包
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(climatol)
+library(corrplot)
+library(GGally)
+library(REmap)
+library(leaflet)
+library(viridis)
+library(cluster)
+library(fpc)
+library(gridExtra)
+library(readxl)
+library(stringr)
+library(zoo)
+library(RColorBrewer)
+library(forecast)
+library(ggfortify)
+library(tseries)
+library(lubridate)
+
+```
+## 数据获取
+
+```{r}
+library(rvest)
+library(data.table)
+library(plyr)
+
+fetchData <- function(city, date){
+  
+  baseUrl <- 'http://lishi.tianqi.com/'
+  Url <- paste(baseUrl, city, '/', date, '.html', sep = '')
+  
+  content <- Url %>%
+    read_html(encoding='GBK') %>%
+    html_nodes('div.tqtongji2') %>%
+    html_nodes("ul") %>%
+    html_text() %>%
+    strsplit("\\s{4,}")
+  
+  content <- ldply(content[-1])
+  names(content) <- c('date', 'highDegree', 'lowDegree', 'weather', 'windDirection', 'windForce')
+  return(content) 
+}
+
+```
+## 对天气数据的可视化
+
+### 折线图
+
+```{r}
+## 读取数据
+weather <- read_csv("全国县级城市201512实时天气数据(预处理后).csv")
+chinaweather <- data.frame(weather)
+## 查看我们的数据
+summary(chinaweather)
+
+## 我们使用折线图展示一维数据，主要温度、相对湿度、降雨量、风力
+## 分析上海的数据
+shanghai<- chinaweather[chinaweather$province == "上海",]
+## 数据准备
+shanghai_day <- shanghai %>%
+  dplyr::group_by(city,days)  %>%  ## 按照城市和天分组
+  summarise(MeanTemperature = mean(temperature),  #平均温度
+            MeanRelative_humidity = mean(relative_humidity),  #平均相对湿度
+            MeanRainfall = mean(rainfall) * 24,  #每天平均降雨量
+            MeanWind_strong = mean(wind_strong)) #平均风力
+
+## 绘制折线图
+## 转换数据格式
+shanghai_day <- data.frame(days = rep(1:30,4),
+                           values = as.vector(as.matrix(shanghai_day[,3:6])),
+                           group = rep(c("平均温度(℃)","平均相对湿度","日降雨量(mm)","平均风力(m/s)"),
+                                       each = dim(shanghai_day)[1]))
+
+ggplot(shanghai_day) +theme_bw(base_family = "STKaiti") +
+  geom_line(aes(days,values),colour = "red") +
+  facet_wrap(~group,scales = "free") + 
+  scale_x_continuous(breaks = seq(1,30,4),labels = paste(seq(1,30,4),"日",sep = "")) + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(y="数值",title ="2015年12月份上海天气") +
+  xlab("日期")
+```
+
+## 风向玫瑰图
+
+针对风向和风力数据，可以绘制风向玫瑰图
+
+```{r}
+## 针对风向和风力数据，可以绘制风向玫瑰图
+shanghai<- chinaweather[chinaweather$province == "上海",]
+##  将风向划分为16个区间，代表16个方向
+## 切分方向
+dirbreak <- seq(-12.25,360,22.5)
+## 代表的方向
+dirdengji <-c("N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW")
+## 调整角度
+index <- shanghai$wind_direction > 347.25
+shanghai$wind_direction[index] <- shanghai$wind_direction[index] - 360
+summary(shanghai$wind_direction)
+shanghai$wind_direction2 <- cut(shanghai$wind_direction,breaks = dirbreak,
+                                labels = dirdengji,include.lowest = TRUE)
+summary(shanghai$wind_direction2)
+## 将风力的强弱划分为4各等级
+shanghai$wind_strong2 <- cut_interval(shanghai$wind_strong,4)
+
+shwind <- as.data.frame.array(table(shanghai$wind_strong2,shanghai$wind_direction2))
+
+par(family = "STKaiti")
+rosavent(shwind, 4, 4, ang=-3*pi/16, margen=c(0,0,2,0),
+         col=rainbow(4,0.5,0.92,start=0.1,end=0.9),
+         main="上海2015年12月风向玫瑰图")
+```
+
+## 相关系数图
+
+分析多个变量之间的关系
+```{r}
+## 分析多个变量之间的关系
+## 上海天气之间的相关性
+shanghai<- chinaweather[chinaweather$city == "上海",]
+## 分析各个监测点监测到的数据到的相关性-------------------------------------
+## 数据准备
+shanghai_day <- shanghai %>%
+  dplyr::group_by(city,days)  %>%  ## 按照城市和天分组
+  summarise(MeanTemperature = mean(temperature),  #平均温度
+            MeanRelative_humidity = mean(relative_humidity),  #平均相对湿度
+            MeanRainfall = mean(rainfall) * 24,  #每天平均降雨量
+            MeanWind_strong = mean(wind_strong)) #平均风力
+weacor <- cor(shanghai_day[3:6])
+rownames(weacor) <- c("温度","相对湿度","降雨量","风力")
+colnames(weacor) <- c("温度","相对湿度","降雨量","风力") 
+par(family = "STKaiti",mfrow = c(1,1),cex=0.8)
+corrplot(weacor,method = "pie",type = "upper",
+         mar = c(2, 2, 2, 10),title = "天气相关系数")
+```
+
+## 矩阵散点图
+
+矩阵散点图能分析数据的分布和数据之间的关系。
+```{r}
+## 绘制矩阵散点图分析
+smdata <- data.frame(shanghai_day[3:6])
+names(smdata) <- c("温度","相对湿度","降雨量","风力")
+ggscatmat(smdata) + theme_bw(base_family = "STKaiti") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(x = "",y = "",title = "天气数据")
+```
+
+## 地图对天气数据进行可视化
+
+通过地图将数据可视化，得到的地图为可交互地图，结合了位置和天气信息，更容易获取有用的信息。
+
+```{r}
+## 通过地图对天气数据进行可视化
+## 获取所有城市的信息，并的到数据可视化地图####-------------------------------
+citys <- chinaweather %>%
+  group_by(city,day)  %>%
+  summarise(MeanTemperature = mean(temperature),  #平均温度
+            MeanRelative_humidity = mean(relative_humidity),  #平均相对湿度
+            MeanRainfall = mean(rainfall) * 24,  #平均每天降雨量
+            MeanWind_strong = mean(wind_strong)) %>%#平均风力
+  arrange(city)
+
+
+citys$city <- as.character(citys$city)
+## 读取数据
+citys_geo <- read_csv("各个城市的经纬度.csv")
+## 查看两个城市的差集
+setdiff(unique(citys$city), citys_geo$city)
+
+citys <- citys[citys$city != setdiff(unique(citys$city), citys_geo$city),]
+## 连接天气数据集和坐标数据集
+newcitys <- left_join(citys,citys_geo,by = c("city" = "city"))
+
+## 绘制可交互的地图 ------------------------
+## 提取一天的数据
+newcitys_day <- newcitys[newcitys$day == "2015-12-15",]
+## 定义颜色 -------------------------
+tempcolor <- colorNumeric(viridis(6,option = "plasma"),newcitys_day$MeanTemperature)
+rehucolor <- colorNumeric(viridis(6,option = "plasma"),newcitys_day$MeanRelative_humidity)
+raincolor <- colorNumeric(viridis(6,option = "viridis"),newcitys_day$MeanRainfall)
+windcolor <- colorNumeric(viridis(6,option = "viridis"),newcitys_day$MeanWind_strong)
+
+## 绘制地图--------------------------------
+## 天气数据的地图可视化，展示各个地点的天气状况
+## 该图像，每个参数使用颜色和大小进行编码，使用鼠标点击圆，会显示相应的点和参数
+map <- leaflet(data = newcitys_day,width = 850, height = 600) %>%
+  setView(lng = 103,lat = 35 ,zoom = 4) %>%
+  addTiles() %>% 
+  addPopups(lng = 103, lat = 45, popup = "2015/12/15")%>%
+  addCircleMarkers(lng = newcitys_day$lon, lat = newcitys_day$lat,
+                   stroke = FALSE,group = "温度",
+                   fillOpacity = 0.8,radius = ~ (8 + newcitys_day$MeanTemperature/4),
+                   popup = ~paste(newcitys_day$city,round(newcitys_day$MeanTemperature,2),sep = "-温度:"),
+                   color = ~tempcolor(newcitys_day$MeanTemperature)) %>%
+  addCircleMarkers(lng = newcitys_day$lon, lat = newcitys_day$lat,
+                   stroke = FALSE,group = "相对湿度",
+                   fillOpacity = 0.8,radius = ~ (2 + newcitys_day$MeanRelative_humidity/10),
+                   popup = ~paste(newcitys_day$city,round(newcitys_day$MeanRelative_humidity,2),sep = "-相对湿度:"),
+                   color = ~rehucolor(newcitys_day$MeanRelative_humidity)) %>%
+  addCircleMarkers(lng = newcitys_day$lon, lat = newcitys_day$lat,
+                   stroke = FALSE,group = "降雨量",
+                   fillOpacity = 0.8,radius = ~ (4.5 + newcitys_day$MeanRainfall),
+                   popup = ~paste(newcitys_day$city,round(newcitys_day$MeanRainfall,2),sep = "-降雨量:"),
+                   color = ~raincolor(newcitys_day$MeanRainfall)) %>%
+  addCircleMarkers(lng = newcitys_day$lon, lat = newcitys_day$lat,
+                   stroke = FALSE,group = "风力",
+                   fillOpacity = 0.8,radius = ~ (2 + newcitys_day$MeanWind_strong),
+                   popup = ~paste(newcitys_day$city,round(newcitys_day$MeanWind_strong,2),sep = "-风力:"),
+                   color = ~windcolor(newcitys_day$MeanWind_strong)) %>%
+  addLegend("topleft",pal = tempcolor, values = newcitys_day$MeanTemperature,
+            title ="温度(℃)",opacity = 0.5) %>%
+  addLegend("topleft",pal = rehucolor, values = newcitys_day$MeanRelative_humidity,
+            title = "相对湿度",opacity = 0.5) %>%
+  addLayersControl(baseGroups = c("温度","相对湿度","降雨量","风力"),
+                   options = layersControlOptions(collapsed = FALSE),
+                   position = "topright") %>%
+  addLegend("topright",pal = raincolor, values = newcitys_day$MeanRainfall,
+            title = "降雨量(mm)",opacity = 0.5) %>%
+  addLegend("topright",pal = windcolor, values = newcitys_day$MeanWind_strong,
+            title = "风力(m/s)",opacity = 0.5) 
+map
+```
+
+## 聚类分析
+
+对天气数据集进行聚类分析，这里以K均值聚类为例进行说明，并且对聚类的结果进行可视化分析。首先探索K的个数：
+
+```{r}
+## =======================================================
+## 数据预处理
+## 获取每个城市12月份每天的天气数据
+citys <- chinaweather %>%
+  group_by(city,day)  %>%
+  summarise(MeanTemperature = mean(temperature),  #平均温度
+            MeanRelative_humidity = mean(relative_humidity),  #平均相对湿度
+            MeanRainfall = mean(rainfall) * 24,  #平均每天降雨量
+            MeanWind_strong = mean(wind_strong))#平均风力
+## 清洗数据，剔除甘南这个地方
+citys <- citys[citys$city != "甘南",]
+## 查看我们都有哪些地点
+unique(citys$city)
+length(unique(citys$city))
+## 一共右359个地点
+## 对数据的特征进行准备工作
+## 我们一共有一个月的数据，我们的特征可能需要包括，该月四个天气因素的最大值、
+##  最小值、均值、标准差等。
+citys_weather <- citys %>%
+  group_by(city) %>%
+  summarise(MeanTemperature2 = mean(MeanTemperature),  #平均温度
+            MinTemperature = min(MeanTemperature),  #最低温度
+            MaxTemperature = max(MeanTemperature),  #最低温度
+            SdTemperature = sd(MeanTemperature),  #温度标准差
+            MeanRelative_humidity2 = mean(MeanRelative_humidity),#平均相对湿度
+            MinRelative_humidity = min(MeanRelative_humidity),#最小相对湿
+            MaxRelative_humidity = max(MeanRelative_humidity),  #最大相对湿
+            SdRelative_humidity = sd(MeanRelative_humidity),  #相对湿标准差
+            MeanRainfall2 = mean(MeanRainfall),  #平均每天降雨量
+            MaxRainfall = max(MeanRainfall),  #最大每天降雨量;因为所有的最小降雨量都为0，所以剔除
+            SdRainfall = sd(MeanRainfall),  #每天降雨量标准差
+            MeanWind_strong2 = mean(MeanWind_strong),#平均风力
+            MinWind_strong = min(MeanWind_strong),#平均风力
+            MaxWind_strong = max(MeanWind_strong),#平均风力
+            SdWind_strong = sd(MeanWind_strong)#平均风力
+  )
+## 对我们的特征数据进行标准化
+citys_cluster <- apply(citys_weather[,2:16],2,scale)
+## ==============================================================
+## ===============k均值聚类算法======================================
+## ==============================================================
+## 使用k均值聚类算法进行聚类
+## 探索由聚类数目k的变化
+## 计算聚类的残差平方和
+set.seed(1234)
+
+## 计算组内平方和  组间平房和
+tot_withinss <- vector()
+betweenss <- vector()
+kk = 30
+for(ii in 1:kk){
+  k1 <- kmeans(citys_cluster,ii,iter.max = 100,algorithm = "MacQueen")
+  tot_withinss[ii] <- k1$tot.withinss
+  betweenss[ii] <- k1$betweenss
+}
+
+kmeanvalue <- data.frame(kk = 1:kk,
+                         tot_withinss = tot_withinss,
+                         betweenss = betweenss)
+
+
+p1 <- ggplot(kmeanvalue,aes(x = kk,y = tot_withinss))+
+  theme_bw(base_family = "STKaiti") +
+  geom_point(colour = "red") +
+  geom_line() +
+  labs(x = "kmean 聚类个数",y = "value") +
+  ggtitle("簇内平方和总和")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+p2 <- ggplot(kmeanvalue,aes(x = kk,y = betweenss))+
+  theme_bw(base_family = "STKaiti") +
+  geom_point(colour = "red") +
+  geom_line() +
+  labs(x = "kmean 聚类个数",y = "value") +
+  ggtitle("簇间平方和")+
+  theme(plot.title = element_text(hjust = 0.5))
+grid.arrange(p1,p2,nrow = 2)
+## 从上面的k均值聚类图，我们可以发现，我们可以将聚类的个数定为8类,这个类数在5以上都可以
+## 因为在8之前，这两个指标变化的比较剧烈，之后变化较为平缓，所以定为8类
+```
+
+得到k后，接下来，使用散点图将聚类结果可视化。
+
+```{r}
+## 聚类为k类，查看聚类结果
+k = 8  ## 聚类的数目
+kcluster <- kmeans(citys_cluster,k,iter.max = 100,algorithm = "MacQueen")
+## 输出我们的聚类结果
+kcluster
+## 查看每一类有多少个地点
+table(kcluster$cluster)
+## 聚类结果可视化,该图因为聚类个数太多所以可以不分析
+clusplot(citys_cluster,kcluster$cluster,main = paste("kmean cluster number=",k,sep = ""))
+```
+
+查看聚类结果的轮廓系数，分析聚类效果的好坏：
+
+```{r}
+## 表示聚类效果,聚类中的轮廓信息
+si1 <- silhouette(kcluster$cluster,dist(citys_cluster,method = "euclidean"))
+par(cex = 0.9)
+plot(si1,main = "kmean silhouette",col = "red")
+```
+
+从聚类中的轮廓信息轮廓信息图，我们可以发现，我们的聚类效果还是很好的。每一类中轮廓图中的直方条形越接近于1的越多，说明这些聚类在一族越好。下面将聚类结果和地图结合起来，对数据可视化：
+
+```{r}
+## 查看哪些城市都分为了哪一类
+city_clu <- data.frame(city = citys_weather$city,
+                       cluster = kcluster$cluster)
+
+city_clu$city <- as.character(city_clu$city)
+## 我们将这些类别在地图上展示出来
+## 链接数据
+## 连接天气数据集和坐标数据集
+newcitys <- left_join(city_clu,citys_geo,by = c("city" = "city"))
+
+## 将聚类数据在地图上显示出来
+## 定义颜色 -------------------------
+clucolor <- colorFactor(viridis(k,option = "viridis"),newcitys$cluster)
+## 绘制地图--------------------------------
+## k均值聚类结果展示在地图上，用开方便的分析我们的聚类结果
+## 该图像，聚类得懂的类别使用颜色进行编码，使用鼠标点击圆，会显示相应的地点和类别
+map <- leaflet(data = newcitys,width = 800, height = 600) %>%
+  setView(lng = 103,lat = 35 ,zoom = 4) %>%
+  addTiles() %>% 
+  addCircleMarkers(lng = newcitys$lon, lat = newcitys$lat,
+                   stroke = FALSE,group = "类别",
+                   fillOpacity = 0.8,radius = 8.5,
+                   popup = ~paste(newcitys$city,newcitys$cluster,sep = "-类别为:"),
+                   color = ~clucolor(newcitys$cluster)) %>%
+  addLegend("topleft",pal = clucolor, values = newcitys$cluster,
+            title ="类别",opacity = 0.5) %>%
+  addLayersControl(baseGroups = c("K means 聚类结果"),
+                   options = layersControlOptions(collapsed = FALSE),
+                   position = "topright")
+map
+## ===================================================
+```
+
+## 时间序列分析
+
+接下来以太原的温度数据为例，分析时间序列建模：
+
+首先将数据可视化：温度的热力图
+
+```{r}
+## 太原温度数据可视化
+## 读取数据
+taiyuan <- read_excel("太原.xlsx",col_names = FALSE) 
+names(taiyuan) <- c("time","MeanTemp")
+## 整理数据
+## 定义时间数据，时间从12年1月开始，到17年5月结束
+taiyuan$time <- as.Date(as.yearmon(2012 + seq(0,64)/12))
+taiyuan$year <- year(taiyuan$time)
+taiyuan$month <- month(taiyuan$time)
+
+## 设定月份
+mymonths <- c("January","February","March","April","May","June","July",
+              "August","September","October","November","December")
+
+## 等级
+month.name <- sort(unique(taiyuan$month))
+taiyuan$month2 <- factor(taiyuan$month, levels = month.name,labels = mymonths)
+head(taiyuan)
+
+
+## ==================================================================
+## 数据可视化
+## 温度的热力图
+ggplot(data=taiyuan, aes(x=year,y=month2)) + 
+  theme_bw(base_family = "STKaiti") +
+  geom_tile(aes(fill = MeanTemp),colour = "white") + 
+  geom_text(aes(label = round(MeanTemp,1))) +
+  scale_fill_gradientn(colours=rev(brewer.pal(10,'Spectral'))) + 
+  theme(legend.title=element_blank(),
+        axis.title.y=element_blank(),
+        axis.title.x=element_blank(),
+        legend.position="top") + 
+  ggtitle("太原每月平均温度") +
+  labs(x="年份",y = "月份") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+## 散点图盒子图
+
+```{r}
+## 散点图盒子图
+ggplot(data =taiyuan,aes(x=month2,y=MeanTemp,color=MeanTemp)) +
+  theme_bw(base_family = "STKaiti") +
+  scale_color_gradientn(colours=rev(brewer.pal(10,'Spectral'))) + 
+  geom_boxplot(colour='black',size=.4,alpha=.5) + 
+  geom_jitter(shape=16,width=.2,size=2) + 
+  theme(legend.title=element_blank(),
+        legend.position='top',
+        axis.text.x = element_text(angle=45, hjust=1),
+        plot.title = element_text(hjust = 0.5)) + 
+  scale_y_continuous(breaks = seq(-10,30,5),labels = seq(-10,30,5)) +
+  ggtitle("太原每月的平均温度") + 
+  xlab('') + ylab('2012～2017温度(℃)') 
+```
+
+## 平均气温的曲线图：
+
+```{r}
+## 平均气温的曲线图
+ggplot(data = taiyuan,aes(x=time,y=MeanTemp)) +
+  theme_bw(base_family = "STKaiti") +
+  geom_line() +
+  geom_point(colour = "red",size = 1) + 
+  scale_x_date(date_breaks = "1 year",date_labels = "%Y") +
+  xlab('年份') + ylab('温度(℃)') +
+  ggtitle("太原每月平均温度") + 
+  theme(plot.title = element_text(hjust = 0.5)) 
+```
+
+建立时间序列模型，在模型建立阶段，我们忽略寻找最好参数的阶段，直接使用合适的参数进行建模：
+```{r}
+## ==========使用时间序列分析温度的变化，并进行预测==============
+## 定义时间序列数据
+tsdata <- ts(data = taiyuan$MeanTemp,start = c(2012,1),frequency = 12)
+par(family = "STKaiti")
+plot(tsdata,xlab = "时间",ylab = "温度(℃)",main="太原每月平均温度")
+## 计算我们的数据个数
+length(tsdata)
+## 我们一共有65个数据，我们使用前55个作为模型的训练数据，
+## 训练合适的时间序列模型，涌来预测后面的数据
+nn = 55
+taiyuan[55,]
+tstrain <- ts(taiyuan$MeanTemp[1:nn],start = c(2012,1),frequency = 12)
+tstest <- ts(taiyuan$MeanTemp[(nn+1):65],star = c(2016,8),frequency = 12)
+
+## =============================================================================
+## 使用新的模型来重新训练季节ARIMA模型
+mod2 <- Arima(tstrain,order = c(0,1,1),seasonal = list(order = c(0,1,1)))
+mod2
+par(family = "STKaiti")
+plot(forecast(mod2,h=10),xlab = "时间",ylab = "温度(℃)",shadecols="oldstyle")
+```
+
+从模型在测试集上的结果，可以发现，该模型预测能力很好。将预测结果使用ggplot画出来：
+
+```{r}
+## 在ggplot中绘制我们的图像
+X <- forecast(mod2,h=10)
+X
+## 构建显得数据集
+tempdatatrain <- data.frame(MeanTemp = taiyuan$MeanTemp[1:nn],
+                            time = taiyuan$time[1:nn])
+tempdatatrain$class <- "训练数据"
+tempdatatest <- data.frame(MeanTemp = taiyuan$MeanTemp[(nn+1):65],
+                           time = taiyuan$time[(nn+1):65])
+tempdatatest$class <- "测试数据"
+tempdatapre <- data.frame(MeanTemp = as.numeric(X$mean),
+                          time = tempdatatest$time)
+tempdatapre$class <- "预测数据"
+## 组合数据
+plottemp <- rbind(tempdatatrain,tempdatatest,tempdatapre)
+
+## 获得置信区间的数据
+X95 <- data.frame(xlower = X$lower[,2],
+                  xupper = X$upper[,2],
+                  time = tempdatatest$time,
+                  MeanTemp = as.numeric(X$mean))
+
+
+## 绘制图像
+titles <- paste("太原:","ARIMA:(",as.character(mod2$call[3]),
+                str_sub(as.character(mod2$call[4]),14,23),"[12])")
+
+ggplot(plottemp,aes(x = time,y = MeanTemp,
+                    linetype=class,colour = class,shape = class)) +
+  theme_bw(base_family = "STKaiti")+
+  geom_line(size = 0.5) +
+  labs(x = "时间",y = "温度(℃)",title=titles) +
+  geom_point(size = 1.5) + 
+  scale_x_date(date_breaks = "1 year",date_labels = "%Y") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(legend.position="top",legend.title = element_blank()) 
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
