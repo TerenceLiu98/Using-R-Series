@@ -33,313 +33,8 @@ output:
 #### How to install `R`
 <a href="https://cran.r-project.org">**Click here**</a> and you can find the answer. \\ **Remember!**, follow the direction and you may get the `R` installed properly.
 
-#### Some Useful Commands
 
-* How to Quit the `R` program
-`> q()`
-```{r setup, include=FALSE}
-#knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
-#q()
-# attention! DO NOT RUN THIS CODE IN THIS MOMENT
-# quit(save = "default", status = 0, runLast = TRUE)
-# q(save = "default", status = 0, runLast = TRUE)
-```
-If you are coding in Windows, `File_Exit` can also works.
-
-* Get or Set Working Directory(Files Path)
-`getwd` returns an absolute filepath representing the current working directory of the `R` process; `setwd(dir)` is used to set the working directory to dir.
-```{r}
-getwd()
-setwd(dir)
-```
-* List Objects
-`ls` and `objects` return a vector of character strings giving the names of the objects in the specified environment. When invoked with no argument at the top level prompt, `ls` shows what data sets and functions a user has defined. When invoked with no argument inside a function, `ls` returns the names of the function's local variables: this is useful in conjunction with browser.
-```{r}
-ls()
-# ls(name, pos = -1L, envir = as.environment(pos),all.names = FALSE, pattern, sorted = TRUE)
-objects()
-# objects(name, pos= -1L, envir = as.environment(pos),all.names = FALSE, pattern, sorted = TRUE)
-```
-#### Getting HELP
-* Details about a specific command whose name you know (input arguments, options)
-`help()` is the primary interface to the help systems
-```{r}
-help()
-#help(topic, package = NULL, lib.loc = NULL,verbose = getOption("verbose"),try.all.packages = getOption("help.try.all.packages"),help_type = getOption("help_type"))
-```
-Also, we can use `?` + `[command]` to get the help files, for instance, `?ls()`
-
-* Find commands containing a regular expression:
-`apropos()` returns a character vector giving the names of objects in the search list matching (as a regular expression) what.
-```{r}
-apropos("help")
-# The return:
-# [1] "help"          "help.request"  "help.search"   "help.start"    "main.help.url"
-```
-* Web Searching
-We can also call the search engine lets us to search for topic related to regular expressions:
-`>help.search("help")`This command allows for searching the help system for documentation matching a given character string in the (file) name, alias, title, concept or keyword entries (or any combination thereof), using either fuzzy matching or regular expression matching. Names and titles of the matched help entries are displayed nicely formatted.
-```{r}
-help.search("covariance")
-```
-* Example of Usage
-`demo` is a user-friendly interface to running some demonstration R scripts. demo() gives the list of available topics.
-```{r}
-demo(graphics)
-#demo(topic, package = NULL, lib.loc = NULL,character.only = FALSE, verbose = getOption("verbose"),echo = TRUE, ask = getOption("demo.ask"),encoding = getOption("encoding"))
-```
-* Check the function
-To see code for a function, just type the name with no parentheses or arguments \\
-```{r}
-plot
-function (x, y, ...)
-UseMethod("plot")
-<bytecode: 0x7fb062f6f9d8>
-<environment: namespace:graphics>
-```
-#### `R` As A Calculator
-We can use `R` to do some calculation just using the operators: `+, -, *, /` and etc..
-```{r}
-2 + 2
-# [1] 4
-2 * 3 * 4 * 5
-# [1] 5
-log2(32)
-# [1] 5
-print(sqrt(2))
-# [1] 1.414214
-sin(c(30,60,90) * pi / 180)
-# [1] 0.5000000 0.8660254 1.0000000
-```
-#### Important concept
-
-* Command:function
-```{r}
-plot(mydata1),q()
-#mydata1 is not exsist
-```
-* Objects:
-vector, matrix, factor, list and data frame
-
-* Modes
-logical, numeric, and character
-
-#### Modes
-* Variables:
-```{r}
-a <- -49 # let 'a' equals negative fourty-nine
-sqrt(a) # solution is: [1] 7
-```
-`a` is numeric.
-
-``` {r}
-b <- "The dog ate my homework"
-sub("dog", "cat", b)
-# substitude "dog" with "cat"
-#solution is: [1] "The cat ate my homework"
-```
-`b` is Character string
-
-```{r}
-d <- (1 + 1 == 3)
-d # solution is: [1] FALSE
-```
-`d` is Logical(Boolean Variable)
-
-#### Objects
-* `ls()` and `objects` return a vector of character strings giving the names of the objects in the specified environment.
-* `rm()` and `remove` can be used to remove objects.
-```{r}
-vector_1 <- c(10,20,30)
-rm(vector_1)
-vector_1
-# solution is: Error: object 'vector_1' not found
-```
-* `typeof` determines the (R internal) type or storage mode of any object
-```{r}
-> tmp <- 1:4
-> typeof(tmp)
-# solution is: [1] "integer"
-```
-* `class()` a simple generic function mechanism which can be used for an object-oriented style of programming.
-```{r}
-x <- 10
-class(x)
-# solution is [1] "numeric"
-```
-#### Vectors
-
-The concept of Vector is vitally important in every area of maths and the kye feature which makes `R` very useful for statistics is that it is vectorized. This means thay many operations can be performed point-wise on vector. `c()` is the function to create vector:
-We can check the R documentation: `c()` is a generic function which combines its arguments.
-```{r}
-c(...)## S3 Generic function
-c(..., recursive = FALSE, use.names = TRUE)## Default S3 method
-```
-```{r}
-x <- c(1, -1, 3.5, 2)
-print(x) # solution is: [1]  1.0 -1.0  3.5  2.0
-x + 2 # add 2 to every number in this vectors
-print(x + 2) # solution is: [1] 3.0 1.0 5.5, 4.0
-x ^ 2 # square each entry
-print(x ^ 2) # solution is: [1]  1.00  1.00 12.25  4.00
-```
-Also, we can generate integer sequences by different method(colon operator):
-```{r}
-1:10 #solution is: [1]  1  2  3  4  5  6  7  8  9 10
--3:4 #solution is: [1] -3 -2 -1  0  1  2  3  4
-9:4 #solution is: [1] 9 8 7 6 5
-seq(from=2, to=6, by=0.4) #solution is: [1] 2.0 2.4 2.8 3.2 3.6 4.0 4.4 4.8 5.2 5.6 6.0
-#`seq` is a standard generic with a default method.
-## Default S3 method:
-#seq(from = 1, to = 1, by = ((to - from)/(length.out - 1)),length.out = NULL, along.with = NULL, ...)
-```
-Sometimes it's necessary to have repeated values, for which we use `rep()`
-```{r}
-rep(5,3) # solution is: [1] 5 5 5
-rep(2:5, each=3) # solution is: [1] 2 2 2 3 3 3 4 4 4 5 5 5
-rep(-1:3, length.out=10) # solution is: [1] -1 0 1 2 3 -1 0 1 2 3
-```
-We can also use R's vectorization to create more interesting sequences:
-```{r}
-2^(0:10) # solution is: [1] 1 2 4 8 16 32 64 128 256 5121024
-1:3 + rep(seq(from=0,by=10,to=30), each=3) # solution is: [1] 1 2 3 11 12 13 21 22 23 31 32 33
-```
-It's frequently necessary to extract some of the elements of a larger **vector**.
-In `R` you can use square brackets to select an individual element or group of elements:
-```{r}
-x <- c(5,9,2,14,-4)
-x[3]
-#solution is: [1] 2
-x[c(2,3,5)] # note indexing starts from 1
-# solution is: [1] 9 2 -4
-x[1:3] # print out from 1 to 3
-# solution is: [1] 5 9 2
-x[3:length(x)]
-print(length(x)) #length(x) can gets or sets the length of vectors
-print((x[3:length(x)]) == x[3:5])
-```
-There are two other methods for getting subvectors. The first is using a logical vector ( i.e. containing `TRUE` and `FALSE` of the same length:)
-```{r}
-x > 4
-# solution is: [1] TRUE TRUE FALSE TRUE FALSE
-x[x > 4]
-# solution is: [1] 5 9 14
-```
-or we can use negative indices to specify wich elements should not be selected:
-```{r}
-x[1]
-# solution is [1] 9 2 14 -4
-x[-c(1,4)]
-# solution is 9 2 -4
-```
-(Note that this is rather different tot what other languages such as `C` or `Python` would interpret negative indices to mean.)
-
-* Logical Operators
-As we see above, the comparison operator `>` returns a logical vector indicating whether or not the left hand side is greater that the right hand side. Here we demonstrate the other comparison operators:
- ```{r}
- x <= 2 # less than or equal to
- # solution is: [1] FALSE FALSE TRUE FALSE TRUE
- x == 2 # equal to
- # solution is: [1] FALSE FALSE TRUE FALSE FALSE
- x != 2 # not equal to
- # solution is: [1]  TRUE  TRUE FALSE  TRUE  TRUE
-```
-Notice that the double equals sign `==`, to distinguish between assignment and comparison.
-We may also wish to combine logical vectors. If we want the elements of x within a gange, we can use the following:
-```{r}
-(x > 0) & (x<10) # '&' means 'and'
-# solution is: [1] TRUE TRUE TRUE FALSE FALSE
-# The & operator does a pointwise 'and' comparison between the two sides. Similarly, the vertical bar | does pointwise 'or', and the unary `!` operator performs negation.
-(x == 5) | (x > 10)
-# solution is: [1]  TRUE FALSE FALSE  TRUE FALSE
-!(x > 5)
-# solution is: [1]  TRUE FALSE  TRUE FALSE  TRUE
-```
-* Character Vectors
-As you might have noticed in the above section, vectors only have contains numbers, but vectors can also contain numbers. We can equally create a **Character Vectors**, in which each entry is a string of text. Strings in `R` are contained within double quote":
-```{r}
-x <- c("Hello", "how do you do", "lovely to meet you", 42)
-print(x)
-# the solution is :
-# [1] "Hello"              "how do you do"      "lovely to meet you"
-# [4] "42"
-```
-Notice that you cannot mix numbers with strings: if you try to do so the number will be converted into a string. Otherwise charater vectors are much like their numerical counterparts.
-```{r}
-x[2:3]
-# solution is: [1] "how do you do" "lovely to meet you"
-x[-4]
-$ solutions is
-# solution is: [1] "Hello" "how do you do" "lovely to meet you"
-c(x[1:2], "goodbye")
-# solution is: [1] "Hello"  "how do you do" "goodbye"
-```
-#### Matrices
-* Matrix: rectangular table of data of the sam type (Two dimension)
-* A mtrix:
-```{r}
-matrix(1:10, ncol = 5)`
-#      [,1] [,2] [,3] [,4] [,5]
-# [1,]    1    3    5    7    9
-# [2,]    2    4    6    8   10
-# matrix function Description
-# ‘matrix’ creates a matrix from the given set of values.
-# ‘as.matrix’ attempts to turn its argument into a matrix.
-# ‘is.matrix’ tests if its argument is a (strict) matrix.
-# Usage:
-# matrix(data = NA, nrow = 1, ncol = 1, byrow = FALSE, dimnames = NULL)
-```
-**Create Matrix**
-We can use `matrix` function to create a matrix, the usage can check the help.
-```{r}
-matrix(1:9, nrow=3, ncol=3)
-#       [,1] [,2] [,3]
-# [1,]    1    4    7
-# [2,]    2    5    8
-# [3,]    3    6    9
-matrix(1:9, nrow=3, ncol=3, byrow=T) #byrow = T means tranfer row and col
-#      [,1] [,2] [,3]
-# [1,]    1    2    3
-# [2,]    4    5    6
-# [3,]    7    8    9
-```
-* Combination, we can also create a matrix by combination two or more vectors,
-using the functions called `rbind` and `cbind`
-```{r}
-a <- c(1,2,3)
-b <- c(4,6,9)
-cbind(a,b) # combine these two vector by columns
-#      a b
-# [1,] 1 4
-# [2,] 2 6
-# [3,] 3 9
-rbind(a,b) # combine these two vectors by rows
-#    [,1] [,2] [,3]
-# a    1    2    3
-# b    4    6    9
-```
-* Subset of Matrix
-some times we need to extract some parts of the matrix, in this time, we need to
-use these functions:
-```{r}
-A <- matrix(1:9, nrow = 3, ncol = 3)  # create a Matrix
-A[2,3] # take out the element from row two and column three
-# [1] 8
-A[2:3, 1:2] # pick up the elements from row two to three && column one to two
-#       [,1] [,2]
-# [1,]    2    5
-# [2,]    3    6
-A[2:3,]  # extract entire columns by leaving a blank after the comma
-#      [,1] [,2] [,3]
-# [1,]    2    5    8
-# [2,]    3    6    9
-A[,2:3] # extract entire columns by leaving a blank before the comma
-#      [,1] [,2]
-# [1,]    4    7
-# [2,]    5    8
-# [3,]    6    9
-```
-
+<<<<<<< HEAD
 In matrix, we sometimes will do some operations like production and there are
 two types of production: scalar multiplication and vector multiplication and in
 R, we have two functions to differentiate them: `*` and `%*%`:
@@ -411,192 +106,99 @@ eigen(m)$Vectors
 # [1,] 0.5657675  0.9093767
 # [2,] 0.8245648 -0.4159736
 =======
+=======
+### A very simple Example
+>>>>>>> 1fc4a5546769521ae50525102254ac4b310e4e22
 
-## From data to Graphics
+Assume that we are investigating growth problem, we have collected 10 baby's ages and their weight data and we are interested in the relationship between the ages and the weight distribution. 
 
-### Plot
+| age | weight | 
+| --- | ------ |
+| 01 | 4.4 |
+| 03 | 5.3 | 
+| 05 | 7.2 |
+| 02 | 5.2 |
+| 11 | 8.5 |
+| 09 | 7.3 |
+| 03 | 6.0 |
+| 09 | 10.4 |
+| 12 | 10.2 |
+| 03 | 6.1 |
 
-The following both plot $y$ agianst $x$:
-
-```{r}
-# plot(y~x)
-# Using  a formula to specify the graph
-# plot(x,y)
-
-x <- seq(-10,10,by=0.1)
-y <- dnorm(x,0,1)
-plot(y~x) # Using  a formula to specify the graph
-lines(x,y,col="orange") # same as the plot(x,y)
-```
-
-```{r}
-x <- seq(-10,10,by=0.1)
-plot((0:20)*pi/10, sin((0:20)*pi/10), xlab="x", ylab="y")
-# xlab is x-axis' label; ylab is yaxis' label
-
-x<-( 0:20)*pi/10
-y<- sin((0:20)*pi/10)
-plot(y~x)
-
-```
-
-### Dataset that relates to lecture note
-
-Dtatset that relate to lecture note: 
-* Download the `R` datafile: "usingR.RData" from the website;
-* Place the file in the working directory ( `getwd()`)
-* Within the R session, typ: `load("usingR.RData")`
-* `ls()` or `objects()`
+We can use function `c()`, which can help us to input the ages and the weight, then we can use other function to get the mean and the standard variation of the weight, and the correlationship bwteen ages and the weight. Finally, we can use plot to show the relationship in graphic.
 
 ```{r}
-load("usingR.RData")
-usingR_data <- load("usingR.RData")
-```
+age <- c(1, 3, 5, 2, 11, 9, 3, 9, 12, 3)
+weight <- c(4.4, 5.3, 7.2, 5.2, 8.5, 7.3, 6.3, 10.4, 10.2, 6.1)
 
-**Example One** 
+mean_weight <- mean(weight)
+sd_weight <- sd(weight)
+cor(age, weight)
 
-```{r}
-str(elasticband) 
-# short for structure
-# It is especially well suited to compactly display the (abbreviated) contents of (possibly nested) lists. 
-
-plot(distance~stretch, data = elasticband)
-```
-or
-```{r}
-attach(elasticband) # R now knows hwere to find distance & stretch
-plot(distance~stretch)
-```
-
-
-**Example Two**
-
-```{r}
-par(mfrow=c(1,2))
-plot(ACT~Year, data = austpop, type="l")
-plot(ACT~Year, data = austpop, type="b")
-```
-
-
-### adding lines, points and tex on the plot 
-
-```{r}
-plot(ACT~Year, data = austpop, type="n")
-points(austpop$Year,austpop$ACT, pch=22,col="red")
-lines(austpop$Year,austpop$ACT,type="l",col="blue")
-text(austpop$Year[5],austpop$ACT[5],"fifth")
-title(main = "austpop",xlab="Year",ylab="ACT")
-```
-
-If we want to add a line to the plot which is existed, we can just use the `lines` function
-
-```{r}
-lines(austpop$Year,austpop$ACT,type="l",col="blue")
-```
-
-If we want to add a point / points to the plot, use `points()`
-
-```{r}
-points(austpop$Year,austpop$ACT, pch=22,col="red")
-```
-
-Note: The `points()` function adds points to a plot. The `lines()` function adds lines to a plot. The `text()` function adds text at specified locations. 
-
-### Controlling axis
-
-```{r}
-plot(NT~Year,data=austpop,type="n",xaxt='n',xlab='Year', ylab='NT',main="austpop")
-axis(1,at=seq(1910,2000,by=10),cex.axis=0.6)
-points(austpop$Year,austpop$NT,pch=22,col="red")
-lines(austpop$Year,austpop$NT,type = "l", col="blue")
-title(main="austpop")
-```
-
-The `axis()` function gives fine control over axis ticks and labels.
-`xlim=, ylim=` specifies the lower and upper limits of the axes, for example with `xlim=c(1, 10)` or `xlim=range(x)`
-
-### Size, color and choice of plotting symbl
-
-* The parameter `cex`("character expancion") control the size
-* The `col`("colour") control the colour of the plotting symbol.
-* The parameter `pch` controls the choice of plotting symbol.
-* The parameter `lwd` controls the thinck of line.
-
-**Example**
-
-```{r}
-plot(1, 1, xlim=c(1, 7.5), ylim=c(0,5), type="n") 
-# Do not plot points
-points(1:7, rep(4.5, 7), cex=1:7, col=1:7, pch=0:6)
-text(1:7,rep(3.5, 7), labels=paste(0:6), cex=1:7, col=1:7)
-lines(1:7,rep(2,7), lwd=2)
-lines(1:7,rep(3,7), lwd=4,lty=3)
+plot(age, weight, main = "Age and Weight")
+abline(lm(weight~age))
 
 ```
 
-### Plotting Mathematical Symbols 
+According to the code, we can get that the averge weight is $7.06$kg, the standard daviation is $2.08$kg, and the correlation is very strong $cor = 0.9$
 
-Using the `expression`
 
-```{r}
-x <- 1:100
-y <- pi* x ^ 2
-plot(x,y,xlab="Radius", ylab=expression(Area == pi*r*2))
-text(80, pi*80^2,expression(pi*r^2), c(0,0.4))
-```
+### Workplace
 
-### Separating different classes in a graph 
+**Workplace** is the working environment of the current `R`. It stores the variable that user defined ( vector, matrix, function, dataset and etc.). 
 
-```{r}
-x<-rnorm(50)
-yf<-2*x[1:25]+1+rnorm(25)
-ym<-(x[26:50])-1+rnorm(25)
-y=c(yf,ym)
-z<-factor(rep(c("female","male"),each=25,rep=T))
-data1<-data.frame(x,y,sex=z)
 
-plot(y,x,col=c(2,3)[z],pch=c(2,16)[z])
-legend("topright",levels(z),col=2:3,pch=c(2,16))
-legend("topleft",levels(z),col=2:3,pch=c(2,16))
-```
+The local working directory is the default directory of R, we can use `getwd()` to check the current working directory and `setwd()` can set the work directory.
 
-### Multiple plot on the one page
+[![Screenshot 2018-11-04 at 01.23.23.png](https://i.loli.net/2018/11/04/5bddd99365be7.png)](https://i.loli.net/2018/11/04/5bddd99365be7.png)
 
-`mfrow()` : subsequent plots appear row by row
+### Input and Output
 
-```{r}
-library(MASS)
-data("Animals")
+#### Input
 
-par(mfrow=c(2,2), pch=16)
-attach(Animals)
-plot(body, brain)
-plot(sqrt(body), sqrt(brain))
-plot((body)^0.1, (brain)^0.1)
-plot(log(body),log(brain))
-detach(Animals)
-par(mfrow=c(1,1), pch=1) # Restore to 1 figure per page
+Function `source("filename")` will run a script in the current shell. 
 
-```
-`mfcol()`: subsequent plots appear column by column 
+#### Output
 
-### Adding straight lines to plots 
+Function`sink("filename")` will let the output rediect to the file with filename. If the the file is exsited, the content will be covered, if you set the parameter as `append = TRUE`， it will add the text to the file instead of cover it. 
 
-`abline()`: This function adds one or more straight lines through the current plot.
+Although `sink()` can redirect the text outoput, but it will have no effect to the graphic output, if we want to output the plots, we have to use the command below and at last, use `dve.off()` to let the output back to the terminal.
+
+[![Screenshot 2018-11-04 at 13.50.45.png](https://i.loli.net/2018/11/04/5bde88ca8708a.png)](https://i.loli.net/2018/11/04/5bde88ca8708a.png)
+
+**Example** 
+
+Let us use an example to show the whole procedure: assume that we have three script files: `scrpt1.R`, `script2.R` adn `scritp3.R`: 
 
 ```{r}
-plot(c(-2,3), c(-1,5), type = "n", xlab="x", ylab = "y")
-abline(h = 0, v = 0, col = "blue")
-abline(h = -1.5, v = -3:3, col = "gray")
-abline(a = 1, b = 2, col = "red")
+source("script1.R")
 ```
-**Usage**
 
-`abline(a , b , h, v)`
+We will run the `R` code written in `script1.R` in local window.
 
-* a,b: the intercept and slope, single values 
-* h: the y-value(s) for horizontal line(s). 
-* v: the x-value(s) for vertical line(s). 
+If we run these command:
+```{r}
+sink("myoutput", append = TRUE, split = TRUE)
+pdf("mygraphs.pdf")
+scource("scripy2.R")
+
+sink()
+dev.off()
+source("scripu3.R")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

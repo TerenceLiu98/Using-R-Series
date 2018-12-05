@@ -1,0 +1,215 @@
+---
+title: "Lecture Summary"
+author: "Terence Lau"
+date: "12/4/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# An Introduction to R 
+
+## Useful Commands
+
+* Quit 
+
+```{r}
+q() # to quit
+```
+**Don't run this module**
+
+* File path 
+File path is relative to working directory 
+```{r}
+getwd() # get the current working directory
+setwd() # set the working directory
+```
+
+* list objects in workspace
+```{r}
+ls()
+```
+
+## Getting Help
+
+* Details about a specific command whose name you know(input arguments, options): 
+```{r}
+?t.test
+help(t.test)
+```
+
+* Finding commands
+Finding commands **containing a regular expression**: 
+```{r}
+apropos("var")
+```
+
+* HTML search 
+the internet engine lets you search for topics related to regular expressions: 
+```{r}
+help.search("covariance")
+```
+
+* See an example of usage: 
+```{r}
+demo(graphics)
+example(mean)
+```
+
+* Checking the function of the code
+Just type the function's name with no parentheses or arguments
+```{r}
+plot #example
+```
+
+## R as A Calculator
+
+```{r}
+2 + 2 # addition
+2 * 3 * 4 * 5 # multiplication
+log2(32) # logrithm
+print(sqrt(2)) # square root
+pi # pi
+1000 * (1 + 0.075) ^ 5 - 1000
+sin(c(30, 60, 90) * pi / 180) # 
+```
+
+<center> 
+![Screenshot 2018-12-04 at 15.18.02.png](https://i.loli.net/2018/12/04/5c062a3324439.png)
+</center>
+
+## Important Concept 
+
+* Command: function 
+```{r}
+plot(sample-data); q()
+```
+
+* Objects:
+```{r}
+# vector, matrix, factor, list, and data frame
+```
+
+* Modes:
+```{r}
+# logical, numeric, and character
+```
+
+## Modes
+
+* Variables:
+```{r}
+# Numeric
+a <- 49 
+sqrt(a) 
+
+# Character string
+b <- "The dog ate my homework" 
+sub("dog", "cat", b) 
+
+# Logical
+d <- (1 + 1 == 3)
+print(d) 
+```
+
+## Objects 
+
+```{r}
+ls()
+# list all data objects currently available
+rm()
+# removes the data object 
+typeof(a)
+# determine the type of an object
+class()
+# determine the type of an object
+```
+
+## Vectors
+```{r}
+a <- c(1, 2, 3)
+a * 2
+t_1 <- c(1, 2, 3, 4, 5)
+t_1
+```
+
+In `R`, a single number is the special case of a vector with 1 element. Other vector types: character strings, logical: 
+```{r}
+logical_vec <- c(T,F,F,F,T,T,F)
+charc_vec <- c("Canberra","Sydney","Newcastle","Dar win")
+
+## Vectors ( Expression) ##
+c(1, 2, 3, 4, 5)
+1:5
+seq(1, 5, by = 1) 
+# sequence, start from 1, end at 5 step is 1
+seq(1, 5, length = 5) 
+```
+
+## Joining Vectors
+
+```{r}
+x <- c(2, 3, 5, 2, 7, 1)
+y <- c(10, 15, 12)
+z <- c(x, y)
+z
+length(z)
+```
+
+## Subsets of Vectors 
+
+```{r}
+x <- seq(-1, 1, by = .1)
+x
+x[5:10]
+x[c(5,7:10)]
+x[-5:10]
+x > 0 
+x[x > 0]
+```
+
+## Exmaple
+
+1. Create a sequence of numbers from $3$ to $30$ in steps of $3$
+
+**Solution**: 
+```{r}
+a <- seq(3, 30, by = 3)
+a
+```
+2. Create a sequence of number from $1$ to $30$ that does not include the numbers that where mentioned above(those that are divisible by $3$)
+
+**Solution**:
+
+```{r}
+b <- seq(1, 30, by = 1)
+b[-intersect(a,b)]
+```
+
+## Vector Arithmetic 
+
+The elementary arithmetic operators are the userl `+, -, *, /` and `^` 
+```{r}
+a <- c(1, 2, 3)
+a * 2
+a - 2
+a + 2
+a ^ 2 
+```
+
+[![Screenshot 2018-12-04 at 17.17.34.png](https://i.loli.net/2018/12/04/5c06463499891.png)](https://i.loli.net/2018/12/04/5c06463499891.png)
+
+## Functions Oper
+
+
+
+
+
+
+
+
+
+
+
+
