@@ -87,7 +87,6 @@ Since this data set is a time series related data set, and in this data set, the
 Categorical Variable $\Rightarrow$ CBWD 
 ```{r}
 cbwd <- as.numeric(cbwd)
-啊、
 ```
 
 ```{r}
@@ -3899,17 +3898,21 @@ new.Beijing.data <- as.data.frame(new.Beijing.data)
 lm1 <- lm(pm2.5~., data = new.Beijing.data) # full model
 par(mfrow=c(2,2))
 plot(lm1)
-
+names(new.Beijing.data)
 ```
 
 Since the Q-Q plot's line has a curling up 's tail, so we can note that the distribution is right skew. We can do the numerical transformation 
 
 ```{r}
-lm2 <- lm(log(pm2.5)~., data = new.Beijing.data) # take the natural logarithm to PM2.5 data
+lm.formula <- "log(pm2.5)~year + month + day + DEWP + TEMP + PRES + Iws + Is^2 + Ir^2"
+lm2 <- lm(as.formula(lm.formula), data = new.Beijing.data, interval = "confidence") # take the natural logarithm to PM2.5 data
 par(mfrow=c(2,2))
 plot(lm2)
+```
+```{r}
 lm.step <- step(lm2) # AIC selection 
-plot(lm.step)
+summary(lm2)
+summary(lm.step)
 ```
 
 ```{R}
@@ -3921,8 +3924,19 @@ lm.BIC <- step(lm2,direction="backward", data = new.Beijing.data, k=log(1826))
 lm.forward <- lm(pm2.5~.,data = new.Beijing.data)
 ```
 
-```{r}
-vif(lm2)
-```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
