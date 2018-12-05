@@ -3938,5 +3938,3 @@ lm.forward <- lm(pm2.5~.,data = new.Beijing.data)
 
 
 
-
-
