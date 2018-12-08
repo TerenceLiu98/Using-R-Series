@@ -1,7 +1,7 @@
 get.Beta.hat <- function(y,x){
   y <- as.matrix(y)
   x <- cbind(constant = 1, as.matrix(x))
-  beta.hat <- solve(t(x)%*%x,t(x)%*%y) # (x'x)^-1 * (x'y)
+  beta.hat <- solve(t(x)%*%x) %*% t(x)%*%y # (x'x)^-1 * (x'y)
 
   # Compute standard errors
   s2 <- sum((y - x%*%beta.hat)^2)/(nrow(x) - ncol(x))
@@ -25,5 +25,5 @@ get.Beta.hat <- function(y,x){
   Table <- as.data.frame(round(cbind(beta.hat,SE,t,p, R2), digits = 4))
   names(Table)[1:5] <- c("Estimate","Standard Error","t-value","p-value", "R^2")
   paste("adj R square is ", adj.R2)
-  return(list("Table" = Table, "coefficients" = beta.hat))
+  return(list("Table" = Table, "coefficients" = beta.hat, "R2" = R2))
 }
