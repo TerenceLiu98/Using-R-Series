@@ -1,9 +1,9 @@
 # Fdb version 3
-["xdvipdfmx"] 1544336162 "sgp940_sample.xdv" "sgp940_sample.pdf" "sgp940_sample" 1544336163
-  "sgp940_sample.xdv" 1544336162 96036 9be0a46434e4d5aae1a8f65f7092fb58 "xelatex"
+["xdvipdfmx"] 1544348925 "sgp940_sample.xdv" "sgp940_sample.pdf" "sgp940_sample" 1544348926
+  "sgp940_sample.xdv" 1544348925 116080 2db59c321663eccaf91e1a86edef9ed8 "xelatex"
   (generated)
   "sgp940_sample.pdf"
-["xelatex"] 1544336161 "sgp940_sample.tex" "sgp940_sample.xdv" "sgp940_sample" 1544336163
+["xelatex"] 1544348923 "sgp940_sample.tex" "sgp940_sample.xdv" "sgp940_sample" 1544348926
   "/usr/local/texlive/2018/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
   "/usr/local/texlive/2018/texmf-dist/fonts/tfm/adobe/zapfding/pzdr.tfm" 1480098689 1528 f853c4d1b4e0550255e02831fdc8496f ""
   "/usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1480098698 1004 54797486969f23fa377b128694d548df ""
@@ -169,20 +169,20 @@
   "/usr/local/texlive/2018/texmf-dist/web2c/texmf.cnf" 1522066949 33362 cf75436e19743e94a92a6b1b9183c434 ""
   "/usr/local/texlive/2018/texmf-var/web2c/xetex/xelatex.fmt" 1531133196 3731936 0ca4516599e52bf85086c1277d501b90 ""
   "/usr/local/texlive/2018/texmf.cnf" 1523934483 577 0b39adfd7c93507ff20c9c14c2f1a33f ""
-  "cuba_logo.png" 1507396318 254700 a13aae9e24bf6ffefccea507e1d505f9 ""
-  "sgp940.sty" 1507396318 3081 32fc95fa2726cc0d03d7a39b61ea64cb ""
-  "sgp940_sample.aux" 1544336162 5228 4585cd97683bac26c24c124c93e5afe8 ""
-  "sgp940_sample.nav" 1544336162 2630 4d206df2b1319fcbe7ac671e78f49d36 ""
-  "sgp940_sample.out" 1544336162 285 807fdf600dcf4425d0ece8bea3752196 ""
-  "sgp940_sample.tex" 1544336161 5471 515b072ea833942b48bc4d8e3141e331 ""
-  "sgp940_sample.toc" 1544336162 279 fdc2e3f2e3690576377628d39102d12a ""
-  "sgp940_sample.vrb" 1544336162 217 83a4f5a79bc60cebde5df0f6846697c8 ""
+  "cuba_logo.png" 1544345457 254700 a13aae9e24bf6ffefccea507e1d505f9 ""
+  "sgp940.sty" 1544345457 3081 32fc95fa2726cc0d03d7a39b61ea64cb ""
+  "sgp940_sample.aux" 1544348925 6266 caceca240856cfa79c59676a32cf0b61 ""
+  "sgp940_sample.nav" 1544348925 2941 97f47e8c5e182c17c28d8f6fde19d4ec ""
+  "sgp940_sample.out" 1544348925 285 807fdf600dcf4425d0ece8bea3752196 ""
+  "sgp940_sample.tex" 1544348923 7505 d0625ce6cb1ee14f171fbcc67ee9f4c7 ""
+  "sgp940_sample.toc" 1544348925 280 da94084a88f96a8ddfe99f077a253613 ""
+  "sgp940_sample.vrb" 1544348924 217 83a4f5a79bc60cebde5df0f6846697c8 ""
   (generated)
-  "sgp940_sample.vrb"
-  "sgp940_sample.nav"
-  "sgp940_sample.xdv"
-  "sgp940_sample.toc"
   "sgp940_sample.out"
+  "sgp940_sample.vrb"
   "sgp940_sample.snm"
+  "sgp940_sample.toc"
   "sgp940_sample.log"
+  "sgp940_sample.nav"
   "sgp940_sample.aux"
+  "sgp940_sample.xdv"

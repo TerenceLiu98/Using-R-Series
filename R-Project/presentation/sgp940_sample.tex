@@ -23,22 +23,60 @@
 
 \section{Intro}
 \subsection{Background}
+
+%STEP BY STEP PROCEDURE
 \begin{frame}
-\frametitle{Formula}
+\frametitle{Step by Step Procedure}
 \vspace{-0.3cm}
-$$\begin{align*}
-&y = \beta_0 + \beta_1 w_1 + \dots + \beta_k w_k + \epsilon \\
+
+\textbf{Step Zero}
+
+$$\begin{align}
+&y = \beta_0 + \beta_1 w_1 + \dots + \beta_k w_k + \epsilon \label{eq:ordinary linear regression} \\
 &w_j = f(x) =\left\{
 \begin{aligned}
 &x_j^{\alpha_j}  \alpha \neq 0 \\
-&ln(x_j), \alpha = 0 \\
+&ln(x_j), \alpha = 0 \label{eq:ransformation of X}\\
 \end{aligned}
 \right.
-\end{align*}
+\end{align}
 $$
 The method accommodates exponents on one or more of the regressor variables. $\alpha_1, \alpha_2, \dots,\alpha_k $
  \end{frame}
 
+\begin{frame}
+	\frametitle{Step by Step Procedure (Continued)}
+\textbf{Step One (Inital Model)}
+
+We can get $W = X^{\alpha} \Rightarrow w_i = x_i^{\alpha_i}$, note that  $\underbrace{\alpha_1, \alpha_2, \alpha_3, \dots, \alpha_k}_{\text{The inital $\alpha$}} = 1$, we can get that $W = X ^ alpha = X^1$ since Equation \ref{eq:ordinary linear regression} \\ the \textbf{new regression model is}:
+$$y = \beta_0 + \beta_1 w_1^* + \dots + \beta_k w_k^* \Rigtharrow \hat{beta_0}, \hat{\beta_1}, \dots, \hat{\beta_k} \Rightarrow \beta_{out} = (\beta_0, \beta_1, \beta_k)_{1 \times (k + 1))}$$
+\end{frame}
+
+\begin{frame}
+ 	\frametitle{Step by Step Procedure (Continued)}
+ \textbf{Step Two (New Model)}
+
+Then, We add $Z$ to the equation as $z_i = w_i ln(w_i)$ and we can get the new $\beta$ and $\gamma$:
+
+$$\begin{align*}
+&y = \beta_0 + \beta_1 w_1^* + \dots + \beta_k w_k^* + \gamma_1 z_1^* \gamma_2 z_2^* + \dots + \gamma_k z_k^* \Rightarrow \hat{\gamma_1}, \hat{\gamma_2}, \dots, \hat{\gamma_k} \label{eq:new linear regression model}\\
+&\beta_{out} = (\beta_0', \beta_1', \dots, \beta_k, \hat{\gamma_1}, \hat{\gamma_2}, \dots, \hat{\gamma_k}) \label{eq:new model coefficient}
+\end{align*}$$
+
+\end{frame}
+
+\begin{frame}
+ 	\frametitle{Step by Step Procedure (Continued)}
+ \textbf{Step Two (Update Term)}
+
+ We compute the update $\hat{alpha_j}$ with the formula:
+
+ $$
+ 	\hat{\alpha_j} = (\frac{\hat{\gamma}_j}{\hat{\beta_j}} + 1) \times (\text{ Current Value of } \hat{\alpha_j})
+ $$
+
+We can get the new $\alpha$ for the new iteration, after $n$ times iterations $(|(\alpha_{k-1} - \alpha_{k-2}| \leq \epsilon$,$\epsilon$ is the tolrance value), we can stop the iteration and at that time, the $\alpha$ is what we need: the relative best fitting curve. In multiple regression it can also be a good use of this method, one more variable is to do a set of data loop.
+\end{frame}
 
 
 \section{Motivation}
