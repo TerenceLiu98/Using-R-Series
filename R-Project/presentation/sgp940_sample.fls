@@ -282,10 +282,6 @@ INPUT /usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsb.fd
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm5.tfm
-OUTPUT sgp940_sample.vrb
-INPUT sgp940_sample.vrb
-INPUT sgp940_sample.vrb
-INPUT cuba_logo.png
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmr9.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmr6.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmmi9.tfm
@@ -298,7 +294,9 @@ INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam1
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam7.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
-INPUT cuba_logo.png
+INPUT get.png
+INPUT box.png
+INPUT /usr/local/texlive/2018/texmf-dist/tex/latex/beamer/beamericonarticle.pdf
 INPUT /usr/local/texlive/2018/texmf-dist/tex/latex/beamer/beamericonarticle.pdf
 INPUT /usr/local/texlive/2018/texmf-dist/tex/latex/beamer/beamericonarticle.pdf
 OUTPUT sgp940_sample.nav

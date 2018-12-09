@@ -9,54 +9,49 @@
 \headcommand {\beamer@framepages {3}{3}}
 \headcommand {\beamer@subsectionpages {3}{3}}
 \headcommand {\beamer@subsectionentry {0}{1}{1}{4}{Background}}
-\headcommand {\slideentry {1}{1}{1}{4/4}{Background}{0}}
+\headcommand {\beamer@sectionpages {3}{3}}
+\headcommand {\beamer@subsectionpages {4}{3}}
+\headcommand {\sectionentry {2}{Procedure}{4}{Procedure}{0}}
+\headcommand {\slideentry {2}{0}{1}{4/4}{}{0}}
 \headcommand {\beamer@framepages {4}{4}}
-\headcommand {\slideentry {1}{1}{2}{5/5}{Background}{0}}
+\headcommand {\beamer@subsectionpages {4}{4}}
+\headcommand {\beamer@subsectionentry {0}{2}{1}{5}{Step Zero}}
+\headcommand {\beamer@subsectionpages {5}{4}}
+\headcommand {\beamer@subsectionentry {0}{2}{2}{5}{Step One}}
+\headcommand {\beamer@subsectionpages {5}{4}}
+\headcommand {\beamer@subsectionentry {0}{2}{3}{5}{Step Two}}
+\headcommand {\slideentry {2}{3}{1}{5/5}{Step Two}{0}}
 \headcommand {\beamer@framepages {5}{5}}
-\headcommand {\slideentry {1}{1}{3}{6/6}{Background}{0}}
+\headcommand {\slideentry {2}{3}{2}{6/6}{Step Two}{0}}
 \headcommand {\beamer@framepages {6}{6}}
-\headcommand {\slideentry {1}{1}{4}{7/7}{Background}{0}}
+\headcommand {\slideentry {2}{3}{3}{7/7}{Step Two}{0}}
 \headcommand {\beamer@framepages {7}{7}}
-\headcommand {\beamer@sectionpages {3}{7}}
-\headcommand {\beamer@subsectionpages {4}{7}}
-\headcommand {\sectionentry {2}{Motivation}{8}{Motivation}{0}}
-\headcommand {\slideentry {2}{0}{1}{8/8}{}{0}}
+\headcommand {\slideentry {2}{3}{4}{8/8}{Step Two}{0}}
 \headcommand {\beamer@framepages {8}{8}}
-\headcommand {\slideentry {2}{0}{2}{9/9}{}{0}}
+\headcommand {\beamer@sectionpages {4}{8}}
+\headcommand {\beamer@subsectionpages {5}{8}}
+\headcommand {\sectionentry {3}{R Code}{9}{R Code}{0}}
+\headcommand {\slideentry {3}{0}{1}{9/9}{}{0}}
 \headcommand {\beamer@framepages {9}{9}}
-\headcommand {\beamer@sectionpages {8}{9}}
-\headcommand {\beamer@subsectionpages {8}{9}}
-\headcommand {\sectionentry {3}{Model}{10}{Model}{0}}
-\headcommand {\slideentry {3}{0}{1}{10/10}{}{0}}
+\headcommand {\beamer@subsectionpages {9}{9}}
+\headcommand {\beamer@subsectionentry {0}{3}{1}{10}{get.beta.hat.R}}
+\headcommand {\beamer@subsectionpages {10}{9}}
+\headcommand {\beamer@subsectionentry {0}{3}{2}{10}{boxtidwell.R}}
+\headcommand {\slideentry {3}{2}{1}{10/10}{boxtidwell.R}{0}}
 \headcommand {\beamer@framepages {10}{10}}
-\headcommand {\slideentry {3}{0}{2}{11/11}{}{0}}
+\headcommand {\slideentry {3}{2}{2}{11/11}{boxtidwell.R}{0}}
 \headcommand {\beamer@framepages {11}{11}}
-\headcommand {\slideentry {3}{0}{3}{12/12}{}{0}}
+\headcommand {\beamer@sectionpages {9}{11}}
+\headcommand {\beamer@subsectionpages {10}{11}}
+\headcommand {\sectionentry {4}{Conclusion}{12}{Conclusion}{0}}
+\headcommand {\slideentry {4}{0}{1}{12/12}{}{0}}
 \headcommand {\beamer@framepages {12}{12}}
-\headcommand {\beamer@sectionpages {10}{12}}
-\headcommand {\beamer@subsectionpages {10}{12}}
-\headcommand {\sectionentry {4}{Data and Method}{13}{Data and Method}{0}}
-\headcommand {\slideentry {4}{0}{1}{13/13}{}{0}}
+\headcommand {\slideentry {4}{0}{2}{13/13}{}{0}}
 \headcommand {\beamer@framepages {13}{13}}
-\headcommand {\slideentry {4}{0}{2}{14/14}{}{0}}
+\headcommand {\slideentry {4}{0}{3}{14/14}{}{0}}
 \headcommand {\beamer@framepages {14}{14}}
-\headcommand {\slideentry {4}{0}{3}{15/15}{}{0}}
-\headcommand {\beamer@framepages {15}{15}}
-\headcommand {\slideentry {4}{0}{4}{16/16}{}{0}}
-\headcommand {\beamer@framepages {16}{16}}
-\headcommand {\beamer@sectionpages {13}{16}}
-\headcommand {\beamer@subsectionpages {13}{16}}
-\headcommand {\sectionentry {5}{Conclusion}{17}{Conclusion}{0}}
-\headcommand {\slideentry {5}{0}{1}{17/17}{}{0}}
-\headcommand {\beamer@framepages {17}{17}}
-\headcommand {\slideentry {5}{0}{2}{18/18}{}{0}}
-\headcommand {\beamer@framepages {18}{18}}
-\headcommand {\slideentry {5}{0}{3}{19/19}{}{0}}
-\headcommand {\beamer@framepages {19}{19}}
-\headcommand {\slideentry {5}{0}{4}{20/20}{}{0}}
-\headcommand {\beamer@framepages {20}{20}}
-\headcommand {\beamer@partpages {1}{20}}
-\headcommand {\beamer@subsectionpages {17}{20}}
-\headcommand {\beamer@sectionpages {17}{20}}
-\headcommand {\beamer@documentpages {20}}
-\headcommand {\gdef \inserttotalframenumber {20}}
+\headcommand {\beamer@partpages {1}{14}}
+\headcommand {\beamer@subsectionpages {12}{14}}
+\headcommand {\beamer@sectionpages {12}{14}}
+\headcommand {\beamer@documentpages {14}}
+\headcommand {\gdef \inserttotalframenumber {14}}

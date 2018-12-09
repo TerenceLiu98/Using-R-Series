@@ -1,6 +1,10 @@
 \BOOKMARK [2][]{Outline0.1}{Intro}{}% 1
 \BOOKMARK [3][]{Outline0.1.1.4}{Background}{Outline0.1}% 2
-\BOOKMARK [2][]{Outline0.2}{Motivation}{}% 3
-\BOOKMARK [2][]{Outline0.3}{Model}{}% 4
-\BOOKMARK [2][]{Outline0.4}{Data\040and\040Method}{}% 5
-\BOOKMARK [2][]{Outline0.5}{Conclusion}{}% 6
+\BOOKMARK [2][]{Outline0.2}{Procedure}{}% 3
+\BOOKMARK [3][]{Outline0.2.1.5}{Step\040Zero}{Outline0.2}% 4
+\BOOKMARK [3][]{Outline0.2.2.5}{Step\040One}{Outline0.2}% 5
+\BOOKMARK [3][]{Outline0.2.3.5}{Step\040Two}{Outline0.2}% 6
+\BOOKMARK [2][]{Outline0.3}{R\040Code}{}% 7
+\BOOKMARK [3][]{Outline0.3.1.10}{get.beta.hat.R}{Outline0.3}% 8
+\BOOKMARK [3][]{Outline0.3.2.10}{boxtidwell.R}{Outline0.3}% 9
+\BOOKMARK [2][]{Outline0.4}{Conclusion}{}% 10

@@ -1,6 +1,10 @@
 \beamer@sectionintoc {1}{Intro}{3}{0}{1}
 \beamer@subsectionintoc {1}{1}{Background}{4}{0}{1}
-\beamer@sectionintoc {2}{Motivation}{8}{0}{2}
-\beamer@sectionintoc {3}{Model}{10}{0}{3}
-\beamer@sectionintoc {4}{Data and Method}{13}{0}{4}
-\beamer@sectionintoc {5}{Conclusion}{17}{0}{5}
+\beamer@sectionintoc {2}{Procedure}{4}{0}{2}
+\beamer@subsectionintoc {2}{1}{Step Zero}{5}{0}{2}
+\beamer@subsectionintoc {2}{2}{Step One}{5}{0}{2}
+\beamer@subsectionintoc {2}{3}{Step Two}{5}{0}{2}
+\beamer@sectionintoc {3}{R Code}{9}{0}{3}
+\beamer@subsectionintoc {3}{1}{get.beta.hat.R}{10}{0}{3}
+\beamer@subsectionintoc {3}{2}{boxtidwell.R}{10}{0}{3}
+\beamer@sectionintoc {4}{Conclusion}{12}{0}{4}
