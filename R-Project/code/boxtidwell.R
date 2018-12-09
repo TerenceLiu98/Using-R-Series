@@ -9,9 +9,9 @@ BoxTidwell <- function(y,x,tol = .001, max.iter = 25){
   print(mod.2$R2)
   w <- x
   iter <- 0
-
+ alpha <- 1
   repeat{
-    w <- w ^ alpha
+
     w.log.w <- w * log(w)
     mod.1 <- get.Beta.hat(y,w)
     mod.2 <- get.Beta.hat(y,cbind(w, w.log.w))
