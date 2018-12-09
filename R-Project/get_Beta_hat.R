@@ -25,7 +25,6 @@ get.Beta.hat <- function(y,x){
   R2 <- 1 - (SSr/SSt)
   adj.R2 <- 1 - ((1 - R2)*(nrow(x) - 1))/(nrow(x) - ncol(x[,-1]) - 1)
 
-  beta.hat <- as.numeric(beta.hat)
   Table <- as.data.frame(round(cbind(beta.hat,SE,t,p, R2), digits = 4))
   names(Table)[1:5] <- c("Estimate","Standard Error","t-value","p-value", "R^2")
   paste("adj R square is ", adj.R2)
