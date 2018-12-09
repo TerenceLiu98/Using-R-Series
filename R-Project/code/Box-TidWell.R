@@ -2,6 +2,7 @@ boxtidwell <- function(y,x,tol = .001, max.iter = 25){
   iter <- 1 # the initial iteration
   y <- as.matrix(y)
   x <- as.matrix(x)
+  w <-x
   alpha <- rep(1, ncol(x)) # initial alpha
 
   repeat{
@@ -9,9 +10,9 @@ boxtidwell <- function(y,x,tol = .001, max.iter = 25){
     x <- as.matrix(x)
 
 
-    x.log.x <- x*log(x) # alpha
-    mod.1 <- get.Beta.hat(y ,  x)
-    mod.2 <- get.Beta.hat(y , cbind(x,x.log.x)) # new model
+    w.log.w <- w*log(w) # alpha
+    mod.1 <- get.Beta.hat(y ,  w)
+    mod.2 <- get.Beta.hat(y , cbind(w,w.log.w)) # new model
     alpha <- (mod.2$coefficients[-c(1,2)] / mod.1$coefficients[-1] + 1) * alpha
     print(iter)
     print(alpha)
@@ -20,13 +21,15 @@ boxtidwell <- function(y,x,tol = .001, max.iter = 25){
     }
     iter <- iter + 1
     for (i in 1:ncol(x)){
-      if(alpha[i] == 0){
-        x[i] <- log(x)
+    for (j in 1:nrow(x)){
+    	if(alpha[i] != 0){
+        w[j] <- x[j]^alpha
       }
-      if(alpha[i] != 0){
-        x[i] <- x[i]^alpha
+      	if(alpha[i] == 0){
+        w[i] <- log(x)
       }
-    }
+	}
+	}
   }
-  return(list("iter" = iter, "alpha" = alpha))
+  return(list("iter" = iter, "alpha" = alpha,"R^2 after transformation" = mod.2$R2))
 }
