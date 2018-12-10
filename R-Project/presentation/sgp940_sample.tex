@@ -66,7 +66,7 @@ The method accommodates exponents on one or more of the regressor variables. $\a
  	\frametitle{Step by Step Procedure (Continued)}
  \textbf{Step Two (New Model and the Iteration)}
 
-The results of equation \ref{eq: estimates of alpha} may be viewd as an updated estimate of $\alpha_j$. Often a one step computation is sufficient, in the example below, we do four iterations. Here is the procedure of the iteration model and the how to update the $\alpha$:
+The results of equation \ref{eq: estimates of alpha} may be viewd as an updated estimate of $\alpha_j$. Often a one step computation is sufficient. Here is the procedure of the iteration model and the how to update the $\alpha$:
 
 \begin{itemize}
 	\item Use $w_1^* = x_1^{\hat{\alpha}}, w_2^* = x_2^{\hat{\alpha}} \dots, w_k^* = x_k^{\hat{\alpha_k}}$ to fit the model $$E(y_i) = \beta_0 + \beta_1 w_1^* + \dots + \beta w_k^*$$ with estimates $\hat{\beta_0}, \hat{\beta_1}, \dots, \hat{\beta_k}$
@@ -80,13 +80,13 @@ The results of equation \ref{eq: estimates of alpha} may be viewd as an updated 
  	\frametitle{Step by Step Procedure (Continued)}
  \textbf{Step Two (Update Term)}
 
- We compute the update $\hat{alpha_j}$ with the formula:
+ We compute the update $\hat{\alpha_j}$ with the formula:
 
  $$
  	\hat{\alpha_j} = (\frac{\hat{\gamma}_j}{\hat{\beta_j}} + 1) \times (\text{ Current Value of } \hat{\alpha_j})
  $$
 
-We can get the new $\alpha$ for the new iteration, after $n$ times iterations $(|(\alpha_{k-1} - \alpha_{k-2}| \leq \epsilon$,$\epsilon$ is the tolrance value), we can stop the iteration and at that time, the $\alpha$ is what we need: the relative best fitting curve. In multiple regression it can also be a good use of this method, one more variable is to do a set of data loop.
+We can get the new $\alpha$ for the new iteration, after $k$ times iterations $(|(\alpha_{k} - \alpha_{k-1}| \leq \epsilon$,$\epsilon$ is the tolrance value), we can stop the iteration and at that time, the $\alpha$ is what we need: the relative best fitting curve. In multiple regression it can also be a good use of this method, one more variable is to do a set of data loop.
 \end{frame}
 
 
