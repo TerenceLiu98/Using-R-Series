@@ -16,7 +16,7 @@ boxtidwell <- function(y,x,tol = .001, max.iter = 25){
     alpha <- (mod.2$coefficients[-c(1,2)] / mod.1$coefficients[-1] + 1) * alpha
     print(iter)
     print(alpha)
-    if(alpha <= tol || iter >= 4){
+    if(alpha <= tol || iter >= max.iter){
       break
     }
     iter <- iter + 1

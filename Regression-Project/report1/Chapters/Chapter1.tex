@@ -1,0 +1,44 @@
+% Chapter 1
+
+\chapter{Introduction} % Main chapter title
+
+\label{Chapter1} % For referencing the chapter elsewhere, use \ref{Chapter1}
+
+%----------------------------------------------------------------------------------------
+
+% Define some commands to keep the formatting separated from the content
+\newcommand{\keyword}[1]{\textbf{#1}}
+\newcommand{\tabhead}[1]{\textbf{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\texttt{\bfseries#1}}
+\newcommand{\option}[1]{\texttt{\itshape#1}}
+
+%********************************** %First Section  **************************************
+\section{Data Set Selection} %Section - 1.1
+
+In the very beginning, we have been shown the data set website \href{https://archive.ics.uci.edu/ml/datasets.html}{UCI Data Sets}, we selected the \textbf{"Beijing PM2.5 Data Data Set}" which was donated by Prof.Song Xi Chen, from Guanghua School of Management, Center for Statistical Science, Peking University\citep{liang2015assessing}, for Beijing is known around the world by severe air pollution. The most widely used method to measure air pollution is PM2.5, the particulate matter smaller than or equal to 2.5 microns in diameter in the air, which is a kind of air pollutant that people and our daily life pay great attention to. Although this data set is time-dependent, as long as the data pre-processing is reasonable, we can still treat the data at each time point as independent and unrelated data for regression analysis.
+
+
+
+
+
+%********************************** %Second Section  *************************************
+\section{Data Sets Introduction} %Section - 1.2
+
+In the original data sets, we can found that it contains almost every hour's PM2.5, Dew Point, Temperature, Pressure, Combined wind direction, Cumulative wind speed, Cumulative hours of snow and  Cumulative hours of rain data, and in this project, our purposes are to determine the major factors responsible for this pollution, discuss whether these factors have been targeted by recent initiatives, and predict future PM2.5 levels.
+
+\section{Multiple Regression Estimation}
+
+In statistical modeling, regression model is one of the most important models. It is estimating the relationship between dependent variable and independent variables by the observation data. Also, the parameters are unbiased.\citep{montgomery2012introduction}.
+
+Regression model involve the following parameters and variables:
+\begin{itemize}
+    \item \textbf{unknown parameters}, denoted as $\beta$, which may represented as a vector;
+    \item \textbf{independent variables}, denoted as $\mathbf{X}$, which is represented as a matrix;
+    \item \textbf{dependent variable}, denoted as $\mathbf{Y}$, which is represented as a vector.
+\end{itemize}
+The \textbf{Ordinary Multiple Regression Model} is
+$$
+  \mathbf{Y} = \mathbf{X} \beta + \epsilon
+$$
+We think this kind of estimation may suitable for our data.

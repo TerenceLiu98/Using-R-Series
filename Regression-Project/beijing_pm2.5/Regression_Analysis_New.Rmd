@@ -2,7 +2,6 @@
 title: "regression_new"
 author: "Terence Lau"
 date: "12/5/2018"
-output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -18,7 +17,7 @@ library(lubridate) # date tranformation
 library(beginr)
 ```
 
-## Data Preparation 
+## Data Pre-Processing
 
 The data set we chosen is from the UCI Machine Learning Repository datasets, it has collected BEijing PM2.5 data from 2010 to 2014 
 ```{r}
@@ -48,40 +47,40 @@ In this data sets, its collection is based on hours, and from the original data 
 ```{r, add the season column}
 i <- NULL
 for ( i in 1:length(beijing.data$No)){
-  if(beijing.data$month[i] == 1){
-    beijing.data$season[i] <- 1
-  }
-  if(beijing.data$month[i] == 2){
-    beijing.data$season[i] <- 1
-  }
   if(beijing.data$month[i] == 3){
     beijing.data$season[i] <- 1
   }
   if(beijing.data$month[i] == 4){
-    beijing.data$season[i] <- 2
+    beijing.data$season[i] <- 1
   }
   if(beijing.data$month[i] == 5){
-    beijing.data$season[i] <- 2
+    beijing.data$season[i] <- 1
   }
   if(beijing.data$month[i] == 6){
     beijing.data$season[i] <- 2
   }
   if(beijing.data$month[i] == 7){
-    beijing.data$season[i] <- 3
+    beijing.data$season[i] <- 2
   }
   if(beijing.data$month[i] == 8){
-    beijing.data$season[i] <- 3
+    beijing.data$season[i] <- 2
   }
   if(beijing.data$month[i] == 9){
     beijing.data$season[i] <- 3
   }
   if(beijing.data$month[i] == 10){
-    beijing.data$season[i] <- 4
+    beijing.data$season[i] <- 3
   }
   if(beijing.data$month[i] == 11){
-    beijing.data$season[i] <- 4
+    beijing.data$season[i] <- 3
   }
   if(beijing.data$month[i] == 12){
+    beijing.data$season[i] <- 4
+  }
+  if(beijing.data$month[i] == 1){
+    beijing.data$season[i] <- 4
+  }
+  if(beijing.data$month[i] == 2){
     beijing.data$season[i] <- 4
   }
 }
@@ -170,7 +169,18 @@ for (i in 1:length(cleanbeijing$timebyday)){
 
 ## combine the data from one day 
 ```{r}
-cleanbeijing_combin <- tapplydf(cleanbeijing, c("timestamp", "season", "pm2.5", "Iws", "Is", "Ir", "DEWP", "TEMP","PRES","cbwd_data"),"timebyday", mean)
+
+cleanbeijing_combin <- tapplydf(cleanbeijing, c("timestamp","season", "pm2.5", "Iws", "Is", "Ir", "DEWP", "TEMP","PRES"), "timebyday", mean)
+
+FindMode <- function(x) {
+    ux <- unique(x)
+    ux[which.max(tabulate(match(x, ux)))]
+}
+# cleanbeijing_combin$cbwd_data <- rep(1,length(cleanbeijing_combin$timebyday))
+
+
+cleanbeijing_combin$cbwd_data <-  tapply(cleanbeijing$cbwd_data, cleanbeijing$timebyday, FindMode)
+cleanbeijing_combin$cbwd_data <- as.numeric(cleanbeijing_combin$cbwd_data)
 # cleanbeijing_combin <- cleanbeijing_combin[,-1]
 # lm.cleanbeijing_combin <- lm(pm2.5~., data = cleanbeijing_combin)
 # summary(lm.cleanbeijing_combin)
@@ -178,10 +188,10 @@ cleanbeijing_combin <- tapplydf(cleanbeijing, c("timestamp", "season", "pm2.5", 
 
 ## Add the season categorical variable into the new data set 
 ```{r}
-i <- NULL
+i <- 1
 for ( i in 1:length(cleanbeijing_combin$timestamp)){
     if(month(cleanbeijing_combin$timebyday)[i] == 3){
-        cleanbeijing_combin$season <- "Spring"
+        cleanbeijing_combin$season[i] <- "Spring"
     }
     if(month(cleanbeijing_combin$timebyday)[i] == 4){
         cleanbeijing_combin$season[i] <- "Spring"
@@ -222,9 +232,9 @@ head(cleanbeijing_combin)
 
 ## change cbwd into categorical variable
 ```{r}
-cleanbeijing_combin$cbwd_data <- floor(cleanbeijing_combin$cbwd_data)
+# cleanbeijing_combin$cbwd_data <- floor(cleanbeijing_combin$cbwd_data)
 for (i in 1:length(cleanbeijing_combin$timebyday)){
-  if(cleanbeijing$cbwd[i] == 1){
+  if(cleanbeijing_combin$cbwd[i] == 1){
     cleanbeijing_combin$cbwd_data[i] = "NW"
   }
   if(cleanbeijing_combin$cbwd_data[i] == 2){
@@ -240,26 +250,143 @@ for (i in 1:length(cleanbeijing_combin$timebyday)){
 ```
 
 
-## multiple regression model 
+## multiple regression model (Full Model: Model One)
+```{r}
+lm.cleanbeijing_combin.nolog <- lm(pm2.5~timestamp + season +Iws + Is + Ir + DEWP + TEMP + PRES + cbwd_data, data = cleanbeijing_combin)
+summary(lm.cleanbeijing_combin.nolog)
+par(mfrow=c(2,2))
+plot(lm.cleanbeijing_combin.nolog)
+```
 
 ```{r}
-lm.cleanbeijing_combin <- lm(log(pm2.5)~timestamp + season + Iws + Is + Ir + DEWP + TEMP + PRES + cbwd_data, data = cleanbeijing_combin)
+lm.cleanbeijing_combin <- lm(log(pm2.5)~timestamp + season +Iws + Is + Ir + DEWP + TEMP + PRES + cbwd_data, data = cleanbeijing_combin)
 summary(lm.cleanbeijing_combin)
-```
-```{r}
 par(mfrow=c(2,2))
 plot(lm.cleanbeijing_combin)
 ```
 
 
+## Full model with Stepwise mothed
+```{r}
+lm.cleanbeijing_combin_step <- step(lm.cleanbeijing_combin, direction = "both")
+summary(lm.cleanbeijing_combin_step)
+par(mfrow=c(2,2))
+plot(lm.cleanbeijing_combin_step)
+```
+
+## Interaction of the Full model 
+```{r}
+lm.cleanbeijing_combin_interaction <- lm(log(pm2.5)~(timestamp + season + Iws + Is + Ir + DEWP + TEMP + PRES + cbwd_data)^2, data = cleanbeijing_combin)
+summary(lm.cleanbeijing_combin_interaction)
+par(mfrow=c(2,2))
+plot(lm.cleanbeijing_combin_interaction)
+```
+
+## Natural Logarithm model (Model Two)
+```{r}
+lm.cleanbeijing_combin_natlog <- lm(log(pm2.5)~timestamp + season + Iws + Is + Ir + DEWP + TEMP + PRES + cbwd_data, data = cleanbeijing_combin)
+summary(lm.cleanbeijing_combin)
+par(mfrow=c(2,2))
+plot(lm.cleanbeijing_combin_natlog)
+```
 
 
+## Interaction Model of Natural Logarithm Model  
+```{r}
+lm.interaction <- lm(log(pm2.5)~(timestamp + season + Iws + Is + Ir + DEWP + TEMP + PRES + cbwd_data)^2, data = cleanbeijing_combin)
+summary(lm.interaction)
+par(mfrow = c(2,2))
+plot(lm.interaction)
+```
 
 
+## Stepwise Method using in the Interaction of Natural Logarithm Model  
+```{r}
+lm.interaction.step <- step(lm.interaction, direction = "both")
+summary(lm.interaction.step)
+par(mfrow=c(2,2))
+plot(lm.interaction.step)
+```
 
 
+## Spring Data Re Do
+```{r}
+Spring_data<-filter(cleanbeijing_combin,cleanbeijing_combin$season=="Spring")
+names(Spring_data)
+lm.spring.data <- lm(log(pm2.5)~timestamp + Iws + Is + Ir + DEWP + TEMP + PRES + cbwd_data, data = Spring_data)
+summary(lm.spring.data)
+par(mfrow=c(2,2))
+plot(lm.spring.data)
+```
 
 
+## winter Data Re Do
+```{r}
+winter_data<-filter(cleanbeijing_combin,cleanbeijing_combin$season=="Winter")
+names(winter_data)
+lm.winter.data <- lm(pm2.5~timestamp + Iws + Is + Ir + DEWP + TEMP + PRES + cbwd_data, data = winter_data)
+summary(lm.winter.data)
+par(mfrow=c(2,2))
+plot(lm.winter.data)
+```
+```{r}
+winter_data<-filter(cleanbeijing_combin,cleanbeijing_combin$season=="Winter")
+names(winter_data)
+lm.winter.data.in <- lm(log(pm2.5)~(timestamp + Iws + Is + Ir + DEWP + TEMP + PRES + cbwd_data)^2, data = winter_data)
+summary(lm.winter.data.in)
+par(mfrow=c(2,2))
+plot(lm.winter.data.in)
+```
+
+```{r}
+anova(lm.winter.data, lm.winter.data.in)
+```
+## Spring + Winter
+```{r}
+spring_winter <- as.data.frame(rbind(Spring_data, winter_data))
+names(spring_winter)
+
+for (i in 1:length(spring_winter$timebyday)){
+  if(spring_winter$season == 1){
+    spring_winter$season[i] = "Spring"
+  }
+  if(spring_winter$season == 4){
+      spring_winter$season[i] = "Winter"
+    }
+}
+lm.plus.data <- lm(log(pm2.5)~timestamp + Iws + Is + Ir + DEWP + TEMP + PRES + cbwd_data + season, data = spring_winter)
+summary(lm.plus.data)
+par(mfrow=c(2,2))
+plot(lm.plus.data)
+```
+
+
+```{r}
+library(car)
+qqPlot(lm.winter.data, labels = row.names(winter_data), id.methods = "identify", simulate = T, main = "Q-Q plot")
+```
+
+```{r}
+residplot <- function(fit, nbreaks = 10){
+  z <- rstudent(fit)
+  hist(z, breaks = nbreaks, freq = FALSE,
+       xlib = "Studentized Residual",
+       main = "Distribution of Errors")
+  rug(jitter(z), col = "brown")
+  curve(dnorm(x), mean = mean(z), sd = sd(z), add = TRUE, col = "blue",lwd = 2)
+lines(density(z)$x, density(z)$y,
+      col="red", lwd = 2, lty = 2)
+legend("topright", 
+       legend = c("Normal Curve", "Kernel Density Curve"),
+       lty = 1:2, col = c("blue", "red"), cex=.7)
+}
+residplot(lm.winter.data)
+```
+```{r}
+library(car)
+ncvTest(lm.winter.data)
+spreadLevelPlot(lm.winter.data)
+```
 
 
 
