@@ -9,9 +9,6 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r message = FALSE< results = 'hide'}
-source('mycode.R')
-```
 ## Basic Arithmetic and Objects 
 
 R has comman line interface and will accept simple commands to it. This is marked by a $>$ symbol, called the **prompt**. If you type a command and press return, **R** will evaluate it and print the result for you.
@@ -281,22 +278,970 @@ c(x[1:2],"goodbye")
 
 Matrices are much used in statistics, and so play an important role in `R`. To create a matrix use the function `matrix()`, specifying elements by column first:
 ```{r}
+matrix(1:12, nrow = 3, ncol = 4)
+```
 
+This is called **column-major order**. Of course, we need noly give one of the dimensions:
+```{r}
+matrix(1:12, nrow = 3)
+```
+
+unless we want vector recycling to help us: 
+
+```{r}
+matrix(1:3, nrow = 3, ncol = 4)
+```
+
+Sometimes it's useful to specify the elements by row first:
+
+```{r}
+matrix(1:12, nrow = 3, byrow = TRUE)
+```
+
+There are special functions for constructing certain **matrices**:
+
+```{r}
+diag(3)
+
+diag(1:3)
+
+1:5 %o% 1:5
+```
+
+The last operator performs an **outer product**, so it creates a matrix with (i,j)-th entry $x_iy_j$. The function `outer()` generalizes this to any fucntion $f$ on two arguments, to create a matrix with entries $f(x_i, y_j)$. (More on functions later.)
+
+```{r}
+outer(1:3, 1:4, "+")
+```
+
+Matrix multiplication is performed using the operator `%*%` which is quite distinct from scalar multiplication `*`.
+
+```{r}
+A <- matrix(c(1:8, 10), 3, 3)
+x <- c(1,2,3)
+
+A %*% x # matrix multiplication
+
+A * x # NOT matrix multiplication 
+```
+
+Standard functions exist for common mathematical operations on **matrices**.
+
+```{r}
+t(A) # transpose
+
+det(A) # determinant
+
+diag(A) # diagonal 
+
+solve(A) # inverse 
 ```
 
 
+### Example Construc the matrix 
+$$B = 
+\begin{pmatrix} 
+1 & 2 & 3 \\ 
+4 & 2 & 6 \\
+-3 & -1 & -3 
+\end{pmatrix}$$
+
+Show that $B \times B \times B$ is a scalar multiple of the identity matrix, and find the scalar. 
+
+**Answer**:
+```{r}
+B <- matrix(c(1,2,3,4,2,6,-3,-1,-3), nrow = 3, ncol = 3)
+scalar <- B %*% B %*% B 
+print(scalar)
+eigen(scalar)$values
+```
+
+**Matrices** can be subsetted much the same way as vectors, although of course they have two indices. Row number comes first:
+
+```{r}
+A[2,1]
+
+A[2,2:ncol(A)]
+
+A[, 1:2] # blank indices give everything
+
+A[c(), 1:2] # empty indices give nothing 
+```
+
+Notice that, where appropriate, `R` automatically reduces a matrix to a vector or scalar when you subset it. You can override this using the optional `drop` agrument.
+
+```{r}
+A[2,2:ncol(A), drop = FALSE] # returns as a matrix
+```
+
+You can stitch matrices together using the `rbind()` and `cbind()` functions. 
+These employ vecot recycling:
+```{r}
+cbind(A,t(A))
+
+rbind(A,1,0)
+```
+
+### Exercise Construct the following matrices:
+$$\begin{align*}
+&\text{Solve hte following system of simultaneous equations using matrix methods.}\\
+& a + 2b + 3c + 4d + 5e = -5 \\
+& 2a + 3b + 4c + 5d + e = 2 \\
+& 3a + 4b + 6c + d + 2e = 5 \\
+& 4a + 5b + c + 2d + 3e = 10 \\
+& 5a + b + 2c + 3d + 4e = 11\\
+&\text{Don't just create your matrix by hand}
+\end{align*}$$
+```{r}
+A <- matrix(c(1,2,3,4,5,2,3,4,5,1,3,4,5,1,2,4,5,1,2,3,5,1,2,3,4), nrow = 5, ncol = 5)
+b <- matrix(c(-5, 2, 5, 10, 11), nrow = 5, ncol = 1)
+solve(A,b)
+```
+
+## Lists 
+Other than vectors and **matrices**, the main object for holding for holding data in `R` is a list. These are a bit like vectors, except that each entry can by any other `R` obect, even another list.
+
+```{r}
+x <- list(1:3, TRUE, "HELLO", list(1:2,5))
+```
+
+Here `x` has $4$ elements: a numeric vector, a logical, a string and another list. We can select an entry of $x$ with double square brackets:
+```{r}
+x[[3]]
+```
+
+To get a sub-list, use single brackets:
+```{r}
+x[c(1,3)]
+```
+
+Notice the difference between `x[[3]]` and `x[3]`
+We can also **name** some or all of the entries in out list, by supplying argument names to `list()`
+```{r}
+x <- list(y = 1:3, TRUE, z = "Hello")
+x
+```
+
+Notice that the `[[1]]`` has been replaced by `$y`, which gives us a clue as to how we can recover the entries by their name. We can still use the numeric position if we prefer:
+
+```{r}
+x$y
+
+x[[1]]
+```
+
+THe function `names()` can be used to obtain a character vector of all the names of objects in a list 
+```{r}
+names(x)
+```
+
+You've seen most standard `R` objects noew: almost all the more complicated ones are just **list**! We'll see this in the next section.
+
+## Data
+
+`R` comes with many datasets built-in, particularly in the `MASS` package. A **package** is a collection (or library) of functions, datasets, and other objects; most packages are not loaded automatically, so you have to do it yourself:
+```{r}
+library(MASS)
+```
+You can now access various datasets from this package. Try looking at the dataset called `hills`
+```{r}
+head(hills)
+```
+To find out what the data represent, use the help function `?hills`
+
+### Data Frames 
+
+The objects `hills` is something called a **data frame**. A data frame is a series of records represented by rows (in this case one for each race), each containing values in several fileds (in this case `dist`, `climb`,`time`).
+
+You can check that `hills` is a data frame by inspecting its class(es)
+```{r}
+class(hills)
+```
+or more reliably by using an `is()` command
+```{r}
+hills[3,]
+
+hills[hills$dist >= 12,]
+```
+
+However, they also behave like **lists** indexed by the columns:
+
+```{r}
+hills$time
+```
+
+THe truth is that, like almost all complicated objects in `R`, data frames are **lists** with some additional structure. Formally speaking, they are not matrices, but they do behave similarly in certain circumstances. 
+
+### Exercise How do the results of the following commands differ from what we would expect if hills were a matrix?
+
+```{r}
+hills[1,]
+hills[3]
+as.matrix(hills) %*% c(1,2,4)
+mean(hills)
+```
+
+### Manipulating Data using `with()`
+
+We often want to use functions on the columns of a data frame, and it quickly becomes inconvenient to repeatedly type (for example) `hills$`before every such event. For example, the comman below will give a scatter plot of the race times against climbs, amounst only those races less than $10$ mils long.
+
+```{r}
+plot(hills$climb[hills$dist < 10], hills$time[hills$dist < 10])
+```
+
+The `with()` function allows us to refer to the names of objects in a data frame (or, in fact, any list) without having to keep referring to the data frame itself. Forexample the command above becomes: 
+```{r}
+with(hills, plot(climb[dist < 10], time[dist < 10]))
+```
+
+If you just type `climb` or `dist` on theri own, `R` won't know what object your're referring to . Technically `with()` alters the **scope** the expression being evaluated (i.e. the code given in the second argument) so that it can 'see' the columns of the data frame as objects. We'll learn a bit more about scope when we talk about functions later on.
+
+### Excercise Using `with()`, find the mean of the average speeds(in miles per hour) for races which are between $5$ and $10$ miles long.
+```{r}
+with(hills, mean(time[dist <= 10 & dist >= 5]))
+```
+
+### Creating Data Frames 
+The command `data.frame()` is used to create a data frame, each argument representing a column:
+```{r}
+books <- data.frame(author = c("Ripley", "Cox", "Snijders", "Cox"), 
+                    year = c(1980, 1979, 1999, 2006),
+                    publisher = c("Wiley", "Chapman", "Sage","CUP"))
+books
+```
+
+### Factors
+
+There are two main types of data which you will encounter this year: numerical and categorical. We've seen how to create numerical vectors already.
+
+Suppose we have the heights of 100 individuals, the first $50$ male and the rest female.
+
+```{r}
+set.seed(1442) # fixes the random numbers 
+height <- round(rnorm(100, mean = rep(c(170, 160), each = 50), sd = 10))
+sex <- rep(c("M", "F"), each = 50)
+head(sex)
+```
 
 
+We can tell `R` to treat `sex` as a categorical variable. Then, note that it is displayed slightly differently. The new varaible `Sex` is called a **factor**; a factor is a categorical variable which takes varaious discrete **levels**, in this case M and F for male and female.
+
+`R` know to do sensible things with factors:
+```{r}
+Sex <- as.factor(sex) # change sex into the categorical varaible
+plot(Sex, height)
+head(Sex)
+```
+
+What happens if you try to plot `sex` against `height` instead ? The distinction between categorical and non=categorical data is especially important if we have numbered groups.
+
+THe infromation in a factor is stored as a vector of integers:
+
+```{r}
+as.integer(Sex)
+```
+
+Just as a data frame is really a list, a factor is really a vector of integers (for levels) to gether with some extra information giving each leavel a names. The additional information is contained within a list of **attributes**. You can view this list directly.
+
+```{r}
+attributes(Sex)
+```
+
+The attributes in this case are its **class** (you'll see this in many objects) and a vector of the level names. The calss tells `R` that this object should be trated as a factor so that, for example, it will be displayed to you in the right way.
+
+You may find that sometimes data are stored as a facotr when you don't want them to be (see the exercise in the previous section). You can turn a factor back into a character vector easily enough:
+
+```{r}
+as.character(Sex)
+```
+
+### Row and Column Names 
+
+The labels above and to the left of the values in `hills` are not part of the data itself, but can be accerssed:
+
+```{r}
+names(hills)
+row.names(hills)
+```
+
+As we saw above, in a data frame the column names can be used for indexing (e.g.`hills$time`); the row names cannot be used in this way.
+
+This additional information is stored as **attributes**, which are in a separate list attached to the object hills:
+
+```{r}
+attributes(hills)
+```
+
+We could add an attribute to `hills` if we wanted:
+```{r}
+attributes(hills) <- c(attributes(hills), list(type = "races"))
+attributes(hills)
+```
+
+Note that `type(hills)` doesn't access `hills$type`, the most important attributes such as `names` and `class` happen to have functions named after them, which can be used to extract relevant infromation.
+
+### Reading in Data 
+
+Whilst `R` provides many interesting datasets, it is often necessary to load data externally. The main commands for doing this are `read.table()` and `read.csv()`
+
+Here is an example using the `smoking.dat` dataset, avaiable on the <a href="http://www.stats.ox.ac.uk/~evans/Rprog/>Course Link </a>
+```{r}
+dat <- read.table("http://www.stats.ox.ac.uk/~evans/Rprog/smoking.dat", header = TRUE)
+head(dat)
+class(dat)
+```
+
+What happens if `header = TRUE` is omitted? 
+**It means `header = F` will take effect** 
+When you specify the file names, be sure to use the double quotes(") around it. You also need to five the correct path to the file. `R` will automatically look for the file in its **working dirctory**. you can check what this is :
+
+```{r}
+getwd()
+```
+
+If you want to change the working dirctory, you can use `setwd()` command and type your location into the brackets and with the double quotes. 
+
+You can also use `file.choose()` to replace the `file dirctory` to get the full path to a file. 
+
+## Functions 
+
+Everything which is done in R is done by functions. A function in a programming language is much like its mathematical equaivalent: it has some inputs called **arguments**, and an output called the return value. In `R` a function can only return a single object.If you type a function's name at the console, you can see its structure:
+
+```{r}
+setdiff
+```
+
+There are two important parts to the function: the **signature**, which in this case is `function(x,y)`, and the **body**, which is the code between the curly brackets. Broadly speaking, when a function is **called**, it takes the information in the arguments, applies the code in the body to them, and then spits out the final expression in the function. In this case that's the complex looking expression **unique()**.
+
+### Arguments
+
+You can look at the arguments for a function by typing `args`:
+```{r}
+args(setdiff)
+```
+
+Arguments are a little complicated in `R`. You will notice that they have a name: the arguments of `setdiff()` are called `x` and `y`. However, you don't usually have to specify an argument by name, because arguments also have a position:
+```{r}
+a <- c(1,4,5,7)
+b <- c(1,2,5,9)
+setdiff(a,b) # everything in 'a' and not in 'b'
+```
+
+It assumes that the first argument supplied should be `x`, and the second `y`. You can override this by specifying the name, and then the order doesn't matter:
+
+```{r}
+setdiff(y = b, x = a)
+
+setdiff(b,a)
+```
+
+If you specify *some* of the argument names but not all, then it will use the ordering to deduce the others.
+
+```{r}
+setdiff(y = b, a) # 'a' must be the argument 'x' 
+```
+
+Most functions don't require all of their arguments to be specified.
+
+```{r}
+x <- rnorm(10)
+y <- x + rnorm(10)
+lm(y ~ x)
+args(lm)
+```
 
 
+The function `lm()`(which fits a linear model) only requires the single argument `formula` to run; the other arguments are **optional**: some of them have default values which are shown inthe signature ( such as`model = T`), whereas others simply alter the behaviour of the function when specified (such as `data`).
+
+`R` also uses **partial matching for arguments, so as long as you give enough ofthe arguments's name to make in unambiguous which one you mean, it will work: 
+
+```{r}
+## these two will do the same thing 
+lm(form = y ~ x)
+lm(formula = y~x)
+```
+
+### Writing Functions 
+
+ To define your own function you just have to construct some thing in the same format as above:
+
+```{r}
+ square = function(x){ # x can be a number or a matrix
+  square.x <- as.matrix(x) %*% as.matrix(x)
+  return(square.x)
+ }
+
+square(4) == 4 * 4  
+```
+
+Objects which are created inside a function do note exist outside it:
+
+```{r}
+mean2 <- function(x){
+  n <- length(x)
+  sum(x) / n
+}
+mean2(1:10) == mean(1:10)
+```
+
+Clearly, the object we used inside the function above, `n`, but it was only inside the function's namespace. Nost functions in `R` do not have **side effects**: tey return a value, but do not change any of the objects which you can reach at the console. In order to *use* a function, you usually have to assign its output to something.
+```{r}
+x <- mean2(1:10)
+x
+```
+
+### Exercise 
+The logit function is defined as
+$$logit(x) = log(\frac{x}{1 - x}), \ \ 0 < x < 1$$
+
+Write an `R` function in one argument to implement this. How does your function behave for values of `x` such as $0$, $1$ or $2$ ? 
+
+**Answer**:
+```{r}
+Logit <- function(x){
+  if(x == 1){
+    return("It has no solution")
+  }
+  if (x != 1){
+    a <- x / 1 - x
+    logit.x <- log(a)
+    return(logit.x)
+  }
+}
+logit(0.1)
+log(0.1/(1 - 0.1))
+logit(0.1) == log(0.1/(1 - 0.1))
+```
+
+As you can see, although `logit(0.1)` equals to `log(0.1/(1 - 0.1))` mathematically, in `R` console, you can found that there are no equal, since the computer language has the precision.
+
+### Exercise 
+Recall that the Taylor expansion of $log(1 + x)$ is 
+$$\displaystyle log(1 + x) = \sum^{\infty}_{i = 1}(-1)^{i+1}\frac{x^i}{i}$$
+Write a function with arguments $x$ and $n$, which calculates the Taylor approximation to $log(1 + x)$ using $n$ terms.
+
+**Answer**
+```{r}
+Log.Taylor <- function(x,n){
+  i <- 1 
+  for(i in 1:n){
+    sum <- 0
+    log.x <- (-1)^(i + 1) * (x^i / i)
+    sum <- sum + log.x
+    i <- i + 1
+  } 
+  return(sum)
+}
+```
+
+### Exercise 
+Given real vectors $x$, $y$ of length $n$, the least squares slope $(\alpha, \beta)^T$ is given by:
+
+$$\begin{align*}
+\beta &= \frac{\sum_i (x_i - \bar(x))(y_i - \bar{u})}{\sum_i(x_i - \bar{x})} \\
+\alpha &= \bar{y} - \bar{x}\beta
+\end{align*}$$
+
+Write a function which takes two arguments, $x$ and $y$, and returns a vector of length $2$ containing $\alpha$ and $\beta$. Verify that your function gives the correct answer using `R`'s built-in function `lm()`[the syntax is `lm(y~x)`].
+
+### `for()` Loops
+
+The most common way to execute a block of code multiple times is with a `for()` loop. What's going on in the code below?
+
+```{r}
+factoria12 <- function(n){
+  out = 1
+  
+  for ( i in 1:n){
+    out = out * i
+  }
+  return(out)
+}
+
+factoria12(10) == factorial(10)
+```
+
+You may have seen `for()` loops in other lnaguages. The syntax in `R` is `for(i in x)` for some vector (or list) `x`, where `i` will take each value in `x`. Most commonly, `x` is a vector of the first `n` natural numbers.
+
+`i` is a dummy variable, and can be called whatever you like, though it retains its value outside the loop.
+
+```{r}
+for (sillyname in 1:4){print(sillyname)}
+sillyname
+```
+
+### Exercise 
+
+Write a function to perform matrix-vector multiplication. It should take a matrix `A` and a vector `b` as arguments, and return the vector `Ab`. Use **two** loops to do this, rather tahen `%*%` or any vectorization.
 
 
+```{r}
+Matrix.multi <- function(matrixA, matrixB){
+c = matrix(0 , dim(matrixA)[1] , dim(matrixB)[2] , TRUE ) #This line
+for ( ii in 1:dim(matrixA)[1] ) {
+  for ( jj in 1:dim(matrixB)[2] ) {
+    for (kk in 1:dim(matrixA)[2] ) {
+      c[ii,jj] = c[ii,jj] + matrixA[ii,kk]*matrixB[kk,jj]
+    }
+  }
+}
+return (c)
+}
+```
+
+### Conditional Code 
+
+It's extremely common to need code to do different things depending upon the number given to it. Let's write a short function find the absolute value of aa number.
+
+```{r}
+abs2 <- function(x){
+  if( x < 0){
+    x <- -x
+  }
+  else{
+    x <- x
+  }
+  return(x)
+}
+```
+
+The `if()` function will only execute the code which follows if the expression in parentheses evaluates to `TRUE`. When the expression is `FALSE` the code following the `else` statement will be used instead. There is no need to include an `else` statement will be used instead. There is no need to inclued an `else`, in which case the program will do nothing if the condition in `FALSE`.
+
+Take care not to allow the logical expression following the `if()` to be a vector, or `R` will spit out a warning 
+```{r}
+abs2(c(1,-3)) # won't work properly
+```
+
+If you only need to assign a single value (whether a number, logical, or string) based on a condition, you can use `ifelse()`:
+```{r}
+ifelse(TRUE, 1 == 1, "hello")
+ifelse(FALSE, 1 == 1, "hello") 
+
+# ifelse(test, yes, no)
+# test	
+# an object which can be coerced to logical mode.
+# yes	
+# return values for true elements of test.
+# no	
+# return values for false elements of test.
+```
+
+### `while()` Loops
+
+Here is a short function to check whether an interger is prime
+```{r}
+isPrime <- function(n){
+  i <- 2 
+  if (n < 2)return(FALSE)
+  while( i < sqrt(n)){
+    ifelse ( n %% i == 0,return(FALSE), return(TRUE))
+  }
+}
+
+isPrime(10)
+isPrime(37)
+```
+  
+ This illustrates points. First, we don't need to waite until reaching the end of a function to return a value; we can use the `return` keyword instead.
+ 
+ The other feature is the `while()` loop. This will keep running until the expression in the parenthesis becomes false.
+ 
+ ### Writing for Speed 
+ 
+ **Loops are slow in `R`!** It is usually much better to try to 'vectorize' a function rather than calling it lots of times with a loop. Of course, for squareing this is already bild in to `R`.
+
+```{r}
+system.time(for(i in 1:1e6) i ^ 2)
+
+system.time(seq_len(1e6)^2)
+```
+  
+We can write a second function to do matrix-vector multiplication, but this time replacing the inner loop by a vectorized function to take dot products:
+```{r}
+mult2 <- function(A,b){
+  n1 <- nrow(A)
+  n2 <- ncol(A)
+  
+  out <- numeric(n1)
+  for(i in 1:n1){
+    out[i] = sum(A[i,] * b)
+  }
+  return(out)
+}
+mult2(A,b) == A %*% b
+```
+
+```{r}
+system.time(Matrix.multi(A,b))
+system.time(mult2(A,b))
+system.time(A %*% b)
+```
+
+The difference is dramatic. 
+
+## Recursion 
+
+Functions can recurse, which means they call themselves; here is a function which calculates the entry $F_n$ in the Fibonacci squarece with $F_0 = F_1 = 1$, and $F_k = F_{k-1} + F_{k - 2}$ for $k \geq 2$:
+
+```{r}
+fib <- function(n){
+  if(n < 2) return(1)
+  else return(fib(n - 1) + fib( n - 2))
+}
+fib(10)
+```
+
+Recursion can be very slow though, so try to avoid it if possible. you can also use `Recall()` instead of writing the function's name in order to recurse.
+
+### Exercise
+The number of moves required to complete a *Towers of Hanoi* puzzle with $k$ pieces is $H_k = 2H_{k-1} + 1$ if $k > 1$, with $H_1 = 1$. Write a recursive function to evaluate $H_k$ 
+
+```{r}
+Tower.Hanoi <- function(k){
+  if(k == 1)return(1)
+  else return(2 * Tower.Hanoi(k - 1) + 1)
+}
+```
+
+## Scope 
+
+When a function is called, the code inside it is run in a separete **environment** to the code you run directly at the command line. This means it's possible for a variable inside a function to have the same anme as something at the command line without causing any problems:
+
+```{r}
+x <- 3 
+f <- function(y){
+  x <- 5
+  x + y
+}
+f(4)
+x  # still the same value as before
+```
+
+However, if a function fails to find a varaible withing its own environment, then it will look to the **parent envrionment** for such a value: this is either the function which called the current function, or the **global environment** (i.e.the one you use at the comman line).
+
+```{r}
+x <- 3
+g <- function(y){
+  x + y
+}
+g(4)
+x
+```
+
+Whilst this sort of behaviour can sometimes seem helpful, it is much better to avoid writing confusing code like this. you are strongly recommended to write functions which only require the information in their own arguments to run. 
+
+This is the same principle used by the functions`with()` and `subset()`: they create an environment for the data frame (or list) you give as their first argument; if any names supplied don't match coluymns within the data frame, `R` searches in the global envrionment:
+```{r}
+conv = 1.609
+with(hills, mean(dist/conv)) #where do conv and dist come from ?
+```
+
+## Graphics 
+
+Graphics and 'data visualization' are an integral part of statistics , and `R` makes it easy to produce common plots quickly, as well as giving a powerful interface for more esoteric ooutput. The basic command is the **generic** function `plot()`. This will try to do the most sensible thing for the kind of data you provide.
+
+We have already seen that `plot(x)` and `plot(x,y) will produce different plots depending upon the class of the inputs. This is very partially summarized in the following table:
+
+|--|-----|-----|-----|
+|x|missing | numeric | factor |
+| numeric |series plot| scatter plot | spine plot |
+| factor | bar chart | box plots | spine plot |
+
+In fact there are many more plotting methods, most of which you will rarely use.
+
+### One dimensional plots 
+
+For graphical summaries of one dimensional data we have already seen box-plots and (in the practical) a time series for random walks. Among the most useful is the histogram:
+```{r}
+hist(nlschools$lang, breaks = 25, col = 2)
+```
+
+Note that the optional argument ` breaks` chooses (approximately) how many bins the histogram should have, and `col` alters the colour of the bars. Of course, all plots should have properly labelld axes and a title, which can be easily added.
+
+```{r}
+hist(nlschools$lang, breaks = 25, col = 2, xlab = "Score", main = "Language test scores of Dutch 8th grade pupils")
+```
+
+Even the simple plot comman for a single numeric vector comes with a large range of options.
+
+```{r}
+x <- cumsum(rnorm(250))
+plot(x, type = "l", col = 3)
+```
+
+Try this with `type = b` or `type = h` and see what happens. You can only find out about a few of the graphics options with the documentation for `plot()`. Try looking at `?par` to find the real detail.
+
+```{r}
+par(mfrow=c(2,2))
+plot(x, type = "l", col = 3)
+plot(x, type = "b", col = 3)
+plot(x, type = "h", col = 3)
+```
+
+### Adding to Plots
+
+Consider the following simple scatter plot, augmented with the line $y = x$. 
+```{r}
+x <- rnorm(300)
+y <- x + rnorm(300)
+plot(x,y, pch = 20, col = 4, cex = 0.5)
+abline(a = 0, b = 1, lty = 4, lwd = 2)
+abline(lm(y~x), col = 2, lty = 1, lwd= 2)
+legend(x = -3, y = 3, legend = c("y = x", "line of best fit"),
+        lty = c(4,1), lwd = c(1.5,1), col = 1:2)
+```
+
+`cex` is to control the radius of the point. 
+
+The function `abline()` plots lines of the form $y = a + bx$ wehre $a$ and $b$ are specified. As you can see, the width and appearance of the line is adjusted withe the options `lty`(line type), `lwd`(line width) and `col`(colour).
+
+You can also use `abline()` in conjunction with output from a simple linear model. 
+
+### Legends
+
+The `legend()` command can be  used to provide additional information about your plots. The basic syntax is: 
+```{r}
+# legend(x = -4, y = 4, legend = c("y = x", "line of best fit"),
+#         lty = c(4,1), lwd = c(1.5,1), col = 1:2)
+```
+
+where $(x,y)$ is the top-left hand corner of the box, `legend` is a character vector of annotation, and the other options are used to describe what to display. Many options are available via the hlep file.
+
+### Formulae and Boxplots 
+
+`R` contains a special object type called a formula which can be used to represent statstical models compactly. Try typing some algebraic expression at the console separated by the tilde operator `~`(this is on the # key on a UK keyboard, and left of 1 on a US keyboard.)
+
+```{r}
+x ~ a + b * c
+```
+
+The formula object can be used to express relationships between varialbes under the convention that the left-hand side 'is modelled by' the right-hand side.
+
+This can be used, for example, when producing plot:
+```{r}
+data(genotype)
+head(genotype)
+```
+```{r}
+boxplot(Wt~Litter, data = genotype)
+```
+
+The function interprets the formula as requiring that the left-hand side be summarized in a way which is broken down by the right. note the `Wt` and `Litter` are contained within `genotype`, and are not recognized at the console, but the argument `data = genotype` ensures that the `boxplot()` function knows where to look for `genotype$wt`.
+
+### Lattice Graphics 
+
+The plots above are all found in the `base` package of `R`, which is to say that they are preloaded functions. A very popular and powerful extension to `R`'s graphics capabilities is made using the package `lattice`. The range of plots which can be produced even using `lattice`'s default methods is stggering, and we will show only a few small example here.
+
+The basic command is `xyplot()`, whose first argument is usually a formula.
+
+```{r}
+library(lattice)
+head(crabs)
+
+form <- log(FL) ~ log(RW) | sp * sex
+form
+
+xyplot(form, data = crabs)
+```
+
+```{r}
+plot(log(crabs$FL), log(crabs$RW))
+```
+
+The formula form in this case has three parts. The left-hand side `log(FL)` is to be plotted against the right `log(FL)`; since both these varaibles are continuous, we will obtain a scatter plot. The conditioning bar '|' indicates that we wish the information to be broken down by the third term, `sp * sex` (i.e. by species and by sex). Hence `lattice` produces four separate scatter plots, each with the same axes.
+
+The most common use of the `lattice` package is to produce these **trellis plots** for representing multivariate data. A few more examples you might find useful:
+```{r}
+histogram(~ height | voice.part, data = singer)
+```
+
+Notice that the comman is `histogram()`, not `hist()`, and the plotting options are different.
+
+```{r}
+library(MASS)
+densityplot(galaxies)
+```
+
+### Function Plots 
+
+When applied to a vectorized funcion of one argument, `plot()` will produce  a graph in the specified range.
+
+```{r}
+plot(sin, -2 * pi, 2 * pi)
+```
+
+For non-vectorized functions, this has to be done manually:
+
+```{r}
+func <- function(x,n = 10){
+  idx = 1:n
+  return(sum((-1)^(idx + 1) * x^idx / idx))
+}
+
+plot(function(x) log(1 + x), -0.5, 1.2)
+
+for(i in 2:10){
+  x <- seq(from = -0.5, to = 1.2, length = 10000)
+  y <- sapply(x, func, n = i)
+  points(x, y, type = "l")
+}
+```
+
+Not too much for `lattice` for now $\dots$
+
+## The `apply` Family of Functions
+
+Much coding involves the repeated application of the same function to several different pieces of data in a vector or list. For this reason, `R` has a series of functions for performing such tasks, which results in much simpler and easier to understand code. 
+
+### `apply()` 
+
+If we want to perform a function a function on every row or column in a matrix (or on an array, see next section), we can use the `apply()` function. The syntax is `apply(x, d, f)`, which will apply the function `f` to each of the *d*th dimension of $x$. if $d = 1$ this corresponds to rows, and $d = 2$ to the columns of a matrix. 
+
+```{r}
+A <- cbind(1:10, (1:10) ^2, (1:10)^3)
+apply(A, 2, sum)
+```
+
+It will also work for 'matrix-like' objects, such as data frames (although see also `sapply()` below).
+
+```{r}
+library(MASS)
+apply(hills, 2, mean)
+apply(hills, 2, sd)
+```
+
+### Exerciese 
+Using `apply()`, write a function which, given an *$(I \times J) -$ matrix $X = (x_{ij})$ computes the magnitude of each row, that is:
+
+$$ \sqrt{x_{i1}^2 + x_{i2}^2 + \dots + x_{iJ}^2}, \ \text{ for each } i = 1,2,\dots,I$$
+
+and returns the results as a vectors.
+
+```{r}
+Matrix.mag <- function(a,i){
+  j <- 1
+  for(j in 1:dim(a)[2]){
+    a[i,j] <- a[i,j] ^ 2
+  }
+  a[i,] <- apply(a, 2, sum)
+  return(as.vector(sqrt(a[i,])))
+}
+```
 
 
+```{r}
+library(ISwR)
+caff.marital <- matrix(c(652, 1537, 598, 242, 36, 46, 38, 21, 218, 327, 106, 67), nrow = 3, byrow =T)
+colnames(caff.marital) <- c("0", "1-150", "151-300", ">300")
+rownames(caff.marital) <- c("Married", "Prev.married", "Single")
+total.caff <- margin.table(caff.marital, 2)
+total.caff
+names(dimnames(caff.marital)) <- c("marital", "consumption")
+table(sex)
+barplot(total.caff, col = "white")
+```
 
+```{r}
+barplot(t(caff.marital),legend.text = colnames(caff.marital))
+```
+```{r}
+opar <- par(mfrow = c(2,2))
+slices <- c("white", "grey80", "grey50", "black")
+pie(caff.marital["Married",], main = "Married", col = slices)
+pie(caff.marital["Prev.married",], main = "Prev.Married", col = slices)
+pie(caff.marital["Single",], main = "Single", col = slices)
+par(opar)
+```
 
+```{r}
+library(MASS)
+head(hills)
+opar <- par(mfrow = c(2,2))
+qqnorm(hills$climb)
+qqline(hills$climb, col = 2)
+```
 
+```{r}
+daily.intake <- c(5260, 5470, 5640, 6180, 6390, 6515, 6805, 7515, 7515, 8230, 8770)
+mean(daily.intake)
+sd(daily.intake)
+quantile(daily.intake)
+t.test(daily.intake, mu = 7725)
+prop.test(daily.intake,length(daily.intake))
+```
 
+```{r}
+y <- thuesen$short.velocity; x <- thuesen$blood.glucose
+lm1 <- lm(y~x)
+lm1
+summary.lm1 <- summary(lm1)
+```
+
+```{r}
+plot(x,y)
+lines(x[!is.na(y)], fitted(lm1),lty = b, col = "red")
+```
+
+```{r}
+options(na.action = na.exclude)
+lm.velo <- lm(y~x)
+fitted(lm.velo)
+plot(x,fitted(lm.velo))
+abline(lm.velo)
+segments(x,y, x,fitted(lm.velo) , col = "red")
+```
+
+```{r}
+predict(lm.velo, int = "c")
+pred.frame <- data.frame(x = 4:20)
+pp <- predict(lm.velo, int = "p", newdata = pred.frame)
+pc <- predict(lm.velo, int = "c", newdata = pred.frame)
+plot(x,y,ylim = range(y, pp, na.rm = T))
+pred.gluc <- pred.frame$x
+matlines(pred.gluc, pp, lty = c(1,2,2), col = "black")
+matlines(pred.gluc, pc, lty = c(1,2,2), col = "red")
+legend(5,2,legend = c("confidence","prediction"), col = c("red", "black"), lty = c(1,2,2,1,2,2))
+```
+
+```{r}
+par (mex = 0.5)
+pairs(cystfibr, gap = 0, cex.labels = 0.9)
+```
+```{r}
+lm2 <- lm(pemax~age+sex+height+weight+bmp+fev1+rv+frc+tlc, data = cystfibr)
+summary(lm2)
+lm.influence(lm2)
+```
+
+```{r}
+influence.measures(lm2)
+```
+
+```{r}
+str(crabs)
+x <- crabs$FL
+y <- crabs$CL
+hist(x, col = "blue", xlim = c(0,30), probability = T)
+lines(density(x), col = "red", lwd = 3)
+a <- rnorm(100,15, )
+lines(density(a),col = "black",lwd = 3, lty = 3)
+```
+
+```{r}
+i <- 1
+roll_results <- rep(NA)
+dice_sides <- 1:6
+j <- 0 
+while(length(roll_results) < 6){
+    a <- sample(dice_sides, size = 1)
+    if(a %in% roll_results == FALSE){
+      roll_results[i] <- a
+      i <- i + 1
+    }
+  j <- j + 1
+}
+paste(j, "times rolling")
+```
 
 
 
